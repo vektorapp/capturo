@@ -2595,7 +2595,7 @@ async function startBioSearch(){
   const btn=$('btnS2');btn.disabled=true;btn.textContent='Buscando...';showCancelBtn(true);
   leads=[];setProg(5);
   const query=c.market==='nacional'?c.nicho:c.nichoEn;
-  const location=c.market==='nacional'?`"${c.city}"`:c.city+' '+c.state;
+  const location=c.city;
   try{
     for(let bi=0;bi<activeBio.length;bi++){
       const bioSite=activeBio[bi];
@@ -2705,7 +2705,7 @@ async function startBioSearchInternal(gKey,cseId){
   const c=campaigns.find(x=>x.id===activeCampaignId);if(!c)return;
   const activeBio=getActiveBiolinks();
   const query=c.market==='nacional'?c.nicho:c.nichoEn;
-  const location=c.market==='nacional'?`"${c.city}"`:c.city+' '+c.state;
+  const location=c.city;
   for(let bi=0;bi<activeBio.length;bi++){
     const bioSite=activeBio[bi];
     const searchQ=`"${query}" site:${bioSite.domain} "${location}"`;
