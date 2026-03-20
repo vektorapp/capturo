@@ -718,9 +718,15 @@ function promptLovableUrl(id){
           <label>RocketReach Key <span style="background:#0a1020;color:#38bdf8;font-size:9px;padding:2px 6px;border-radius:10px;font-family:monospace">🚀 RR</span></label>
           <input type="password" id="rrKey" placeholder="1dcbac2k...">
         </div>
+        <div class="field">
+          <label>🔗 Proxy URL (Apps Script)</label>
+          <input type="text" id="proxyUrl" placeholder="https://script.google.com/macros/s/AKfycbxSHe2x6h96l2oPcL7W6TNFy12S24mnLbg83gBtCiEFC0l23eudB7LKBGWGHAud7PL9sA/exec" value="https://script.google.com/macros/s/AKfycbxSHe2x6h96l2oPcL7W6TNFy12S24mnLbg83gBtCiEFC0l23eudB7LKBGWGHAud7PL9sA/exec" style="font-size:10px">
+        </div>
         <div style="display:flex;gap:8px;align-items:flex-end">
           <button class="btn btn-ghost" onclick="testGoogle()" style="font-size:11px">Testar Google</button>
+          <button class="btn btn-ghost" onclick="testProxy()" style="font-size:11px">Testar Proxy</button>
           <span class="status-pill pill-idle" id="gStatus">⚬</span>
+          <span class="status-pill pill-idle" id="proxyStatus">⚬</span>
         </div>
       </div>
       <div class="campaign-info" id="campaignInfoBar">Selecione uma campanha</div>
@@ -1868,6 +1874,25 @@ async function fetchFallback(url){
   throw new Error('Sem conexão. Verifique se está rodando via localhost (npx serve) e não via file://. Detalhes: '+errors.join(' | '));
 }
 
+async function testProxy(){
+  const url=($('proxyUrl')?.value.trim()||PROXY_URL)+'?action=cascade&name=Test+Company&city=New+York';
+  setStat('<span class="spinner"></span>Testando proxy...');
+  try{
+    const r=await fetch(url,{signal:AbortSignal.timeout(15000)});
+    if(r.ok){
+      $('proxyStatus').className='status-pill pill-ok';
+      $('proxyStatus').textContent='✓ Proxy OK';
+      setStat('✓ Proxy funcionando!');
+    }else{
+      $('proxyStatus').className='status-pill pill-err';
+      $('proxyStatus').textContent='✗ Erro '+r.status;
+    }
+  }catch(e){
+    $('proxyStatus').className='status-pill pill-err';
+    $('proxyStatus').textContent='✗ '+e.message.substring(0,20);
+    setStat('Proxy erro: '+e.message);
+  }
+}
 async function testGoogle(){
   const key=$('gKey').value.trim();if(!key){alert('Insira a key');return;}
   setStat('<span class="spinner"></span>Testando...');
@@ -2030,45 +2055,43 @@ async function googleSearchEmail(companyName, address, gKey, cseId){
   return null;
 }
 
-// MASTER CASCADE: tries all 5 sources in order
+// MASTER CASCADE via Google Apps Script Proxy (resolves CORS)
+const PROXY_URL = 'https://script.google.com/macros/s/AKfycbxSHe2x6h96l2oPcL7W6TNFy12S24mnLbg83gBtCiEFC0l23eudB7LKBGWGHAud7PL9sA/exec';
+
 async function findEmailCascade(lead, keys){
-  const {hKey,apolloKey,snovId,snovSecret,rrKey,gKey,cseId}=keys;
-  const domain=lead.website?new URL(lead.website.startsWith('http')?lead.website:'https://'+lead.website).hostname.replace('www.',''):null;
-  const name=lead.name||'';
-  const city=(lead.formatted_address||'').split(',').slice(-3,-1).join(',').trim();
+  const name = lead.name||'';
+  const domain = lead.website ? (() => { try { return new URL(lead.website.startsWith('http')?lead.website:'https://'+lead.website).hostname.replace('www.',''); } catch(e){ return ''; } })() : '';
+  const city = (lead.formatted_address||'').split(',').slice(-3,-1).join(',').trim();
+  const address = lead.formatted_address||'';
 
-  setStat(`<span class="spinner"></span>📧 [1/5] Hunter: ${name}`);
-  if(hKey&&domain){
-    const r=await hunterDomainSearch(domain,hKey);
-    if(r) return {...r,source:'hunter'};
-  }
-  await new Promise(r=>setTimeout(r,300));
+  setStat(`<span class="spinner"></span>📧 Buscando email via proxy: ${name}`);
 
-  setStat(`<span class="spinner"></span>📧 [2/5] Apollo: ${name}`);
-  if(apolloKey){
-    const r=await apolloEmailSearch(name,city,apolloKey);
-    if(r) return r;
-  }
-  await new Promise(r=>setTimeout(r,400));
-
-  setStat(`<span class="spinner"></span>📧 [3/5] Snov.io: ${name}`);
-  if(snovId&&snovSecret){
-    const r=await snovEmailSearch(name,domain,snovId,snovSecret);
-    if(r) return r;
-  }
-  await new Promise(r=>setTimeout(r,400));
-
-  setStat(`<span class="spinner"></span>📧 [4/5] RocketReach: ${name}`);
-  if(rrKey){
-    const r=await rocketReachEmailSearch(name,city,rrKey);
-    if(r) return r;
-  }
-  await new Promise(r=>setTimeout(r,400));
-
-  setStat(`<span class="spinner"></span>📧 [5/5] Google Search: ${name}`);
-  if(gKey){
-    const r=await googleSearchEmail(name,lead.formatted_address,gKey,cseId);
-    if(r) return r;
+  try{
+    // Build proxy URL with params
+    const params = new URLSearchParams({
+      action: 'cascade',
+      name: name,
+      domain: domain,
+      city: city,
+      address: address
+    });
+    const url = PROXY_URL + '?' + params.toString();
+    const r = await fetch(url, {signal: AbortSignal.timeout(30000)});
+    if(r.ok){
+      const d = await r.json();
+      if(d && d.email){
+        setStat(`✓ Email encontrado via ${d.source||'proxy'}: ${d.email}`);
+        return d;
+      }
+    }
+  }catch(e){
+    console.warn('Proxy error:', e.message);
+    // Fallback to direct Hunter if proxy fails
+    if(keys.hKey && domain){
+      setStat(`<span class="spinner"></span>📧 Fallback Hunter: ${name}`);
+      const r = await hunterDomainSearch(domain, keys.hKey);
+      if(r) return {...r, source:'hunter'};
+    }
   }
   return null;
 }
