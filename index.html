@@ -655,7 +655,7 @@ select option{background:#8a9099}
 <body class="theme-blue">
 
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
-<div id="loginScreen" style="display:none;position:fixed;inset:0;z-index:99999;background:var(--bg);align-items:center;justify-content:center;padding:20px">
+<div id="loginScreen" style="display:flex;position:fixed;inset:0;z-index:99999;background:var(--bg);align-items:center;justify-content:center;padding:20px">
   <div style="width:100%;max-width:420px">
 
     <!-- Logo -->
@@ -7835,8 +7835,6 @@ function guiaScroll(sectionId){
       syncAllToSheets(null,true);
   });
 
-  // ── Inicializar autenticação Supabase ──
-  if(typeof initAuth==='function') initAuth();
 })();
 
 // ── BULK ACTIONS ──
@@ -8259,6 +8257,9 @@ async function loadFromSupabase(){
     console.error('[CAPTURO] loadFromSupabase error:',e);
   }
 }
+
+// ── Iniciar auth assim que este bloco carrega ─────────────────
+initAuth();
 </script>
 <!-- ══ /SUPABASE AUTH + SYNC ═══════════════════════════════════ -->
 
