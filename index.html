@@ -642,11 +642,98 @@ select option{background:#8a9099}
 @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes toastOut{from{opacity:1}to{opacity:0}}
 
+/* ── BIO LINK PANEL ── */
+.bl-toggle-btn{display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;background:var(--volcano-bg);color:var(--volcano);border:1px solid var(--volcano-b);font-size:11px;font-weight:700;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .2s;white-space:nowrap}
+.bl-toggle-btn:hover{background:rgba(255,45,45,.15)}
+.bl-panel{display:none;margin-top:10px;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:12px;animation:fadeIn .15s ease}
+.bl-panel.open{display:block}
+.bl-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.bl-panel-title{font-size:9px;font-family:'IBM Plex Mono',monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em}
+.bl-panel-actions{display:flex;gap:6px}
+.bl-panel-action{background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:10px;color:var(--muted2);cursor:pointer;font-family:'IBM Plex Mono',monospace}
+.bl-panel-action:hover{border-color:var(--accent);color:var(--accent)}
+.bl-chips{display:flex;gap:5px;flex-wrap:wrap}
+.bl-chip{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;border:1px solid var(--border);cursor:pointer;font-size:10px;color:var(--muted2);background:var(--s1);transition:all .15s;white-space:nowrap;user-select:none}
+.bl-chip.active{background:var(--volcano-bg);color:var(--volcano);border-color:var(--volcano-b);font-weight:700}
+.bl-chip:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── QUICK WA MESSAGE ── */
+.qwa-panel{display:none;position:absolute;left:0;right:0;bottom:calc(100% + 8px);z-index:500;background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:fadeIn .15s ease}
+.qwa-panel.open{display:block}
+.qwa-title{font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--muted2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em}
+.qwa-msg{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:7px;cursor:pointer;transition:all .15s;position:relative}
+.qwa-msg:hover{border-color:var(--accent);background:var(--accent-bg)}
+.qwa-msg-label{font-size:10px;font-weight:700;color:var(--accent2);font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
+.qwa-msg-preview{font-size:11px;color:var(--muted2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qwa-send-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:'IBM Plex Mono',monospace;white-space:nowrap;display:none}
+.qwa-msg:hover .qwa-send-btn{display:block}
+
 /* ── BULK ACTIONS ── */
 .bulk-bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1c1c1e;color:#fff;border-radius:16px;padding:12px 20px;display:none;align-items:center;gap:12px;z-index:300;box-shadow:0 8px 32px rgba(0,0,0,.3);white-space:nowrap;}
 .bulk-bar.show{display:flex}
 .bulk-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--accent)}
 .lead-card.bulk-selected{outline:2px solid var(--accent);background:var(--accent-bg)}
+
+/* ── GLOBAL SEARCH ── */
+.gs-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--muted2);display:flex;align-items:center;gap:6px;font-size:11px;font-family:'IBM Plex Mono',monospace;transition:all .2s;flex-shrink:0}
+.gs-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg)}
+.gs-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:none;align-items:flex-start;justify-content:center;padding-top:60px;backdrop-filter:blur(4px)}
+.gs-overlay.open{display:flex}
+.gs-box{background:var(--s1);border:1px solid var(--border);border-radius:18px;width:680px;max-width:95vw;max-height:75vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.5)}
+.gs-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.gs-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:16px;font-family:'Plus Jakarta Sans',sans-serif}
+.gs-input::placeholder{color:var(--muted2)}
+.gs-close{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:20px;padding:2px 6px}
+.gs-results{overflow-y:auto;padding:8px 0}
+.gs-result-item{padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);transition:background .15s}
+.gs-result-item:hover{background:var(--s2)}
+.gs-result-item:last-child{border-bottom:none}
+.gs-result-icon{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+.gs-result-main{flex:1;min-width:0}
+.gs-result-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-result-sub{font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.gs-result-camp{font-size:10px;background:var(--accent-bg);color:var(--accent2);padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.gs-empty{padding:40px 20px;text-align:center;color:var(--muted2);font-size:13px}
+
+/* ── CSV IMPORT ── */
+.csv-drop-zone{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+.csv-drop-zone:hover,.csv-drop-zone.drag-over{border-color:var(--accent);background:var(--accent-bg)}
+.csv-preview-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:12px}
+.csv-preview-table th{background:var(--s2);padding:6px 10px;text-align:left;color:var(--muted2);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700}
+.csv-preview-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── ACTIVITY HISTORY ── */
+.activity-timeline{padding:8px 0}
+.activity-item{display:flex;gap:10px;padding:6px 0;position:relative}
+.activity-item+.activity-item::before{content:'';position:absolute;left:11px;top:-6px;width:1px;height:12px;background:var(--border)}
+.activity-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid var(--border);background:var(--s1)}
+.activity-body{flex:1;min-width:0}
+.activity-desc{font-size:12px;color:var(--text);line-height:1.4}
+.activity-time{font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.btn-history{background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--muted2);cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .2s}
+.btn-history:hover{border-color:var(--accent);color:var(--accent)}
+.history-panel{display:none;margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:8px;border:1px solid var(--border);max-height:200px;overflow-y:auto}
+.history-panel.open{display:block}
+
+/* ── FUNNEL CHART VISUAL ── */
+.funnel-visual{display:flex;flex-direction:column;align-items:center;gap:2px;margin-bottom:14px}
+.funnel-stage{border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;transition:width .6s cubic-bezier(.4,0,.2,1);cursor:pointer;position:relative;height:34px;font-family:'IBM Plex Mono',monospace}
+.funnel-stage-label{position:absolute;left:calc(100% + 8px);font-size:10px;color:var(--muted2);white-space:nowrap;font-family:'IBM Plex Mono',monospace}
+.funnel-wrap{width:100%;overflow:visible;padding-left:8px}
+
+/* ── ONBOARDING TOUR ── */
+.tour-overlay{position:fixed;inset:0;z-index:99000;pointer-events:none}
+.tour-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.tour-bubble{position:fixed;background:var(--s1);border:1px solid var(--accent);border-radius:14px;padding:18px 20px;max-width:320px;box-shadow:0 12px 48px rgba(0,0,0,.5);z-index:99001;pointer-events:all}
+.tour-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tour-desc{font-size:12px;color:var(--muted2);line-height:1.6;margin-bottom:14px}
+.tour-nav{display:flex;align-items:center;justify-content:space-between}
+.tour-step{font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace}
+.tour-dots{display:flex;gap:4px}
+.tour-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
+.tour-dot.active{background:var(--accent)}
+.tour-btn-next{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.tour-btn-skip{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:11px;font-family:'Plus Jakarta Sans',sans-serif}
 
 </style>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222840'/><circle cx='50' cy='50' r='32' fill='none' stroke='%234e7fff' stroke-width='3' opacity='0.6'/><circle cx='50' cy='50' r='22' fill='none' stroke='%234e7fff' stroke-width='2' opacity='0.7'/><circle cx='50' cy='50' r='12' fill='none' stroke='%234e7fff' stroke-width='2' opacity='0.8'/><circle cx='50' cy='50' r='4' fill='%234e7fff'/><line x1='50' y1='50' x2='74' y2='50' stroke='%234e7fff' stroke-width='2' opacity='0.7' stroke-dasharray='3 2'/><circle cx='68' cy='34' r='5' fill='%23ff4d4d' opacity='0.9'/><circle cx='32' cy='62' r='4' fill='%23f5b833' opacity='0.9'/><text x='50' y='92' font-family='monospace' font-size='14' font-weight='700' fill='%234e7fff' text-anchor='middle' opacity='0.9'>C</text></svg>">
@@ -962,6 +1049,11 @@ function toast(msg, type='info', duration=3500){
     <div style="width:1px;height:22px;background:var(--border);flex-shrink:0;margin:0 6px"></div>
     <!-- Prospecções inline -->
     <div class="nav-tabs" id="navTabs" style="flex:1;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-ms-overflow-style:none"></div>
+    <!-- Global Search Button -->
+    <button class="gs-btn" onclick="openGlobalSearch()" title="Busca global (Ctrl+K)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Buscar... <span style="font-size:9px;opacity:.5;margin-left:4px">Ctrl+K</span>
+    </button>
     <!-- Swatches de tema no topnav — sempre visíveis -->
     <div class="topnav-swatches" title="Tema de cores">
       <div class="tn-swatch" id="swBlue"  style="background:#0f1117;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)" onclick="applyTheme('blue')"  title="🌑 Noturno"></div>
@@ -984,6 +1076,7 @@ function toast(msg, type='info', duration=3500){
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <div style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace" id="dashGreeting">Carregando...</div>
+        <button onclick="localStorage.removeItem('capturo-tour-done');startOnboardingTour()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;padding:0 4px" title="Reiniciar tour de onboarding">🧭 Tour</button>
         <button class="btn btn-primary" onclick="openCampaignModal()" style="font-size:11px;padding:6px 14px">+ Nova Campanha</button>
       </div>
     </div>
@@ -1088,8 +1181,7 @@ function toast(msg, type='info', duration=3500){
           <button class="btn btn-primary" id="btnS1" onclick="startMapsSearch()" style="height:37px;margin-left:auto">🗺 Buscar via Maps</button>
         </div>
         <div style="margin-top:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
-          <div style="font-size:9px;color:var(--muted2);font-family:monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">🔗 Detectar Bio Links durante busca</div>
-          <div class="biolink-grid" id="biolinkChipsMaps"></div>
+          <div id="biolinkChipsMaps"></div>
         </div>
       </div>
 
@@ -1099,10 +1191,7 @@ function toast(msg, type='info', duration=3500){
           🌋 <strong>Engine Bio Links</strong> — encontra negócios que só têm link da bio (Instagram, Linktree, etc).<br>
           Configure sua chave em <strong>⚙️ Configurações → Integrações</strong>.
         </div>
-        <div style="margin-bottom:14px">
-          <div class="field" style="margin-bottom:8px"><label>Bio Link Sites — clique para ativar/desativar</label></div>
-          <div class="biolink-grid" id="biolinkChips"></div>
-        </div>
+        <div style="margin-bottom:14px" id="biolinkChips"></div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span style="font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">250 buscas/mês grátis · 10 resultados/consulta</span>
           <button class="btn" id="btnS2" onclick="startBioSearch()" style="height:37px;margin-left:auto;background:var(--volcano);color:#fff;font-weight:700">🌋 Buscar Bio Links</button>
@@ -1157,6 +1246,7 @@ function toast(msg, type='info', duration=3500){
       <button class="btn btn-ghost" onclick="loadFromSheets()" style="font-size:11px;color:#34a853;border-color:#1a3d28;background:#031a0e">📥 Restaurar Sheets</button>
       <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:11px">⬇ CSV</button>
       <button class="btn btn-ghost" onclick="exportOpps()" style="font-size:11px">🎯 Oportunidades</button>
+      <button class="btn btn-ghost" onclick="openCsvImportModal()" style="font-size:11px;color:var(--accent2);border-color:var(--accent);background:var(--accent-bg)" title="Importar leads de arquivo CSV">📥 Importar CSV</button>
     </div>
 
     <div class="kanban">
@@ -1201,7 +1291,14 @@ function toast(msg, type='info', duration=3500){
 
   <!-- BUSCA MANUAL -->
   <div class="page" id="pageManual">
-    <div style="font-size:10px;font-family:monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">// Prospecção Manual</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:10px;font-family:monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em">// Prospecção Manual</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="openCsvImportModal()" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent);font-size:11px;font-weight:700;cursor:pointer;font-family:'IBM Plex Mono',monospace">
+          📥 Importar CSV em Massa
+        </button>
+      </div>
+    </div>
     <!-- Banner de campanha ativa — Fix Bug #1 e #2 -->
     <div id="manualCampaignBanner" style="display:none;padding:10px 16px;border-radius:10px;border:1px solid;font-size:12px;font-family:monospace;margin-bottom:14px;align-items:center;gap:10px"></div>
     <div class="manual-area">
@@ -1275,8 +1372,14 @@ function toast(msg, type='info', duration=3500){
         <label>Observações</label>
         <textarea id="mNotes" placeholder="O que você observou sobre esse negócio? Tem site? Só WhatsApp? Perfil no Instagram abandonado? A IA vai usar isso para enriquecer o lead." style="min-height:70px;width:100%;resize:vertical"></textarea>
       </div>
-      <div style="font-size:10px;color:var(--muted2);font-family:monospace;margin-top:8px">
-        🤖 Se a <strong style="color:var(--purple)">Claude API Key</strong> estiver configurada (aba Campanha), a IA vai enriquecer automaticamente com análise, pitch personalizado e temperatura sugerida.
+      <!-- AI enrichment info -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);margin-top:10px">
+        <span style="font-size:22px;flex-shrink:0">🤖</span>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--purple);font-family:'IBM Plex Mono',monospace;margin-bottom:3px">IA OPCIONAL — Enriquecimento Automático</div>
+          <div style="font-size:11px;color:var(--muted2);line-height:1.5">Se a <strong style="color:var(--text)">Claude API Key</strong> estiver configurada em <em>Configurações → Integrações</em>, a IA enriquece cada lead adicionado com: análise do site, pitch personalizado, problemas detectados e temperatura sugerida.</div>
+        </div>
+        <button onclick="openSettings();setSettingsTab('integrações')" style="flex-shrink:0;padding:6px 12px;border-radius:8px;background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.3);font-size:10px;font-weight:700;cursor:pointer;font-family:'IBM Plex Mono',monospace;white-space:nowrap">⚙ Config IA</button>
       </div>
     </div>
     <div id="manualLeadsList"></div>
@@ -2750,31 +2853,46 @@ Object.keys(STATES_US_TIERS).forEach(state => {
 });
 
 const BIOLINKS=[
-  {domain:'linktr.ee',    label:'Linktree',  icon:'🌳', on:true},
-  {domain:'beacons.ai',   label:'Beacons',   icon:'📡', on:true},
-  {domain:'taplink.cc',   label:'Taplink',   icon:'🔗', on:true},
-  {domain:'lnk.bio',      label:'Lnk.Bio',   icon:'🔵', on:true},
-  {domain:'bio.link',     label:'Bio.link',  icon:'🔗', on:true},
-  {domain:'campsite.bio', label:'Campsite',  icon:'⛺', on:true},
-  {domain:'milkshake.app',label:'Milkshake', icon:'🥛', on:true},
-  {domain:'komi.io',      label:'Komi',      icon:'🟣', on:true},
-  {domain:'biosit.es',    label:'Bio Sites', icon:'🌐', on:true},
-  {domain:'stan.store',   label:'Stan',      icon:'⚡', on:true},
-  {domain:'my.canva.site',label:'Canva',     icon:'🎨', on:true},
-  {domain:'linkpop.com',  label:'Linkpop',   icon:'🛍', on:true},
-  {domain:'hopp.to',      label:'Hopp/Wix',  icon:'🟦', on:true},
-  {domain:'bento.me',     label:'Bento',     icon:'🍱', on:true},
-  {domain:'linkin.bio',   label:'Later',     icon:'📅', on:true},
-  {domain:'solo.to',      label:'Solo.to',   icon:'🟠', on:true},
-  {domain:'snipfeed.co',  label:'Snipfeed',  icon:'✂️', on:true},
-  {domain:'card.co',      label:'Card.co',   icon:'💳', on:true},
-  {domain:'contactinbio.com',label:'CIB',    icon:'📇', on:true},
-  {domain:'msha.ke',      label:'Milkshake2',icon:'🥤', on:true},
-  {domain:'withkoji.com', label:'Koji',      icon:'🎮', on:false},
-  {domain:'about.me',     label:'About.me',  icon:'👤', on:false},
-  {domain:'carrd.co',     label:'Carrd',     icon:'📄', on:true},
-  {domain:'wix.com',      label:'Wix Free',  icon:'🆓', on:false},
-  {domain:'notion.so',    label:'Notion',    icon:'📝', on:false},
+  // ── PRINCIPAIS (alto volume) ──
+  {domain:'linktr.ee',       label:'Linktree',    icon:'🌳', on:true,  cat:'principal'},
+  {domain:'msha.ke',         label:'Milkshake',   icon:'🥤', on:true,  cat:'principal'},  // milkshake.app — URL curta msha.ke
+  {domain:'beacons.ai',      label:'Beacons',     icon:'📡', on:true,  cat:'principal'},
+  {domain:'taplink.cc',      label:'Taplink',     icon:'🔗', on:true,  cat:'principal'},
+  {domain:'lnk.bio',         label:'Lnk.Bio',     icon:'🔵', on:true,  cat:'principal'},
+  {domain:'bio.link',        label:'Bio.link',    icon:'🔗', on:true,  cat:'principal'},
+  {domain:'campsite.bio',    label:'Campsite',    icon:'⛺', on:true,  cat:'principal'},
+  {domain:'milkshake.app',   label:'Milkshake.app',icon:'🥛',on:true,  cat:'principal'},
+  {domain:'komi.io',         label:'Komi',        icon:'🟣', on:true,  cat:'principal'},
+  {domain:'biosit.es',       label:'Bio Sites',   icon:'🌐', on:true,  cat:'principal'},
+  {domain:'stan.store',      label:'Stan',        icon:'⚡', on:true,  cat:'principal'},
+  {domain:'my.canva.site',   label:'Canva Bio',   icon:'🎨', on:true,  cat:'principal'},
+  {domain:'linkpop.com',     label:'Linkpop',     icon:'🛍', on:true,  cat:'principal'},
+  {domain:'hopp.to',         label:'Hopp/Wix',    icon:'🟦', on:true,  cat:'principal'},
+  {domain:'bento.me',        label:'Bento',       icon:'🍱', on:true,  cat:'principal'},
+  {domain:'linkin.bio',      label:'Later Bio',   icon:'📅', on:true,  cat:'principal'},
+  {domain:'solo.to',         label:'Solo.to',     icon:'🟠', on:true,  cat:'principal'},
+  {domain:'snipfeed.co',     label:'Snipfeed',    icon:'✂️', on:true,  cat:'principal'},
+  {domain:'card.co',         label:'Card.co',     icon:'💳', on:true,  cat:'principal'},
+  {domain:'contactinbio.com',label:'Contact Bio', icon:'📇', on:true,  cat:'principal'},
+  {domain:'carrd.co',        label:'Carrd',       icon:'📄', on:true,  cat:'principal'},
+  {domain:'hoo.be',          label:'Hoo.be',      icon:'🐝', on:true,  cat:'principal'},
+  {domain:'tap.bio',         label:'Tap.bio',     icon:'👆', on:true,  cat:'principal'},
+  {domain:'instabio.cc',     label:'InstaBio',    icon:'📸', on:true,  cat:'principal'},
+  {domain:'direct.me',       label:'Direct.me',   icon:'➡', on:true,  cat:'principal'},
+  {domain:'shorby.com',      label:'Shorby',      icon:'🟡', on:true,  cat:'principal'},
+  // ── EXTRAS (menor volume) ──
+  {domain:'withkoji.com',    label:'Koji',        icon:'🎮', on:false, cat:'extra'},
+  {domain:'about.me',        label:'About.me',    icon:'👤', on:false, cat:'extra'},
+  {domain:'wix.com',         label:'Wix Free',    icon:'🆓', on:false, cat:'extra'},
+  {domain:'notion.so',       label:'Notion',      icon:'📝', on:false, cat:'extra'},
+  {domain:'flowpage.com',    label:'Flowpage',    icon:'💧', on:false, cat:'extra'},
+  {domain:'bio.fm',          label:'Bio.fm',      icon:'🎵', on:false, cat:'extra'},
+  {domain:'feedlink.io',     label:'Feedlink',    icon:'📰', on:false, cat:'extra'},
+  {domain:'lynx.id',         label:'Lynx',        icon:'🐱', on:false, cat:'extra'},
+  {domain:'koji.to',         label:'Koji.to',     icon:'🎯', on:false, cat:'extra'},
+  {domain:'pallyy.com',      label:'Pallyy',      icon:'🎪', on:false, cat:'extra'},
+  {domain:'lnkbio.com',      label:'LnkBio',      icon:'🔗', on:false, cat:'extra'},
+  {domain:'hero.page',       label:'Hero.page',   icon:'🦸', on:false, cat:'extra'},
 ];
 
 // ══════════════════════════════════════════
@@ -2827,17 +2945,84 @@ $('hKey').addEventListener('change',()=>localStorage.setItem('hk',$('hKey').valu
 $('cKey').addEventListener('change',()=>localStorage.setItem('ck',$('cKey').value));
 
 // ══════════════════════════════════════════
-// BIOLINKS
+// BIOLINKS — Painel Colapsável
 // ══════════════════════════════════════════
 function initBiolinkChips(){
-  const html = BIOLINKS.map((b,i)=>`<div class="biolink-chip ${b.on?'on':''}" onclick="toggleBiolink(${i})">${b.icon||''} ${b.label}<br><span style="font-size:8px;opacity:.6">${b.domain}</span></div>`).join('');
-  const g1=$('biolinkChips');     if(g1) g1.innerHTML=html;
-  const g2=$('biolinkChipsMaps'); if(g2) g2.innerHTML=html;
+  ['biolinkChips','biolinkChipsMaps'].forEach(id=>{
+    const el=$(id);
+    if(!el) return;
+    el.innerHTML='';
+    el.parentElement && renderBioPanel(el.parentElement, id);
+  });
 }
-function toggleBiolink(i){
+
+function renderBioPanel(container, panelId){
+  const activeCount = BIOLINKS.filter(b=>b.on).length;
+  const btnId = 'blBtn_'+panelId;
+  const pId = 'blPanel_'+panelId;
+  // Remove existing if re-render
+  ['blWrapper_'+panelId].forEach(wid=>{ const w=document.getElementById(wid); if(w) w.remove(); });
+  const wrap = document.createElement('div');
+  wrap.id = 'blWrapper_'+panelId;
+  wrap.innerHTML = `
+    <button class="bl-toggle-btn" id="${btnId}" onclick="toggleBioPanel('${pId}','${btnId}','${panelId}')">
+      🔗 Bio Links
+      <span id="blCount_${panelId}" style="background:var(--volcano);color:#fff;border-radius:10px;padding:1px 7px;font-size:9px">${activeCount} ativo${activeCount!==1?'s':''}</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" id="blArrow_${panelId}"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="bl-panel" id="${pId}">
+      <div class="bl-panel-header">
+        <div class="bl-panel-title">Clique para ativar/desativar · ${BIOLINKS.length} plataformas cadastradas</div>
+        <div class="bl-panel-actions">
+          <button class="bl-panel-action" onclick="setAllBiolinks(true,'${panelId}')">✅ Todos</button>
+          <button class="bl-panel-action" onclick="setAllBiolinks(false,'${panelId}')">❌ Nenhum</button>
+          <button class="bl-panel-action" onclick="setBiolinkCategory('principal','${panelId}')" style="color:var(--volcano);border-color:var(--volcano-b)">🌋 Principais</button>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--muted2);font-family:monospace;margin-bottom:8px;opacity:.7">PRINCIPAIS — maior volume de usuários no Brasil</div>
+      <div class="bl-chips" id="blChipsPrincipal_${panelId}">
+        ${BIOLINKS.filter(b=>b.cat==='principal').map((b,i)=>{const gi=BIOLINKS.indexOf(b);return `<div class="bl-chip ${b.on?'active':''}" onclick="toggleBiolink(${gi},'${panelId}')" title="${b.domain}">${b.icon} ${b.label}</div>`;}).join('')}
+      </div>
+      <div style="font-size:9px;color:var(--muted2);font-family:monospace;margin-top:10px;margin-bottom:8px;opacity:.7">EXTRAS — menor volume, uso de nicho</div>
+      <div class="bl-chips" id="blChipsExtra_${panelId}">
+        ${BIOLINKS.filter(b=>b.cat==='extra').map((b,i)=>{const gi=BIOLINKS.indexOf(b);return `<div class="bl-chip ${b.on?'active':''}" onclick="toggleBiolink(${gi},'${panelId}')" title="${b.domain}">${b.icon} ${b.label}</div>`;}).join('')}
+      </div>
+    </div>`;
+  container.appendChild(wrap);
+}
+
+function toggleBioPanel(pId, btnId, panelId){
+  const panel=document.getElementById(pId);
+  const arrow=document.getElementById('blArrow_'+panelId);
+  if(!panel) return;
+  panel.classList.toggle('open');
+  if(arrow) arrow.style.transform=panel.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
+}
+
+function toggleBiolink(i, panelId){
   BIOLINKS[i].on=!BIOLINKS[i].on;
+  // Update all panels
+  document.querySelectorAll('.bl-chip').forEach(chip=>chip.classList.remove('_'));
   initBiolinkChips();
+  // Keep panels open
+  if(panelId){
+    const p=document.getElementById('blPanel_'+panelId);
+    if(p && !p.classList.contains('open')) p.classList.add('open');
+  }
 }
+
+function setAllBiolinks(val, panelId){
+  BIOLINKS.forEach(b=>b.on=val);
+  initBiolinkChips();
+  if(panelId){ const p=document.getElementById('blPanel_'+panelId); if(p) p.classList.add('open'); }
+}
+
+function setBiolinkCategory(cat, panelId){
+  BIOLINKS.forEach(b=>b.on=(b.cat===cat));
+  initBiolinkChips();
+  if(panelId){ const p=document.getElementById('blPanel_'+panelId); if(p) p.classList.add('open'); }
+}
+
 function getActiveBiolinks(){return BIOLINKS.filter(b=>b.on);}
 
 // ══════════════════════════════════════════
@@ -3932,10 +4117,21 @@ function cardHTML(l){
     ${aiBox}
     <div class="card-actions-v2">
       <!-- PRIMARY ACTION -->
-      <button class="ca-primary" onclick="openMsgModal('${l.id}')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.547 4.09 1.504 5.814L.057 23.1a.75.75 0 0 0 .916.925l5.373-1.431A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.872 0-3.638-.493-5.165-1.355l-.36-.21-3.19.85.858-3.105-.228-.372A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        Contatar via WhatsApp / Email
-      </button>
+      <div style="position:relative">
+        <div style="display:flex;gap:6px">
+          <button class="ca-primary" style="flex:1" onclick="openMsgModal('${l.id}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.547 4.09 1.504 5.814L.057 23.1a.75.75 0 0 0 .916.925l5.373-1.431A11.944 11.944 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.872 0-3.638-.493-5.165-1.355l-.36-.21-3.19.85.858-3.105-.228-.372A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Contatar via WhatsApp / Email
+          </button>
+          <button onclick="event.stopPropagation();toggleQwaPicker('qwa-${l.id}')" title="Mensagens rápidas pré-selecionadas" style="padding:0 10px;border-radius:8px;background:rgba(37,211,102,.12);color:#25D366;border:1px solid rgba(37,211,102,.3);cursor:pointer;font-size:14px;flex-shrink:0" id="qwaBtn-${l.id}">
+            💬▾
+          </button>
+        </div>
+        <div class="qwa-panel" id="qwa-${l.id}" onclick="event.stopPropagation()">
+          <div class="qwa-title">⚡ Mensagem rápida — clique para enviar no WhatsApp</div>
+          ${buildQuickMessages(l)}
+        </div>
+      </div>
       <!-- SECONDARY ACTIONS -->
       <div class="ca-secondary">
         <button class="ca-sec" onclick="openCRMDropdown('${l.id}',event)" title="Status CRM" style="${l.status==='closed'?'color:var(--green);border-color:var(--green);background:var(--green-bg)':l.status==='contacted'?'color:var(--accent2);border-color:var(--accent);background:#0a1520':l.status==='proposal'?'color:var(--warm);border-color:var(--warm-b);background:var(--warm-bg)':l.status==='negotiating'?'color:var(--purple);border-color:#2a1040;background:var(--purple-bg)':l.status==='lost'?'color:var(--hot);border-color:var(--hot-b);background:var(--hot-bg)':''}">
@@ -3989,6 +4185,10 @@ function cardHTML(l){
         <button class="ca-icon" onclick="addFollowupForLead('${l.id}')" title="Agendar follow-up" style="color:var(--orange)">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </button>
+        <button class="ca-icon ${(l.activities&&l.activities.length)?'ca-icon-dim':''}" onclick="openActivityModal('${l.id}','${activeCampaignId}')" title="Histórico de atividades ${(l.activities&&l.activities.length)?'('+l.activities.length+')':''}" style="${(l.activities&&l.activities.length)?'color:var(--accent2);border-color:var(--accent);background:var(--accent-bg)':''}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          ${(l.activities&&l.activities.length)?`<span style="font-size:8px;font-family:monospace;margin-left:2px">${l.activities.length}</span>`:''}
+        </button>
         <button class="ca-icon ${l.favorito?'ca-fav-on':''}" onclick="toggleFavorito('${l.id}')" title="${l.favorito?'Remover dos favoritos':'Salvar nos favoritos'}" style="${l.favorito?'color:var(--orange);background:rgba(255,149,0,.1);border-color:rgba(255,149,0,.3)':''}">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="${l.favorito?'var(--orange)':'none'}" stroke="${l.favorito?'var(--orange)':'currentColor'}" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </button>
@@ -4030,12 +4230,13 @@ function cardHTML(l){
 // ══════════════════════════════════════════
 // ACTIONS
 // ══════════════════════════════════════════
-function toggleContacted(id){const l=leads.find(x=>x.id===id);if(l){l.status=l.status==='contacted'?'new':'contacted';saveCampaigns();renderAll();setTimeout(()=>syncToSheets(),500);}}
-function toggleClosed(id){const l=leads.find(x=>x.id===id);if(l){l.status=l.status==='closed'?'new':'closed';saveCampaigns();renderAll();setTimeout(()=>syncToSheets(),500);}}
+function toggleContacted(id){const l=leads.find(x=>x.id===id);if(l){const prev=l.status;l.status=l.status==='contacted'?'new':'contacted';if(typeof addLeadActivity==='function')addLeadActivity(id,'status',l.status==='contacted'?'Marcado como Contatado':'Status voltou para Novo');saveCampaigns();renderAll();setTimeout(()=>syncToSheets(),500);}}
+function toggleClosed(id){const l=leads.find(x=>x.id===id);if(l){l.status=l.status==='closed'?'new':'closed';if(typeof addLeadActivity==='function')addLeadActivity(id,'status',l.status==='closed'?'✅ Marcado como Convertido/Fechado':'Status voltou para Novo');saveCampaigns();renderAll();setTimeout(()=>syncToSheets(),500);}}
 function setCRMStatus(id, status){
   const l=leads.find(x=>x.id===id);if(!l)return;
   l.status=status;
   l.statusUpdatedAt=new Date().toISOString();
+  if(typeof addLeadActivity==='function') addLeadActivity(id,'status','Status CRM → '+getCRMLabel(status));
   saveCampaigns();renderAll();
   toast(`Status: ${getCRMLabel(status)}`,'ok');
   setTimeout(()=>syncToSheets(),500);
@@ -4245,6 +4446,79 @@ async function findEmailManual(id){
 // ══════════════════════════════════════════
 // MSG MODAL
 // ══════════════════════════════════════════
+/* ── QUICK WA MESSAGE PICKER ─────────────────────────────── */
+function toggleQwaPicker(panelId){
+  const panel=document.getElementById(panelId);
+  if(!panel) return;
+  // Close all others
+  document.querySelectorAll('.qwa-panel.open').forEach(p=>{ if(p.id!==panelId) p.classList.remove('open'); });
+  panel.classList.toggle('open');
+  // Close on outside click
+  if(panel.classList.contains('open')){
+    setTimeout(()=>{
+      const closer = (e)=>{ if(!panel.contains(e.target)){ panel.classList.remove('open'); document.removeEventListener('click',closer); } };
+      document.addEventListener('click', closer);
+    }, 10);
+  }
+}
+
+function buildQuickMessages(l){
+  const camp = campaigns.find(c=>(c.leads||[]).some(x=>x.id===l.id));
+  const vendedor = (appSettings&&appSettings.vendedor)||'Consultor';
+  const nicho = (l.nicho||camp?.nicho||'negócio').toLowerCase();
+  const cidade = l.city||camp?.city||'sua cidade';
+  const firstName = l.name.split(' ')[0]||l.name;
+  const isBio = l.t==='volcano' || (l.bioUrl&&!l.website);
+  const bioPlat = l.bioSite||'Linktree';
+  const hasSite = l.website && !isBio;
+
+  // Pick templates based on lead type
+  const templates = [];
+
+  if(isBio){
+    templates.push({
+      label:'🌋 Só tem Bio Link',
+      msg:`Oi, ${firstName}! Me chamo *${vendedor}*, ajudo *${nicho}s* a atraírem mais clientes com site profissional.\n\nVi que você usa o ${bioPlat} como principal presença online… e isso pode estar fazendo você perder clientes que buscam algo mais profissional.\n\nCom um site bem estruturado, dá pra transformar muito mais dessas buscas em vendas 📈\n\nPosso começar uma amostra do seu site pra você ver, sem compromisso?`
+    });
+  }
+  if(l.t==='hot'){
+    templates.push({
+      label:'🔥 Sem site nenhum',
+      msg:`Oi, ${firstName}! Me chamo *${vendedor}*.\n\nVi que a *${l.name}* ainda não tem um site — e isso significa que você está perdendo clientes que buscam "${nicho} em ${cidade}" no Google todos os dias.\n\nEu crio sites profissionais que aparecem nas buscas e convertem visitantes em clientes.\n\nPosso te mostrar como ficaria um site da *${l.name}*?`
+    });
+  }
+  if(l.t==='warm'||l.t==='cold'){
+    templates.push({
+      label:'🌡 Tem site, mas fraco',
+      msg:`Oi, ${firstName}! Me chamo *${vendedor}*.\n\nVi o site da *${l.name}* e notei que ele pode estar afastando clientes em vez de atrair — carregamento lento, design desatualizado ou sem botão direto pro WhatsApp fazem muita diferença.\n\nFiz uma análise rápida e posso te mostrar o potencial de melhoria, sem compromisso.\n\nTem um minutinho?`
+    });
+  }
+  // Generic always
+  templates.push({
+    label:'📋 Mensagem genérica',
+    msg:`Oi, ${firstName}! Me chamo *${vendedor}*, ajudo *${nicho}s* em ${cidade} a conseguirem mais clientes pelo digital.\n\nPesquisei na região e encontrei a *${l.name}* — acredito que dá pra aumentar muito a visibilidade de vocês.\n\nPodemos conversar 5 minutos?`
+  });
+
+  const phone = (l.formatted_phone_number||l.whatsapp||l.manualWa||'').replace(/\D/g,'');
+
+  return templates.map((t,i)=>`
+    <div class="qwa-msg" onclick="sendQuickWa('${encodeURIComponent(t.msg)}','${phone}')">
+      <div class="qwa-msg-label">${t.label}</div>
+      <div class="qwa-msg-preview">${t.msg.replace(/\*/g,'').substring(0,120)}...</div>
+      <button class="qwa-send-btn" onclick="event.stopPropagation();sendQuickWa('${encodeURIComponent(t.msg)}','${phone}')">💬 Enviar →</button>
+    </div>`).join('');
+}
+
+function sendQuickWa(msgEncoded, phone){
+  const msg = decodeURIComponent(msgEncoded);
+  const p = (phone||'').replace(/\D/g,'');
+  if(!p){ toast('Adicione o WhatsApp do lead primeiro.','warn',3000); return; }
+  const waUrl = `https://wa.me/${p}?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl,'_blank');
+  // Close panel
+  document.querySelectorAll('.qwa-panel.open').forEach(p=>p.classList.remove('open'));
+}
+
 function openMsgModal(id){
   currentMsgLead=findLeadAnywhere(id);
   if(!currentMsgLead)return;
@@ -4848,7 +5122,7 @@ function updateFavBadge(){
 
 function renderFavoritos(){
   const allFavs=campaigns.flatMap(c=>{
-    return (c.leads||[]).filter(l=>l.favorito).map(l=>({...l,_campName:c.name,_campNicho:c.nicho,_campCity:c.city}));
+    return (c.leads||[]).filter(l=>l.favorito).map(l=>({...l,_campName:c.name,_campId:c.id,_campNicho:c.nicho,_campCity:c.city}));
   });
 
   const content=$('favContent');
@@ -4987,7 +5261,7 @@ function favCardHTML(l){
       <span style="background:${tempBg};color:${tempColor};font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px">${tempLabel}</span>
       <span style="background:var(--s2);color:var(--muted2);font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px">${statusLabel}</span>
       ${l.bioUrl?`<span style="background:var(--volcano-bg);color:var(--volcano);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px">🔗 Bio Link</span>`:''}
-      ${l._campName?`<span style="background:var(--accent-bg);color:var(--accent);font-size:10px;padding:3px 9px;border-radius:20px">${l._campName}</span>`:''}
+      ${l._campName?`<span onclick="goToLead('${l.id}','${l._campId}')" title="Ir para esta campanha" style="background:var(--accent-bg);color:var(--accent);font-size:10px;padding:3px 9px;border-radius:20px;cursor:pointer;transition:all .15s" onmouseover="this.style.background='rgba(0,122,255,.2)'" onmouseout="this.style.background='var(--accent-bg)'">📁 ${l._campName} →</span>`:''}
     </div>
     <!-- AI pitch if available -->
     ${l.sitePitch?`<div style="background:rgba(175,82,222,.06);border:1px solid rgba(175,82,222,.12);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:11px;color:var(--muted2);font-style:italic;line-height:1.5">"${l.sitePitch}"</div>`:''}
@@ -5002,6 +5276,7 @@ function favCardHTML(l){
       ${l.email?`<a href="mailto:${l.email}" style="font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--muted2);text-decoration:none;display:inline-flex;align-items:center;transition:all .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">✉ Email</a>`:''}
       ${l.website?`<a href="${l.website}" target="_blank" style="font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--muted2);text-decoration:none;display:inline-flex;align-items:center;transition:all .15s" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">🌐 Site</a>`:''}
       <button onclick="toggleFavNotes('${l.id}')" style="font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--muted2);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--orange)';this.style.color='var(--orange)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted2)'">📝 Notas${l.notes?` <span style='color:var(--orange)'>●</span>`:''}</button>
+      <button onclick="goToLead('${l.id}','${l._campId}')" title="Abrir lead na campanha original" style="font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid rgba(0,122,255,.3);background:var(--accent-bg);color:var(--accent);cursor:pointer;font-weight:600;transition:all .15s" onmouseover="this.style.background='rgba(0,122,255,.2)'" onmouseout="this.style.background='var(--accent-bg)'">🔗 Ver Lead</button>
     </div>
     <!-- Notas expandíveis (sincronia com card original) -->
     <div id="favNotes_${l.id}" style="display:none;margin-top:8px">
@@ -5014,6 +5289,31 @@ function favCardHTML(l){
 // ══════════════════════════════════════════
 // FAV NOTES FUNCTIONS
 // ══════════════════════════════════════════
+// Navega para o lead original na campanha dele
+function goToLead(leadId, campId){
+  if(!campId){ toast('Campanha não encontrada','warn'); return; }
+  // Ativa a campanha correta
+  const camp = campaigns.find(c=>c.id===campId);
+  if(!camp){ toast('Campanha não encontrada','warn'); return; }
+  activeCampaignId = campId;
+  leads = [...(camp.leads||[])];
+  // Renderiza as abas e vai para Leads
+  if(typeof renderNavTabs==='function') renderNavTabs();
+  showPage('pageLeads');
+  setSbActive('sb-leads');
+  // Destaca o card do lead após renderização
+  setTimeout(()=>{
+    const el = document.getElementById('lead_'+leadId) || document.querySelector(`[data-lead-id="${leadId}"]`);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.style.outline = '2px solid var(--accent)';
+      el.style.boxShadow = '0 0 0 4px rgba(0,122,255,.15)';
+      setTimeout(()=>{ el.style.outline=''; el.style.boxShadow=''; }, 2500);
+    }
+  }, 400);
+  toast(`📍 Lead encontrado em "${camp.name}"`, 'info', 3000);
+}
+
 function toggleFavNotes(id){
   const el=document.getElementById('favNotes_'+id);
   if(!el)return;
@@ -5074,6 +5374,7 @@ let isSearching = false;
 function showCancelBtn(show){
   const cb=$('cancelBtn');
   if(cb) cb.style.display = show ? 'inline-block' : 'none';
+  isSearching = show; // true ao iniciar, false ao parar
 }
 function cancelSearch(){
   searchAborted=true;
@@ -8047,6 +8348,7 @@ async function initAuth(){
     currentUser = session.user;
     hideLoginScreen();
     await loadFromSupabase();
+    if(typeof window._postAuthInit==='function') window._postAuthInit();
   } else {
     showLoginScreen();
   }
@@ -8056,6 +8358,7 @@ async function initAuth(){
       currentUser = session.user;
       hideLoginScreen();
       await loadFromSupabase();
+      if(typeof window._postAuthInit==='function') window._postAuthInit();
     } else if(event === 'SIGNED_OUT'){
       currentUser = null;
       campaigns = [];
@@ -8262,6 +8565,621 @@ async function loadFromSupabase(){
 initAuth();
 </script>
 <!-- ══ /SUPABASE AUTH + SYNC ═══════════════════════════════════ -->
+
+<!-- ══ GLOBAL SEARCH MODAL ════════════════════════════════════ -->
+<div class="gs-overlay" id="gsOverlay" onclick="closeGlobalSearch(event)">
+  <div class="gs-box" onclick="event.stopPropagation()">
+    <div class="gs-header">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="gs-input" id="gsInput" placeholder="Buscar leads, campanhas, nichos, telefone, e-mail..." oninput="performGlobalSearch(this.value)" autocomplete="off" spellcheck="false">
+      <button class="gs-close" onclick="closeGlobalSearch()">✕</button>
+    </div>
+    <div class="gs-results" id="gsResults">
+      <div class="gs-empty">
+        <div style="font-size:28px;margin-bottom:8px">🔍</div>
+        <div>Digite para buscar em todas as campanhas</div>
+        <div style="font-size:10px;margin-top:6px;font-family:'IBM Plex Mono',monospace;color:var(--border)">nome · cidade · nicho · telefone · e-mail</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CSV IMPORT MODAL ════════════════════════════════════════ -->
+<div class="modal-overlay" id="csvModal" style="display:none" onclick="if(event.target===this)closeCsvModal()">
+  <div class="modal" style="max-width:640px;width:95vw;max-height:85vh;overflow-y:auto">
+    <div class="modal-header">
+      <div class="modal-title">📥 Importar Leads via CSV</div>
+      <button class="modal-close" onclick="closeCsvModal()">✕</button>
+    </div>
+    <div style="padding:20px">
+      <!-- Campaign selector -->
+      <div style="margin-bottom:16px">
+        <label style="font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--muted2);display:block;margin-bottom:6px">CAMPANHA DESTINO</label>
+        <select id="csvCampSelect" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:13px">
+          <option value="">Selecione uma campanha...</option>
+        </select>
+      </div>
+      <!-- Drop zone -->
+      <div class="csv-drop-zone" id="csvDropZone" onclick="document.getElementById('csvFileInput').click()" ondragover="csvDragOver(event)" ondrop="csvDrop(event)" ondragleave="csvDragLeave(event)">
+        <div style="font-size:32px;margin-bottom:8px">📂</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">Arraste um arquivo CSV aqui</div>
+        <div style="font-size:11px;color:var(--muted2)">ou clique para selecionar</div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">Colunas aceitas: nome, telefone, email, cidade, nicho, site, endereço</div>
+      </div>
+      <input type="file" id="csvFileInput" accept=".csv,.txt" style="display:none" onchange="csvFileSelected(event)">
+      <!-- Template download -->
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+        <button onclick="downloadCsvTemplate()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;color:var(--muted2);cursor:pointer;font-family:'IBM Plex Mono',monospace">⬇ Baixar modelo CSV</button>
+        <span style="font-size:10px;color:var(--muted2)">Arquivo de exemplo com colunas corretas</span>
+      </div>
+      <!-- Preview -->
+      <div id="csvPreviewArea" style="display:none;margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:11px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--muted2)">PRÉ-VISUALIZAÇÃO</div>
+          <div id="csvPreviewCount" style="font-size:11px;color:var(--accent2);font-family:'IBM Plex Mono',monospace"></div>
+        </div>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;max-height:200px;overflow-y:auto">
+          <table class="csv-preview-table" id="csvPreviewTable"></table>
+        </div>
+        <button onclick="executeCsvImport()" style="margin-top:14px;width:100%;padding:12px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif">
+          ✅ Importar <span id="csvImportCount">0</span> Leads
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ACTIVITY HISTORY MODAL ════════════════════════════════ -->
+<div class="modal-overlay" id="activityModal" style="display:none" onclick="if(event.target===this)closeActivityModal()">
+  <div class="modal" style="max-width:520px;width:95vw;max-height:80vh;overflow-y:auto">
+    <div class="modal-header">
+      <div class="modal-title">📋 Histórico de Atividades</div>
+      <button class="modal-close" onclick="closeActivityModal()">✕</button>
+    </div>
+    <div style="padding:20px">
+      <div id="activityLeadName" style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px"></div>
+      <div id="activityLeadSub" style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;margin-bottom:16px"></div>
+      <!-- Add activity -->
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <select id="activityTypeSelect" style="padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:12px;flex-shrink:0">
+          <option value="note">📝 Nota</option>
+          <option value="call">📞 Ligação</option>
+          <option value="whatsapp">💬 WhatsApp</option>
+          <option value="email">✉ E-mail</option>
+          <option value="meeting">🤝 Reunião</option>
+          <option value="proposal">📄 Proposta</option>
+          <option value="followup">🔔 Follow-up</option>
+        </select>
+        <input type="text" id="activityNoteInput" placeholder="Descrição da atividade..." style="flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:12px" onkeydown="if(event.key==='Enter')addActivityEntry()">
+        <button onclick="addActivityEntry()" style="padding:8px 14px;border-radius:8px;background:var(--accent);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">+ Add</button>
+      </div>
+      <!-- Timeline -->
+      <div class="activity-timeline" id="activityTimeline">
+        <div style="text-align:center;color:var(--muted2);font-size:12px;padding:20px 0">Nenhuma atividade registrada ainda.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING TOUR ════════════════════════════════════════ -->
+<div class="tour-overlay" id="tourOverlay" style="display:none">
+  <div class="tour-spotlight" id="tourSpotlight"></div>
+</div>
+<div class="tour-bubble" id="tourBubble" style="display:none">
+  <div class="tour-title" id="tourTitle"></div>
+  <div class="tour-desc" id="tourDesc"></div>
+  <div class="tour-nav">
+    <button class="tour-btn-skip" onclick="endTour()">Pular tour</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="tour-dots" id="tourDots"></div>
+      <div class="tour-step" id="tourStepLabel"></div>
+      <button class="tour-btn-next" id="tourBtnNext" onclick="nextTourStep()">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   CAPTURO v5.0 — FEATURES EXTRAS
+   1. Busca Global
+   2. Importar CSV
+   3. Histórico de Atividades
+   4. Notificações Browser
+   5. Funil Visual Melhorado (já existe, melhorado no renderDashboard)
+   6. Onboarding Tour
+══════════════════════════════════════════════════════════════ */
+
+/* ─────────── 1. BUSCA GLOBAL ─────────────────────────────── */
+let gsCurrentLeadId = null;
+
+function openGlobalSearch(){
+  const ov = document.getElementById('gsOverlay');
+  if(ov){ ov.classList.add('open'); setTimeout(()=>{ const inp=document.getElementById('gsInput'); if(inp){inp.value='';inp.focus();} },50); }
+}
+
+function closeGlobalSearch(e){
+  if(e && e.target !== document.getElementById('gsOverlay')) return;
+  const ov = document.getElementById('gsOverlay');
+  if(ov) ov.classList.remove('open');
+}
+
+function performGlobalSearch(q){
+  const res = document.getElementById('gsResults');
+  if(!res) return;
+  q = (q||'').trim().toLowerCase();
+  if(q.length < 2){
+    res.innerHTML = '<div class="gs-empty"><div style="font-size:28px;margin-bottom:8px">🔍</div><div>Digite para buscar em todas as campanhas</div><div style="font-size:10px;margin-top:6px;font-family:\'IBM Plex Mono\',monospace;color:var(--border)">nome · cidade · nicho · telefone · e-mail</div></div>';
+    return;
+  }
+  const all = [];
+  (campaigns||[]).forEach(c=>{
+    (c.leads||[]).forEach(l=>{
+      const hay = [l.name,l.formatted_address,l.city,l.nicho||c.nicho,l.email,l.formatted_phone_number,l.whatsapp,l.manualWa,l.website].join(' ').toLowerCase();
+      if(hay.includes(q)) all.push({lead:l, camp:c});
+    });
+    // Also match campaign name
+    if(c.name.toLowerCase().includes(q)) all.push({lead:null, camp:c, isCamp:true});
+  });
+
+  // dedupe campaigns
+  const seen = new Set();
+  const filtered = all.filter(x=>{ if(x.isCamp){ if(seen.has('c_'+x.camp.id)) return false; seen.add('c_'+x.camp.id); } else { if(seen.has('l_'+x.lead.id)) return false; seen.add('l_'+x.lead.id); } return true; }).slice(0,30);
+
+  if(!filtered.length){ res.innerHTML='<div class="gs-empty"><div style="font-size:28px;margin-bottom:8px">😶</div><div>Nenhum resultado para <strong style="color:var(--text)">'+escHtml(q)+'</strong></div></div>'; return; }
+
+  res.innerHTML = filtered.map(x=>{
+    if(x.isCamp){
+      const n = x.camp.leads ? x.camp.leads.length : 0;
+      return `<div class="gs-result-item" onclick="gsGoToCampaign('${x.camp.id}')">
+        <div class="gs-result-icon">🗂</div>
+        <div class="gs-result-main">
+          <div class="gs-result-name">${escHtml(x.camp.name)}</div>
+          <div class="gs-result-sub">${n} lead${n!==1?'s':''} · ${escHtml(x.camp.nicho||'')} ${escHtml(x.camp.city||'')}</div>
+        </div>
+        <div class="gs-result-camp" style="background:var(--s2);color:var(--muted2)">Campanha</div>
+      </div>`;
+    }
+    const l=x.lead, c=x.camp;
+    const temp={volcano:'🌋',hot:'🔥',warm:'🌡',cold:'❄',frozen:'🧊'}[l.t]||'📍';
+    const sub=[l.formatted_address||l.city, l.formatted_phone_number||l.whatsapp||l.manualWa, l.email].filter(Boolean).join(' · ');
+    return `<div class="gs-result-item" onclick="gsGoToLead('${l.id}','${c.id}')">
+      <div class="gs-result-icon">${temp}</div>
+      <div class="gs-result-main">
+        <div class="gs-result-name">${escHtml(l.name)}</div>
+        <div class="gs-result-sub">${escHtml(sub)}</div>
+      </div>
+      <div class="gs-result-camp">${escHtml(c.name)}</div>
+    </div>`;
+  }).join('');
+}
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function gsGoToLead(leadId, campId){
+  closeGlobalSearch({});
+  document.getElementById('gsOverlay').classList.remove('open');
+  goToLead(leadId, campId);
+}
+
+function gsGoToCampaign(campId){
+  document.getElementById('gsOverlay').classList.remove('open');
+  const camp = campaigns.find(c=>c.id===campId);
+  if(!camp) return;
+  activeCampaignId = campId;
+  leads = [...(camp.leads||[])];
+  if(typeof renderNavTabs==='function') renderNavTabs();
+  showPage('pageLeads');
+  setSbActive('sb-leads');
+}
+
+// Ctrl+K shortcut
+document.addEventListener('keydown', e=>{
+  if((e.ctrlKey||e.metaKey) && e.key==='k'){ e.preventDefault(); openGlobalSearch(); }
+  if(e.key==='Escape'){ document.getElementById('gsOverlay').classList.remove('open'); }
+});
+
+
+/* ─────────── 2. IMPORTAR CSV ─────────────────────────────── */
+let csvParsedLeads = [];
+
+function openCsvImportModal(){
+  // Populate campaign select
+  const sel = document.getElementById('csvCampSelect');
+  sel.innerHTML = '<option value="">Selecione uma campanha...</option>';
+  (campaigns||[]).forEach(c=>{
+    const opt = document.createElement('option');
+    opt.value = c.id; opt.textContent = c.name;
+    if(c.id === activeCampaignId) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  document.getElementById('csvPreviewArea').style.display='none';
+  document.getElementById('csvModal').style.display='flex';
+  csvParsedLeads = [];
+}
+
+function closeCsvModal(){
+  document.getElementById('csvModal').style.display='none';
+}
+
+function csvDragOver(e){ e.preventDefault(); document.getElementById('csvDropZone').classList.add('drag-over'); }
+function csvDragLeave(e){ document.getElementById('csvDropZone').classList.remove('drag-over'); }
+function csvDrop(e){
+  e.preventDefault();
+  document.getElementById('csvDropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) processCsvFile(file);
+}
+function csvFileSelected(e){ const file=e.target.files[0]; if(file) processCsvFile(file); }
+
+function processCsvFile(file){
+  const reader = new FileReader();
+  reader.onload = ev => { parseCsvData(ev.target.result); };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function parseCsvData(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length < 2){ toast('CSV deve ter cabeçalho + pelo menos 1 linha de dados.','error'); return; }
+  const headers = lines[0].split(/[;,]/).map(h=>h.trim().toLowerCase().replace(/[^a-z0-9]/g,''));
+  const colMap = {};
+  const mappings = {
+    nome:['nome','name','empresa','business'],
+    telefone:['telefone','phone','tel','celular','fone','whatsapp'],
+    email:['email','mail','e-mail','contato'],
+    cidade:['cidade','city','municipio'],
+    nicho:['nicho','segmento','setor','categoria','ramo'],
+    site:['site','website','url','web'],
+    endereco:['endereco','address','logradouro','rua']
+  };
+  Object.entries(mappings).forEach(([field, aliases])=>{
+    const idx = headers.findIndex(h=>aliases.some(a=>h.includes(a)));
+    if(idx>=0) colMap[field]=idx;
+  });
+  if(colMap.nome===undefined){ toast('Coluna "nome" não encontrada no CSV.','error'); return; }
+
+  csvParsedLeads = lines.slice(1).map((line,i)=>{
+    const cols = line.split(/[;,]/).map(c=>c.trim().replace(/^"|"$/g,''));
+    const get = (field) => colMap[field]!==undefined ? (cols[colMap[field]]||'') : '';
+    return {
+      id: 'csv_'+Date.now()+'_'+i,
+      name: get('nome'),
+      formatted_phone_number: get('telefone'),
+      email: get('email'),
+      city: get('cidade'),
+      nicho: get('nicho'),
+      website: get('site'),
+      formatted_address: get('endereco')||get('cidade'),
+      source: 'csv',
+      isManual: true,
+      t: 'cold',
+      score: 0,
+      status: 'new',
+      addedAt: Date.now(),
+      activities: []
+    };
+  }).filter(l=>l.name);
+
+  if(!csvParsedLeads.length){ toast('Nenhum lead válido encontrado no CSV.','error'); return; }
+  renderCsvPreview();
+}
+
+function renderCsvPreview(){
+  const area = document.getElementById('csvPreviewArea');
+  const count = document.getElementById('csvPreviewCount');
+  const importCount = document.getElementById('csvImportCount');
+  const table = document.getElementById('csvPreviewTable');
+  area.style.display='block';
+  count.textContent = csvParsedLeads.length+' leads encontrados';
+  importCount.textContent = csvParsedLeads.length;
+  const fields = ['nome','telefone','email','cidade','nicho','site'];
+  const labels = {nome:'Nome',telefone:'Telefone',email:'E-mail',cidade:'Cidade',nicho:'Nicho',site:'Site'};
+  const getF = (l,f) => f==='nome'?l.name:f==='telefone'?l.formatted_phone_number:f==='email'?l.email:f==='cidade'?l.city:f==='nicho'?l.nicho:f==='site'?l.website:'';
+  const shown = csvParsedLeads.slice(0,5);
+  table.innerHTML = `<thead><tr>${fields.map(f=>`<th>${labels[f]}</th>`).join('')}</tr></thead>`+
+    `<tbody>${shown.map(l=>`<tr>${fields.map(f=>`<td title="${escHtml(getF(l,f))}">${escHtml(getF(l,f)||'—')}</td>`).join('')}</tr>`).join('')}${csvParsedLeads.length>5?`<tr><td colspan="${fields.length}" style="text-align:center;color:var(--muted2);font-style:italic">...e mais ${csvParsedLeads.length-5} leads</td></tr>`:''}</tbody>`;
+}
+
+function executeCsvImport(){
+  const campId = document.getElementById('csvCampSelect').value;
+  if(!campId){ toast('Selecione uma campanha destino.','error'); return; }
+  const camp = campaigns.find(c=>c.id===campId);
+  if(!camp){ toast('Campanha não encontrada.','error'); return; }
+  if(!camp.leads) camp.leads = [];
+  camp.leads.push(...csvParsedLeads);
+  saveCampaigns();
+  if(activeCampaignId===campId){ leads=[...(camp.leads||[])]; renderLeads(); }
+  toast(`✅ ${csvParsedLeads.length} leads importados com sucesso!`,'success',3000);
+  closeCsvModal();
+  csvParsedLeads = [];
+}
+
+function downloadCsvTemplate(){
+  const csv = 'nome,telefone,email,cidade,nicho,site,endereco\nExemplo Negócio,11912345678,contato@exemplo.com.br,São Paulo,Restaurante,www.exemplo.com.br,"Rua das Flores, 100 - Centro"';
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='modelo_capturo.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+/* ─────────── 3. HISTÓRICO DE ATIVIDADES ─────────────────── */
+let activityCurrentLeadId = null;
+let activityCurrentCampId = null;
+
+const ACTIVITY_ICONS = { note:'📝', call:'📞', whatsapp:'💬', email:'✉', meeting:'🤝', proposal:'📄', followup:'🔔', status:'🔄', created:'✨', search:'🔍' };
+
+function openActivityModal(leadId, campId){
+  const camp = campaigns.find(c=>c.id===(campId||activeCampaignId));
+  if(!camp) return;
+  const lead = (camp.leads||[]).find(l=>l.id===leadId);
+  if(!lead) return;
+  activityCurrentLeadId = leadId;
+  activityCurrentCampId = camp.id;
+  if(!lead.activities) lead.activities=[];
+  document.getElementById('activityLeadName').textContent = lead.name||'Lead';
+  document.getElementById('activityLeadSub').textContent = [lead.formatted_address||lead.city, lead.nicho||camp.nicho].filter(Boolean).join(' · ');
+  renderActivityTimeline(lead);
+  document.getElementById('activityNoteInput').value='';
+  document.getElementById('activityModal').style.display='flex';
+}
+
+function closeActivityModal(){
+  document.getElementById('activityModal').style.display='none';
+}
+
+function renderActivityTimeline(lead){
+  const tl = document.getElementById('activityTimeline');
+  const acts = [...(lead.activities||[])].reverse();
+  if(!acts.length){ tl.innerHTML='<div style="text-align:center;color:var(--muted2);font-size:12px;padding:20px 0">Nenhuma atividade registrada ainda.<br><span style="font-size:10px;opacity:.6">As atividades registradas aqui ficam salvas no lead.</span></div>'; return; }
+  tl.innerHTML = acts.map(a=>{
+    const icon = ACTIVITY_ICONS[a.type]||'📌';
+    const dt = new Date(a.ts);
+    const timeStr = dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="activity-item">
+      <div class="activity-dot">${icon}</div>
+      <div class="activity-body">
+        <div class="activity-desc">${escHtml(a.desc)}</div>
+        <div class="activity-time">${timeStr}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addActivityEntry(){
+  const camp = campaigns.find(c=>c.id===activityCurrentCampId);
+  if(!camp) return;
+  const lead = (camp.leads||[]).find(l=>l.id===activityCurrentLeadId);
+  if(!lead) return;
+  const type = document.getElementById('activityTypeSelect').value;
+  const desc = document.getElementById('activityNoteInput').value.trim();
+  if(!desc){ toast('Digite uma descrição da atividade.','warn'); return; }
+  if(!lead.activities) lead.activities=[];
+  lead.activities.push({ type, desc, ts: Date.now() });
+  saveCampaigns();
+  renderActivityTimeline(lead);
+  document.getElementById('activityNoteInput').value='';
+  toast('✅ Atividade registrada!','success',2000);
+}
+
+function addLeadActivity(leadId, type, desc){
+  // Called automatically on status changes etc
+  const camp = campaigns.find(c=>(c.leads||[]).some(l=>l.id===leadId));
+  if(!camp) return;
+  const lead = (camp.leads||[]).find(l=>l.id===leadId);
+  if(!lead) return;
+  if(!lead.activities) lead.activities=[];
+  lead.activities.push({ type, desc, ts: Date.now() });
+}
+
+
+/* ─────────── 4. NOTIFICAÇÕES BROWSER ────────────────────── */
+let notifPermission = 'default';
+
+async function requestNotificationPermission(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'granted'){ notifPermission='granted'; return; }
+  if(Notification.permission !== 'denied'){
+    const perm = await Notification.requestPermission();
+    notifPermission = perm;
+    if(perm==='granted') toast('🔔 Notificações ativadas! Você receberá alertas de follow-up.','success',3000);
+  }
+}
+
+function sendBrowserNotification(title, body, onClick){
+  if(notifPermission!=='granted' || !('Notification' in window)) return;
+  const n = new Notification(title, {
+    body, icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222840'/><circle cx='50' cy='50' r='32' fill='none' stroke='%234e7fff' stroke-width='3'/><circle cx='50' cy='50' r='4' fill='%234e7fff'/></svg>",
+    tag: 'capturo-followup'
+  });
+  if(onClick) n.onclick = onClick;
+}
+
+function checkFollowupNotifications(){
+  if(typeof followups==='undefined') return;
+  const now = new Date();
+  const todayEnd = new Date(); todayEnd.setHours(23,59,59,999);
+  const overdue = followups.filter(f=>{
+    if(f.done || f._notified) return false;
+    return new Date(f.date) <= now;
+  });
+  overdue.forEach(f=>{
+    f._notified = true;
+    sendBrowserNotification('⏰ Follow-up pendente — CAPTURO', f.leadName+': '+f.note, ()=>{ showPage('pageFollowup'); setSbActive('sb-followup'); });
+  });
+  if(overdue.length>0) saveFollowups && saveFollowups();
+}
+
+// Request permission when user is logged in & start interval
+function initNotifications(){
+  requestNotificationPermission();
+  setInterval(checkFollowupNotifications, 60000); // check every minute
+  checkFollowupNotifications(); // check immediately
+}
+
+
+/* ─────────── 5. FUNIL VISUAL MELHORADO ──────────────────── */
+// Override renderFunnel inside renderDashboard with visual trapezoid funnel
+function renderVisualFunnel(stages){
+  const el = document.getElementById('dashFunnel');
+  if(!el) return;
+  const maxN = stages[0]?.n || 1;
+  const colors = ['var(--accent)','var(--cold)','var(--warm)','var(--green)','var(--volcano)'];
+  const minW = 30, maxW = 100;
+  el.innerHTML = `<div class="funnel-wrap">` +
+    stages.map((s,i)=>{
+      const pct = maxN>0?(s.n/maxN*100):0;
+      const w = Math.max(minW, Math.round(pct*(maxW-minW)/100+minW));
+      const convPct = i>0&&stages[0].n>0?((s.n/stages[0].n)*100).toFixed(0):100;
+      return `<div style="margin-bottom:3px;display:flex;align-items:center;gap:8px">
+        <div style="width:${w}%;background:${colors[i%colors.length]};border-radius:4px;height:32px;display:flex;align-items:center;padding:0 10px;transition:width .6s cubic-bezier(.4,0,.2,1);min-width:40px;position:relative;overflow:visible">
+          <span style="font-size:10px;font-weight:700;color:#fff;font-family:'IBM Plex Mono',monospace;white-space:nowrap">${s.n}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;font-weight:600;color:var(--text)">${s.label}</div>
+          <div style="font-size:9px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">${i===0?'base':convPct+'% conversão'}</div>
+        </div>
+      </div>`;
+    }).join('') + `</div>`;
+}
+
+
+/* ─────────── 6. ONBOARDING TOUR ─────────────────────────── */
+const TOUR_STEPS = [
+  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos. Em 2 minutos você estará prospectando leads profissionalmente!', target:null, pos:'center' },
+  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Comece criando a primeira!', target:'.campaigns-grid', pos:'top' },
+  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios via Google Maps, Bio Links ou Busca Completa automaticamente.', target:'#sb-prospectar', pos:'right' },
+  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados em colunas por temperatura (🌋 Vulcão → 🧊 Gelado). Arraste para mover entre estágios.', target:'#sb-leads', pos:'right' },
+  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads específicos. O CAPTURO te notifica no navegador quando o prazo chega.', target:'#sb-followup', pos:'right' },
+  { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente.', target:'.gs-btn', pos:'bottom' },
+  { title:'📥 Importar CSV', desc:'Já tem uma lista de leads? Importe via CSV com um clique. Acesse o botão na tela de Prospecção → Entrada Manual.', target:null, pos:'center' },
+  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Qualquer dúvida, consulte o Manual na sidebar.', target:null, pos:'center' }
+];
+
+let tourStep = 0;
+
+function startOnboardingTour(){
+  if(localStorage.getItem('capturo-tour-done')) return;
+  tourStep = 0;
+  showTourStep(0);
+}
+
+function showTourStep(idx){
+  const step = TOUR_STEPS[idx];
+  if(!step){ endTour(); return; }
+  const ov = document.getElementById('tourOverlay');
+  const bubble = document.getElementById('tourBubble');
+  const sp = document.getElementById('tourSpotlight');
+  ov.style.display='block'; bubble.style.display='block';
+  document.getElementById('tourTitle').textContent = step.title;
+  document.getElementById('tourDesc').textContent = step.desc;
+  document.getElementById('tourStepLabel').textContent = (idx+1)+'/'+TOUR_STEPS.length;
+  // Dots
+  document.getElementById('tourDots').innerHTML = TOUR_STEPS.map((_,i)=>`<div class="tour-dot ${i===idx?'active':''}"></div>`).join('');
+  // Last step
+  document.getElementById('tourBtnNext').textContent = idx===TOUR_STEPS.length-1?'✅ Começar!':'Próximo →';
+  // Spotlight
+  if(step.target && step.pos!=='center'){
+    const el = document.querySelector(step.target);
+    if(el){
+      const r = el.getBoundingClientRect();
+      const pad=8;
+      sp.style.cssText=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
+      ov.style.pointerEvents='none';
+    } else { sp.style.cssText='display:none'; }
+    // Position bubble
+    positionTourBubble(step, sp);
+  } else {
+    sp.style.cssText='display:none';
+    bubble.style.cssText='display:block;top:50%;left:50%;transform:translate(-50%,-50%)';
+  }
+}
+
+function positionTourBubble(step, sp){
+  const bubble = document.getElementById('tourBubble');
+  const r = sp.getBoundingClientRect();
+  const bw=340, bh=180;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  let top, left;
+  if(step.pos==='right'){ top=Math.min(r.top,vh-bh-20); left=Math.min(r.right+12,vw-bw-20); }
+  else if(step.pos==='bottom'){ top=r.bottom+12; left=Math.max(20,r.left+r.width/2-bw/2); }
+  else if(step.pos==='top'){ top=Math.max(20,r.top-bh-12); left=Math.max(20,r.left+r.width/2-bw/2); }
+  else { top=vh/2-bh/2; left=vw/2-bw/2; }
+  top=Math.max(10,Math.min(top,vh-bh-10));
+  left=Math.max(10,Math.min(left,vw-bw-10));
+  bubble.style.cssText=`display:block;top:${top}px;left:${left}px;transform:none;max-width:${bw}px`;
+}
+
+function nextTourStep(){
+  tourStep++;
+  if(tourStep >= TOUR_STEPS.length){ endTour(); return; }
+  showTourStep(tourStep);
+}
+
+function endTour(){
+  document.getElementById('tourOverlay').style.display='none';
+  document.getElementById('tourBubble').style.display='none';
+  localStorage.setItem('capturo-tour-done','1');
+}
+
+// Start tour for new users (campaigns empty + first time)
+function maybeStartTour(){
+  if(!localStorage.getItem('capturo-tour-done') && (!campaigns||campaigns.length===0)){
+    setTimeout(startOnboardingTour, 1200);
+  }
+}
+
+
+/* ─────────── 7. BOTÃO IMPORTAR CSV NA PROSPECÇÃO ─────────── */
+// Inject CSV button into pageCampaign header after DOM loads
+function injectCsvButton(){
+  const btn = document.createElement('button');
+  btn.className='btn btn-ghost';
+  btn.style.cssText='font-size:10px;padding:5px 12px';
+  btn.innerHTML='📥 Importar CSV';
+  btn.onclick = openCsvImportModal;
+  // Inject next to "Verificar APIs" and "Integrações" buttons
+  const target = document.querySelector('.search-area .btn-ghost');
+  if(target && target.parentNode){ target.parentNode.insertBefore(btn, target); }
+}
+
+/* ─────────── INIT EXTRAS ─────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', ()=>{
+  injectCsvButton();
+  // Patch renderDashboard to use visual funnel
+  const _origRD = typeof renderDashboard==='function'?renderDashboard:null;
+  if(_origRD){
+    const _patchRD = function(){
+      _origRD();
+      // Override funnel with visual version
+      const allLeads=(campaigns||[]).flatMap(c=>c.leads||[]);
+      const total=allLeads.length;
+      const contacted=allLeads.filter(l=>l.status==='contacted').length;
+      const proposal=allLeads.filter(l=>l.status==='proposal').length;
+      const negotiating=allLeads.filter(l=>l.status==='negotiating').length;
+      const closed=allLeads.filter(l=>l.status==='closed').length;
+      if(total>0){
+        const stages=[
+          {label:'Total de Leads',n:total},
+          {label:'Contatados',n:contacted},
+          {label:'Proposta Enviada',n:proposal},
+          {label:'Em Negociação',n:negotiating},
+          {label:'Convertidos',n:closed}
+        ].filter(s=>s.n>0||s.label==='Total de Leads');
+        renderVisualFunnel(stages);
+      }
+    };
+    window.renderDashboard = _patchRD;
+  }
+});
+
+// Also hook into initAuth completion to start notifications + tour
+const _origInitAuth = typeof window.initAuth==='function' ? window.initAuth : null;
+// Patching via inline call after auth init
+window._postAuthInit = function(){
+  initNotifications();
+  setTimeout(maybeStartTour, 800);
+};
+</script>
 
 </body>
 </html>
