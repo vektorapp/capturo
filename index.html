@@ -62,10 +62,7 @@
 /* CAPTURO © Felipe Uchoa 2024-2025 — CAP-7B3E92A1F0C84D56 — Uso não autorizado é proibido */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
-@keyframes tourArrowPulse{
-  0%,100%{transform:scale(1);opacity:1}
-  50%{transform:scale(1.35);opacity:.7}
-}
+@keyframes tourArrowPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
 /* ── RADAR ANIMATIONS ── */
 @keyframes radarSpin{
   from{transform:rotate(0deg)}
@@ -785,7 +782,7 @@ select option{background:#8a9099}
 </head>
 <body class="theme-blue">
 <!-- CAPTURO authorship watermark — do not remove -->
-<span aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none;opacity:0" data-cap="CAP-7B3E92A1F0C84D56" data-author="Felipe Uchoa" data-year="2025">CAPTURO v5.0 © 2024-2025 Felipe Uchoa <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dcbab9b0b5acb9b0bdbebda89cb4b3a8b1bdb5b0f2bfb3b1">[email&#160;protected]</a></span>
+<span aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none;opacity:0" data-cap="CAP-7B3E92A1F0C84D56" data-author="Felipe Uchoa" data-year="2025">CAPTURO v5.0 © 2024-2025 Felipe Uchoa <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="593f3c3530293c35383b382d1931362d34383035773a3634">[email&#160;protected]</a></span>
 
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
 <div id="loginScreen" style="display:flex;position:fixed;inset:0;z-index:99999;background:var(--bg);align-items:center;justify-content:center;padding:20px">
@@ -2237,55 +2234,6 @@ function toast(msg, type='info', duration=3500){
             <input type="text" id="cfgEmojiFrozen" placeholder="❄️" style="font-size:18px">
           </div>
         </div>
-
-        <!-- NOTIFICAÇÕES DE FOLLOW-UP -->
-        <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:20px">🔔 Notificações de Follow-up</div>
-        <div style="font-size:11px;color:var(--muted2);margin-bottom:12px;line-height:1.6">Quando um follow-up estiver pendente, o CAPTURO pode te avisar pelo navegador, por e-mail e/ou WhatsApp.</div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px">
-          <!-- Navegador -->
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
-            <div>
-              <div style="font-size:12px;font-weight:600;color:var(--text)">🌐 Notificação no navegador</div>
-              <div style="font-size:10px;color:var(--muted2)">Alerta direto no browser quando o prazo chegar</div>
-            </div>
-            <button onclick="requestNotificationPermission().then(()=>toast('🔔 Permissão de notificação solicitada','info',2500))" style="font-size:10px;padding:5px 12px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent);cursor:pointer;font-weight:600">Ativar</button>
-          </div>
-
-          <!-- E-mail -->
-          <div style="padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-              <div>
-                <div style="font-size:12px;font-weight:600;color:var(--text)">📧 Notificação por e-mail</div>
-                <div style="font-size:10px;color:var(--muted2)">Abre seu cliente de e-mail com o alerta pronto para enviar</div>
-              </div>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-                <input type="checkbox" id="cfgNotifEmail" onchange="localStorage.setItem('capturo-notifEmail',this.checked?'1':'0')" style="width:14px;height:14px;accent-color:var(--accent)">
-                <span style="font-size:10px;color:var(--muted2)">Ativo</span>
-              </label>
-            </div>
-            <div class="field" style="margin:0">
-              <input type="email" id="cfgNotifEmailAddr" placeholder="seu@email.com" style="font-size:11px">
-            </div>
-          </div>
-
-          <!-- WhatsApp -->
-          <div style="padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-              <div>
-                <div style="font-size:12px;font-weight:600;color:var(--text)">💬 Notificação por WhatsApp</div>
-                <div style="font-size:10px;color:var(--muted2)">Abre o WhatsApp Web com a mensagem de alerta pronta</div>
-              </div>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
-                <input type="checkbox" id="cfgNotifWA" onchange="localStorage.setItem('capturo-notifWA',this.checked?'1':'0')" style="width:14px;height:14px;accent-color:var(--green)">
-                <span style="font-size:10px;color:var(--muted2)">Ativo</span>
-              </label>
-            </div>
-            <div class="field" style="margin:0">
-              <input type="tel" id="cfgNotifWANum" placeholder="5511999999999 (com DDI)" style="font-size:11px">
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- TAB: INTEGRAÇÕES (todas as API keys) -->
@@ -2362,10 +2310,6 @@ function toast(msg, type='info', duration=3500){
             <input type="password" id="snovClientSecret" placeholder="client_secret..." autocomplete="off">
           </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <button class="btn btn-ghost" onclick="testSnovKey()" id="btnTestSnov" style="font-size:11px;white-space:nowrap">Testar Snov.io</button>
-          <span id="snovStatus" class="status-pill pill-idle" style="font-size:10px">—</span>
-        </div>
         <div class="field" style="margin-bottom:18px">
           <label>RocketReach API Key <span style="font-size:9px;color:var(--muted2)">(5 buscas/mês grátis · <a href="https://rocketreach.co/api" target="_blank" style="color:var(--accent2)">obter chave</a>)</span></label>
           <div style="display:flex;gap:8px">
@@ -2409,6 +2353,10 @@ function toast(msg, type='info', duration=3500){
       <!-- TAB: INTERFACE -->
       <div id="stab-content-interface" style="display:none">
         <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🎨 Aparência</div>
+        <div class="field" style="margin-bottom:14px">
+          <label>Nome do sistema (aparece no topo)</label>
+          <input type="text" id="cfgTitulo" placeholder="CAPTURO">
+        </div>
         <div style="margin-bottom:18px">
           <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:10px">Tema de cores</label>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -3468,82 +3416,22 @@ function createCampaign(){
   const country=currentMarket==='internacional'?$('countryDD').value:'BR';
   const nichoData=(currentMarket==='nacional'?NICHOS_BR:NICHOS_INT).find(n=>n.v===nicho);
 
-  // If multiple cities selected, show custom modal with 3 options
+  // If multiple cities selected, create one campaign per city (or one combined)
   if(cities.length > 1){
-    _showMultiCityModal(cities, nicho, state, city, neighborhood, country, nichoData, radius, name);
-    return;
+    const doMulti = confirm(`Criar ${cities.length} campanhas separadas (uma por cidade)?\n\nCidades: ${cities.join(', ')}\n\nOK = ${cities.length} campanhas · Cancelar = só a primeira (${cities[0]})`);
+    if(doMulti){
+      cities.forEach((ct,i)=>{
+        const cName = `${nicho} — ${ct}, ${state}`;
+        const camp={id:'c'+Date.now()+'_'+i,name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:ct,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString(),cityList:cities};
+        campaigns.push(camp);
+      });
+      saveCampaigns(); closeCampaignModal(); renderCampaignsList();
+      toast(`✅ ${cities.length} campanhas criadas!`,'success',3000);
+      return;
+    }
   }
   const c={id:'c'+Date.now(),name,nicho,nichoEn:nichoData?.en||nicho,state,city,cityList:cities,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
   campaigns.push(c); saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(c.id);
-}
-
-// ══════════════════════════════════════════
-// MULTI-CITY CAMPAIGN MODAL
-// ══════════════════════════════════════════
-function _showMultiCityModal(cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName){
-  // Remove old modal if exists
-  const old = document.getElementById('multiCityModal');
-  if(old) old.remove();
-
-  const modal = document.createElement('div');
-  modal.id = 'multiCityModal';
-  modal.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)';
-  modal.innerHTML=`
-    <div style="background:var(--s1);border-radius:16px;padding:24px 28px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid var(--border)">
-      <div style="font-size:15px;font-weight:800;margin-bottom:4px">🏙️ ${cities.length} cidades selecionadas</div>
-      <div style="font-size:11px;color:var(--muted2);margin-bottom:16px;font-family:'IBM Plex Mono',monospace">${cities.join(' · ')}</div>
-
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
-
-        <button onclick="_multiCityChoice('separate')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">📂 Criar ${cities.length} campanhas separadas</div>
-          <div style="font-size:11px;color:var(--muted2)">Uma campanha por cidade — funil e leads independentes por cidade</div>
-        </button>
-
-        <button onclick="_multiCityChoice('combined')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">📋 Uma campanha com todas as cidades</div>
-          <div style="font-size:11px;color:var(--muted2)">Todos os leads na mesma campanha — prospecta todas as cidades de uma vez</div>
-        </button>
-
-        <button onclick="_multiCityChoice('first')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='var(--border)'">
-          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">🎯 Só a primeira cidade (${cities[0]})</div>
-          <div style="font-size:11px;color:var(--muted2)">Cria apenas a campanha de ${cities[0]} agora</div>
-        </button>
-      </div>
-
-      <button onclick="document.getElementById('multiCityModal').remove()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-size:11px">Cancelar</button>
-    </div>`;
-
-  // Store data on window for callback
-  window._mcc = {cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName};
-  document.body.appendChild(modal);
-}
-
-function _multiCityChoice(choice){
-  const {cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName} = window._mcc || {};
-  const modal = document.getElementById('multiCityModal');
-  if(modal) modal.remove();
-  if(!cities) return;
-
-  if(choice === 'separate'){
-    cities.forEach((ct,i)=>{
-      const cName = `${nicho} — ${ct}, ${state}`;
-      const camp={id:'c'+Date.now()+'_'+i,name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:ct,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString(),cityList:cities};
-      campaigns.push(camp);
-    });
-    saveCampaigns(); closeCampaignModal(); renderCampaignsList();
-    toast(`✅ ${cities.length} campanhas criadas!`,'success',3000);
-  } else if(choice === 'combined'){
-    const cName = `${nicho} — ${cities.join(', ')}, ${state}`;
-    const camp={id:'c'+Date.now(),name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:cities[0],cityList:cities,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
-    campaigns.push(camp);
-    saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(camp.id);
-    toast(`✅ Campanha única criada com ${cities.length} cidades!`,'success',3000);
-  } else {
-    // first only
-    const c={id:'c'+Date.now(),name:baseName,nicho,nichoEn:nichoData?.en||nicho,state,city,cityList:[city],neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
-    campaigns.push(c); saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(c.id);
-  }
 }
 
 // ══════════════════════════════════════════
@@ -3731,15 +3619,9 @@ async function testSerpKey(){
   if(!proxyBase){_setKeyStatus('serpStatus',false,'Configure o proxy');return;}
   _setKeyLoading('serpStatus');
   try{
-    const url=`${proxyBase}?action=serp&query=${encodeURIComponent('restaurante')}&serpKey=${encodeURIComponent(key)}`;
+    const url=`${proxyBase}?action=serp&query=test&serpKey=${encodeURIComponent(key)}`;
     const r=await fetch(url,{signal:AbortSignal.timeout(15000)});
-    if(r.ok){
-      const d=await r.json();
-      // 404 from SerpAPI means no results but key is valid; error.type===auth means invalid
-      const isInvalid = d.error && (d.error.toLowerCase().includes('invalid')|| d.error.toLowerCase().includes('auth'));
-      _setKeyStatus('serpStatus',!isInvalid,'SerpAPI '+(isInvalid?'inválida':'OK'));
-    }
-    else if(r.status===404){ _setKeyStatus('serpStatus',true,'SerpAPI OK'); } // 404 = key ok, sem resultados
+    if(r.ok){ const d=await r.json(); _setKeyStatus('serpStatus',!d.error,'SerpAPI '+(d.error?'inválida':'OK')); }
     else _setKeyStatus('serpStatus',false,'Erro '+r.status);
   }catch(e){ _setKeyStatus('serpStatus',false,'Timeout/Proxy off'); }
 }
@@ -3761,67 +3643,22 @@ async function testApolloKey(){
   if(!key){_setKeyStatus('apolloStatus',false,'Sem chave');return;}
   _setKeyLoading('apolloStatus');
   try{
-    // Apollo /auth/health blocks CORS from browser — use proxy if available
-    const proxyBase=localStorage.getItem('capturo-proxyUrl')||PROXY_URL;
-    let ok=false;
-    if(proxyBase){
-      try{
-        const r=await fetch(`${proxyBase}?action=apollo_test&apolloKey=${encodeURIComponent(key)}`,{signal:AbortSignal.timeout(10000)});
-        if(r.ok){ const d=await r.json(); ok=!d.error; }
-        else if(r.status===404){ ok=true; } // proxy doesn't have apollo_test action but key may be valid
-      }catch(e2){}
-    }
-    if(!ok){
-      // Try direct (may fail due to CORS on some browsers)
-      try{
-        const r=await fetch('https://api.apollo.io/api/v1/auth/health',{
-          method:'GET',headers:{'Cache-Control':'no-cache','X-Api-Key':key,'Content-Type':'application/json'},
-          signal:AbortSignal.timeout(10000)
-        });
-        ok=r.ok;
-      }catch(e3){ _setKeyStatus('apolloStatus',false,'CORS — teste via proxy'); return; }
-    }
-    _setKeyStatus('apolloStatus',ok,'Apollo '+(ok?'OK':'inválida'));
-  }catch(e){ _setKeyStatus('apolloStatus',false,'Erro de conexão'); }
-}
-
-async function testSnovKey(){
-  const id=$('snovClientId')?.value.trim()||localStorage.getItem('capturo-snovId')||'';
-  const secret=$('snovClientSecret')?.value.trim()||localStorage.getItem('capturo-snovSecret')||'';
-  if(!id||!secret){_setKeyStatus('snovStatus',false,'Preencha ID e Secret');return;}
-  _setKeyLoading('snovStatus');
-  try{
-    const r=await fetch('https://api.snov.io/v1/oauth/access_token',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({grant_type:'client_credentials',client_id:id,client_secret:secret}),
+    const r=await fetch('https://api.apollo.io/api/v1/auth/health',{
+      method:'GET', headers:{'Cache-Control':'no-cache','X-Api-Key':key},
       signal:AbortSignal.timeout(10000)
     });
-    const d=await r.json();
-    if(d.access_token) _setKeyStatus('snovStatus',true,'Snov.io OK');
-    else _setKeyStatus('snovStatus',false,'Credenciais inválidas');
-  }catch(e){
-    if(e.name==='TypeError'||e.message?.includes('fetch')){
-      _setKeyStatus('snovStatus',true,'Formato OK (CORS)');
-    } else {
-      _setKeyStatus('snovStatus',false,'Erro de conexão');
-    }
-  }
+    _setKeyStatus('apolloStatus',r.ok,'Apollo '+(r.ok?'OK':'inválida'));
+  }catch(e){ _setKeyStatus('apolloStatus',false,'Erro de conexão'); }
 }
 
 async function testAIKey(){
   const key=$('cKey')?.value.trim()||localStorage.getItem('capturo-cKey')||'';
   if(!key){_setKeyStatus('aiKeyStatus',false,'Sem chave');return;}
   _setKeyLoading('aiKeyStatus');
-  // Anthropic blocks direct browser calls via CORS — validate format first
-  if(!key.startsWith('sk-ant-')){
-    _setKeyStatus('aiKeyStatus',false,'Formato inválido (sk-ant-...)');
-    return;
-  }
   try{
     const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
       body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:10,messages:[{role:'user',content:'Hi'}]}),
       signal:AbortSignal.timeout(15000)
     });
@@ -3829,13 +3666,7 @@ async function testAIKey(){
     if(d.content||d.id) _setKeyStatus('aiKeyStatus',true,'IA OK');
     else if(d.error?.type==='authentication_error') _setKeyStatus('aiKeyStatus',false,'Chave inválida');
     else _setKeyStatus('aiKeyStatus',r.status<500,'Erro '+r.status);
-  }catch(e){
-    if(e.name==='TypeError'||e.message?.includes('fetch')){
-      _setKeyStatus('aiKeyStatus',true,'Formato OK ✓');
-    } else {
-      _setKeyStatus('aiKeyStatus',false,'Erro de conexão');
-    }
-  }
+  }catch(e){ _setKeyStatus('aiKeyStatus',false,'Erro de conexão'); }
 }
 
 async function testRRKey(){
@@ -3844,36 +3675,32 @@ async function testRRKey(){
   _setKeyLoading('rrStatus');
   try{
     const r=await fetch('https://api.rocketreach.co/v2/api/lookupProfile?name=test',{
-      headers:{'Api-Key':key,'Content-Type':'application/json'},
+      headers:{'Api-Key':key},
       signal:AbortSignal.timeout(10000)
     });
-    // 404 or 400 = key valid but no result; 401/403 = invalid key
-    const valid = r.status!==401 && r.status!==403;
-    _setKeyStatus('rrStatus',valid,'RocketReach '+(valid?'OK':'inválida'));
-  }catch(e){
-    // CORS error means key exists but browser blocked — treat as OK
-    if(e.name==='TypeError'||e.message?.includes('CORS')||e.message?.includes('fetch')){
-      _setKeyStatus('rrStatus',true,'RocketReach OK (CORS)');
-    } else {
-      _setKeyStatus('rrStatus',false,'Erro de conexão');
-    }
-  }
+    // 404 or 400 = key is valid but no result; 401 = invalid key
+    _setKeyStatus('rrStatus',r.status!==401,'RocketReach '+(r.status===401?'inválida':'OK'));
+  }catch(e){ _setKeyStatus('rrStatus',false,'Erro de conexão'); }
 }
 
 async function testProxy(){
-  const proxyUrl=$('proxyUrl')?.value.trim()||localStorage.getItem('capturo-proxyUrl')||PROXY_URL;
-  if(!proxyUrl){_setKeyStatus('proxyStatus',false,'Configure a URL');return;}
-  // save current input value first
-  if($('proxyUrl')?.value.trim()) localStorage.setItem('capturo-proxyUrl',$('proxyUrl').value.trim());
-  _setKeyLoading('proxyStatus');
-  const url=proxyUrl+'?action=cascade&name=Teste&city=São+Paulo';
+  const url=(localStorage.getItem('capturo-proxyUrl')||PROXY_URL)+'?action=cascade&name=Test+Company&city=New+York';
+  setStat('<span class="spinner"></span>Testando proxy...');
   try{
     const r=await fetch(url,{signal:AbortSignal.timeout(15000)});
-    if(r.ok){ _setKeyStatus('proxyStatus',true,'Proxy OK'); }
-    else { _setKeyStatus('proxyStatus',false,'Erro '+r.status); }
-  }catch(e){ _setKeyStatus('proxyStatus',false,'Proxy off/CORS'); }
-  // also update sTxt if it exists (prospecting page)
-  try{ if($('sTxt')) setStat('Pronto...'); }catch(e){}
+    if(r.ok){
+      $('proxyStatus').className='status-pill pill-ok';
+      $('proxyStatus').textContent='✓ Email OK';
+      setStat('✓ Proxy funcionando!');
+    }else{
+      $('proxyStatus').className='status-pill pill-err';
+      $('proxyStatus').textContent='✗ Erro '+r.status;
+    }
+  }catch(e){
+    $('proxyStatus').className='status-pill pill-err';
+    $('proxyStatus').textContent='✗ Proxy off';
+    setStat('Proxy erro: '+e.message);
+  }
 }
 async function testGoogle(){
   const key=localStorage.getItem('capturo-gKey')||'';
@@ -5431,17 +5258,38 @@ function renderRelatorio(){
 }
 
 function exportRelatorioCSV(){
-  const allLeads=campaigns.flatMap(c=>c.leads||[]);
+  const allLeads=campaigns.flatMap(c=>(c.leads||[]).map(l=>({...l,_camp:c.name,_nicho:c.nicho,_city:c.city,_state:c.state})));
   if(!allLeads.length){toast('Nenhum lead para exportar','error');return;}
-  const rows=[['Nome','Endereço','Temperatura','Score','Website','Bio Link','Telefone','Email','Status','Campanha','Data']];
+  const rows=[[
+    'Campanha','Segmento/Nicho','Bairro','Cidade','Estado',
+    'Nome','Endereço Completo',
+    'Telefone','WhatsApp','E-mail','E-mail Verificado',
+    'Website','Bio Link',
+    'Temperatura','Score','Avaliação Google','Nº Avaliações',
+    'Fonte','Status','Notas','Data Captura'
+  ]];
   allLeads.forEach(l=>{
-    const camp=campaigns.find(c=>(c.leads||[]).find(x=>x.id===l.id));
-    rows.push([l.name,l.formatted_address,l.t,l.score,l.website||'',l.bioUrl||'',l.formatted_phone_number||'',l.email||'',l.status||'new',camp?.name||'',new Date().toLocaleDateString('pt-BR')]);
+    const addr = l.formatted_address||'';
+    const parts = addr.split(',').map(s=>s.trim());
+    const bairro = l.bairro||l.neighborhood||parts[1]||'';
+    const waNum = (l.whatsapp||l.manualWa||l.formatted_phone_number||'').replace(/\D/g,'');
+    const waLink = waNum ? `wa.me/${waNum}` : '';
+    const capDate = l.createdAt ? new Date(l.createdAt).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+    rows.push([
+      l._camp||'', l._nicho||l.nicho||'', bairro, l._city||l.city||'', l._state||l.state||'',
+      l.name||'', addr,
+      l.formatted_phone_number||'', waLink, l.email||'', l.emailVerified?'Sim':'',
+      l.website||'', l.bioUrl||'',
+      l.t||'', l.score||'', l.rating||'', l.user_ratings_total||'',
+      l.source||'', l.status||'new', (l.notes||'').replace(/\n/g,' '), capDate
+    ]);
   });
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download=`CAPTURO-leads-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;a.click();
-  toast('✅ CSV exportado!','ok');
+  const csv=rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`CAPTURO_relatorio_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast('✅ CSV exportado com '+allLeads.length+' leads!','success',3000);
 }
 
 function exportRelatorioHTML(){
@@ -5837,14 +5685,37 @@ function saveFavNotes(id,value){
 }
 
 function exportFavoritosCSV(){
-  const allFavs=campaigns.flatMap(c=>(c.leads||[]).filter(l=>l.favorito).map(l=>({...l,_camp:c.name,_nicho:c.nicho})));
+  const allFavs=campaigns.flatMap(c=>(c.leads||[]).filter(l=>l.favorito).map(l=>({...l,_camp:c.name,_nicho:c.nicho,_city:c.city,_state:c.state})));
   if(!allFavs.length){toast('Nenhum favorito para exportar','error');return;}
-  const rows=[['Nome','Endereço','Nicho','Temperatura','Status','Telefone','Email','Website','Campanha','Adicionado em']];
-  allFavs.forEach(l=>rows.push([l.name,l.formatted_address||'',l._nicho||'',l.t,l.status||'new',l.formatted_phone_number||'',l.email||'',l.website||l.bioUrl||'',l._camp||'',l.favoritoAt?new Date(l.favoritoAt).toLocaleDateString('pt-BR'):'']));
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
-  a.download=`CAPTURO-favoritos-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;a.click();
-  toast('✅ Favoritos exportados!','ok');
+  const rows=[[
+    'Nome','Segmento/Nicho','Bairro','Cidade','Estado',
+    'Endereço Completo','Telefone','WhatsApp','E-mail','E-mail Verificado',
+    'Website','Bio Link',
+    'Temperatura','Score','Avaliação Google',
+    'Status','Campanha','Pitch IA','Notas','Adicionado em'
+  ]];
+  allFavs.forEach(l=>{
+    const addr = l.formatted_address||'';
+    const parts = addr.split(',').map(s=>s.trim());
+    const bairro = l.bairro||l.neighborhood||parts[1]||'';
+    const waNum = (l.whatsapp||l.manualWa||l.formatted_phone_number||'').replace(/\D/g,'');
+    const waLink = waNum ? `wa.me/${waNum}` : '';
+    const pitchIA = (l.pitch||l.aiPitch||'').replace(/\n/g,' ');
+    rows.push([
+      l.name||'', l._nicho||l.nicho||'', bairro, l._city||l.city||'', l._state||l.state||'',
+      addr, l.formatted_phone_number||'', waLink, l.email||'', l.emailVerified?'Sim':'',
+      l.website||'', l.bioUrl||'',
+      l.t||'', l.score||'', l.rating||'',
+      l.status||'new', l._camp||'', pitchIA, (l.notes||'').replace(/\n/g,' '),
+      l.favoritoAt?new Date(l.favoritoAt).toLocaleDateString('pt-BR'):''
+    ]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`CAPTURO_favoritos_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast('✅ Favoritos exportados!','success',3000);
 }
 
 // ══════════════════════════════════════════
@@ -5852,18 +5723,78 @@ function exportFavoritosCSV(){
 // ══════════════════════════════════════════
 function exportCSV(){
   if(!leads.length){alert('Sem leads!');return;}
-  const rows=[['Nome','Endereço','Website','Bio Link','Telefone','Email','Email Verificado','Confiança Email','Avaliação','Reviews','Temperatura','Score','Score Site','Problemas Site','Fonte','Status','Notas']];
-  leads.forEach(l=>rows.push([l.name,l.formatted_address,l.website||'',l.bioUrl||'',l.formatted_phone_number||'',l.email||'',l.emailVerified?'Sim':'Não',l.emailConfidence||'',l.rating||'',l.user_ratings_total||'',l.t,l.score,l.siteScore||'',(l.siteIssues||[]).join(' | '),l.source,l.status,(l.notes||'').replace(/\n/g,' ')]));
-  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`leads_capturo_${activeCampaignId}.csv`;a.click();
+  const camp = campaigns.find(c=>c.id===activeCampaignId)||{};
+  const rows=[[
+    'Nome','Segmento/Nicho','Bairro','Cidade','Estado','País',
+    'Endereço Completo','CEP',
+    'Telefone','WhatsApp',
+    'E-mail','E-mail Verificado','Confiança E-mail',
+    'Website','Bio Link','Instagram','Facebook',
+    'Temperatura','Score Geral','Score Site','Avaliação Google','Nº Avaliações',
+    'Problemas no Site','Fonte','Status','Campanha',
+    'Pitch IA','Notas','Data Captura'
+  ]];
+  leads.forEach(l=>{
+    const addr = l.formatted_address||'';
+    const parts = addr.split(',').map(s=>s.trim());
+    const bairro = l.bairro||l.neighborhood||parts[1]||'';
+    const cep = (addr.match(/\d{5}-?\d{3}/)||[''])[0];
+    const waNum = (l.whatsapp||l.manualWa||l.formatted_phone_number||'').replace(/\D/g,'');
+    const waLink = waNum ? `wa.me/${waNum}` : '';
+    const insta = (l.instagram||l.socialLinks?.instagram||'');
+    const fb = (l.facebook||l.socialLinks?.facebook||'');
+    const pitchIA = (l.pitch||l.aiPitch||'').replace(/\n/g,' ');
+    const capDate = l.createdAt ? new Date(l.createdAt).toLocaleDateString('pt-BR') : new Date().toLocaleDateString('pt-BR');
+    rows.push([
+      l.name||'', l.nicho||camp.nicho||'', bairro,
+      l.city||camp.city||'', l.state||camp.state||'', l.country||camp.country||'BR',
+      addr, cep,
+      l.formatted_phone_number||'', waLink,
+      l.email||'', l.emailVerified?'Sim':'', l.emailConfidence||'',
+      l.website||'', l.bioUrl||'', insta, fb,
+      l.t||'', l.score||'', l.siteScore||'', l.rating||'', l.user_ratings_total||'',
+      (l.siteIssues||[]).join(' | '), l.source||'', l.status||'new', camp.name||'',
+      pitchIA, (l.notes||'').replace(/\n/g,' '), capDate
+    ]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`CAPTURO_leads_${camp.name||activeCampaignId}_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast('✅ CSV exportado com '+leads.length+' leads!','success',3000);
 }
 function exportOpps(){
   const opps=leads.filter(l=>l.t==='volcano'||l.t==='hot'||l.t==='warm'||l.t==='cold');
   if(!opps.length){alert('Nenhuma oportunidade!');return;}
-  const rows=[['Nome','Endereço','Telefone','Email','Email Verificado','Temperatura','Score','Bio Link','Site','Problemas']];
-  opps.forEach(l=>rows.push([l.name,l.formatted_address,l.formatted_phone_number||'',l.email||'',l.emailVerified?'Sim':'',l.t,l.score,l.bioUrl||'',l.website||'',(l.siteIssues||[]).join(' | ')]));
-  const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='oportunidades_capturo.csv';a.click();
+  const camp = campaigns.find(c=>c.id===activeCampaignId)||{};
+  const rows=[[
+    'Nome','Segmento/Nicho','Bairro','Cidade',
+    'Telefone','WhatsApp','E-mail','E-mail Verificado',
+    'Website','Bio Link',
+    'Temperatura','Score Geral','Avaliação Google',
+    'Problemas no Site','Status','Notas'
+  ]];
+  opps.forEach(l=>{
+    const addr = l.formatted_address||'';
+    const parts = addr.split(',').map(s=>s.trim());
+    const bairro = l.bairro||l.neighborhood||parts[1]||'';
+    const waNum = (l.whatsapp||l.manualWa||l.formatted_phone_number||'').replace(/\D/g,'');
+    const waLink = waNum ? `wa.me/${waNum}` : '';
+    rows.push([
+      l.name||'', l.nicho||camp.nicho||'', bairro, l.city||camp.city||'',
+      l.formatted_phone_number||'', waLink, l.email||'', l.emailVerified?'Sim':'',
+      l.website||'', l.bioUrl||'',
+      l.t||'', l.score||'', l.rating||'',
+      (l.siteIssues||[]).join(' | '), l.status||'', (l.notes||'').replace(/\n/g,' ')
+    ]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`CAPTURO_oportunidades_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast('✅ Oportunidades exportadas!','success',3000);
 }
 
 
@@ -7547,13 +7478,9 @@ function setSbActive(id){
 function openSettings(){
   $('cfgVendedor').value = appSettings.vendedor||'';
   $('cfgWA').value = appSettings.wa||'';
-  // Notification settings
-  const notifEmailEl = $('cfgNotifEmail'); if(notifEmailEl) notifEmailEl.checked = localStorage.getItem('capturo-notifEmail')==='1';
-  const notifEmailAddrEl = $('cfgNotifEmailAddr'); if(notifEmailAddrEl) notifEmailAddrEl.value = localStorage.getItem('capturo-notifEmailAddr')||'';
-  const notifWAEl = $('cfgNotifWA'); if(notifWAEl) notifWAEl.checked = localStorage.getItem('capturo-notifWA')==='1';
-  const notifWANumEl = $('cfgNotifWANum'); if(notifWANumEl) notifWANumEl.value = localStorage.getItem('capturo-notifWANum')||'';
   $('cfgPrecoAvista').value = appSettings.precoAvista||'3000';
   $('cfgJuros').value = appSettings.juros||'0';
+  $('cfgTitulo').value = appSettings.titulo||'';
   calcParcelas($('cfgPrecoAvista').value, $('cfgJuros').value);
   $('cfgPrecoAvista').oninput = ()=>calcParcelas($('cfgPrecoAvista').value,$('cfgJuros').value);
   $('cfgJuros').oninput = ()=>calcParcelas($('cfgPrecoAvista').value,$('cfgJuros').value);
@@ -7577,7 +7504,7 @@ function openSettings(){
   $('enableAI').checked = localStorage.getItem('capturo-enableAI')==='true';
   $('enableHunter').checked = localStorage.getItem('capturo-enableHunter')==='true';
   // Reset all test status pills
-  ['gMapsStatus','serpStatus','hunterStatus','apolloStatus','rrStatus','aiKeyStatus','snovStatus','proxyStatus'].forEach(id=>{
+  ['gMapsStatus','serpStatus','hunterStatus','apolloStatus','rrStatus','aiKeyStatus'].forEach(id=>{
     const el=$(id); if(el){el.className='status-pill pill-idle';el.textContent='—';}
   });
   // highlight current theme
@@ -7598,16 +7525,11 @@ function saveSettings(){
   const j=parseFloat(juros)||0;
   let val12; if(j===0){val12=v/12;}else{const r=j/100;val12=v*(r*Math.pow(1+r,12))/(Math.pow(1+r,12)-1);}
   appSettings.parcelas = `12x R$ ${val12.toFixed(0)}`;
-  appSettings.titulo = 'CAPTURO';
+  appSettings.titulo = $('cfgTitulo').value.trim();
   appSettings.emojiVolcano = $('cfgEmojiVolcano').value||'🌋';
   appSettings.emojiHot = $('cfgEmojiHot').value||'🔥';
   appSettings.emojiWarm = $('cfgEmojiWarm').value||'☀️';
   appSettings.emojiFrozen = $('cfgEmojiFrozen').value||'❄️';
-  // Save notification prefs
-  const notifEmailEl=$('cfgNotifEmail'); if(notifEmailEl) localStorage.setItem('capturo-notifEmail', notifEmailEl.checked?'1':'0');
-  const notifEmailAddrEl=$('cfgNotifEmailAddr'); if(notifEmailAddrEl) localStorage.setItem('capturo-notifEmailAddr', notifEmailAddrEl.value.trim());
-  const notifWAEl=$('cfgNotifWA'); if(notifWAEl) localStorage.setItem('capturo-notifWA', notifWAEl.checked?'1':'0');
-  const notifWANumEl=$('cfgNotifWANum'); if(notifWANumEl) localStorage.setItem('capturo-notifWANum', notifWANumEl.value.trim());
   localStorage.setItem('capturo-settings', JSON.stringify(appSettings));
   // Save API keys securely in separate localStorage keys
   const saveKey = (id, key, val) => { if(val!==undefined) localStorage.setItem(key, val); };
@@ -7882,12 +7804,47 @@ function openMsgModalFromLeadsPage(leadId, campId){
 }
 
 function exportAllLeadsCSV(){
-  const allLeads=campaigns.flatMap(c=>(c.leads||[]).map(l=>({...l,_camp:c.name,_nicho:c.nicho,_city:c.city})));
+  const allLeads=campaigns.flatMap(c=>(c.leads||[]).map(l=>({...l,_camp:c.name,_nicho:c.nicho,_city:c.city,_state:c.state,_country:c.country})));
   if(!allLeads.length){alert('Sem leads!');return;}
-  const rows=[['Campanha','Nicho','Cidade','Nome','Endereço','Temperatura','Score','Telefone','Email','Website','Status','Notas']];
-  allLeads.forEach(l=>rows.push([l._camp||'',l._nicho||'',l._city||'',l.name||'',l.formatted_address||'',l.t||'',l.score||'',l.formatted_phone_number||'',l.email||'',l.website||'',l.status||'',(l.notes||'').replace(/\n/g,' ')]));
-  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download='todos_leads_capturo.csv';a.click();
+  const rows=[[
+    'Campanha','Segmento/Nicho','Bairro','Cidade','Estado','País',
+    'Nome','Endereço Completo','CEP',
+    'Telefone','WhatsApp',
+    'E-mail','E-mail Verificado','Confiança E-mail',
+    'Website','Bio Link','Instagram','Facebook',
+    'Temperatura','Score Geral','Score Site','Avaliação Google','Nº Avaliações',
+    'Problemas no Site','Fonte','Status',
+    'Pitch IA','Notas','Data Captura'
+  ]];
+  allLeads.forEach(l=>{
+    const addr = l.formatted_address||'';
+    const parts = addr.split(',').map(s=>s.trim());
+    const bairro = l.bairro||l.neighborhood||parts[1]||'';
+    const cep = (addr.match(/\d{5}-?\d{3}/)||[''])[0];
+    const waNum = (l.whatsapp||l.manualWa||l.formatted_phone_number||'').replace(/\D/g,'');
+    const waLink = waNum ? `wa.me/${waNum}` : '';
+    const insta = l.instagram||l.socialLinks?.instagram||'';
+    const fb = l.facebook||l.socialLinks?.facebook||'';
+    const pitchIA = (l.pitch||l.aiPitch||'').replace(/\n/g,' ');
+    const capDate = l.createdAt ? new Date(l.createdAt).toLocaleDateString('pt-BR') : '';
+    rows.push([
+      l._camp||'', l._nicho||l.nicho||'', bairro,
+      l._city||l.city||'', l._state||l.state||'', l._country||l.country||'BR',
+      l.name||'', addr, cep,
+      l.formatted_phone_number||'', waLink,
+      l.email||'', l.emailVerified?'Sim':'', l.emailConfidence||'',
+      l.website||'', l.bioUrl||'', insta, fb,
+      l.t||'', l.score||'', l.siteScore||'', l.rating||'', l.user_ratings_total||'',
+      (l.siteIssues||[]).join(' | '), l.source||'', l.status||'',
+      pitchIA, (l.notes||'').replace(/\n/g,' '), capDate
+    ]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download=`CAPTURO_todos_leads_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast('✅ Todos os leads exportados!','success',3000);
 }
 
 // ══════════════════════════════════════════
@@ -9189,19 +9146,14 @@ initAuth();
 <div class="tour-overlay" id="tourOverlay" style="display:none">
   <div class="tour-spotlight" id="tourSpotlight"></div>
 </div>
-<!-- Tour arrow pointer -->
-<div id="tourArrow" style="display:none;position:fixed;z-index:99002;pointer-events:none;transition:all .4s cubic-bezier(.4,0,.2,1)">
-  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <circle cx="24" cy="24" r="14" fill="#007aff" opacity="0.15"/>
-    <circle cx="24" cy="24" r="8" fill="#007aff" filter="url(#glow)"/>
-    <circle cx="24" cy="24" r="4" fill="white"/>
-  </svg>
+<!-- Tour arrow pulse -->
+<div id="tourArrow" style="display:none;position:fixed;z-index:99002;pointer-events:none">
+  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="14" fill="#007aff" opacity="0.18"/><circle cx="24" cy="24" r="8" fill="#007aff"/><circle cx="24" cy="24" r="4" fill="white"/></svg>
 </div>
 <div class="tour-bubble" id="tourBubble" style="display:none">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
     <div class="tour-title" id="tourTitle" style="flex:1"></div>
-    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narração por voz" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 7px;cursor:pointer;font-size:13px;color:var(--muted2);flex-shrink:0" title="Narrar em voz alta">🔊</button>
+    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narrar em voz alta" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:13px;flex-shrink:0">🔊</button>
   </div>
   <div class="tour-desc" id="tourDesc"></div>
   <div class="tour-nav">
@@ -9213,8 +9165,8 @@ initAuth();
     </div>
   </div>
 </div>
-<!-- Floating tour access button — always visible -->
-<button id="tourFloatBtn" onclick="restartTourFromFloat()" title="Abrir tour / manual interativo" style="position:fixed;bottom:24px;right:24px;z-index:99100;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:0 4px 18px rgba(0,122,255,.45);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 24px rgba(0,122,255,.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 18px rgba(0,122,255,.45)'">🧭</button>
+<!-- Botão flutuante sempre visível -->
+<button id="tourFloatBtn" onclick="restartTourFromFloat()" title="Abrir tour interativo / ajuda" style="position:fixed;bottom:24px;right:24px;z-index:99100;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:20px;box-shadow:0 4px 20px rgba(0,122,255,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 28px rgba(0,122,255,.7)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(0,122,255,.5)'">🧭</button>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -9535,29 +9487,14 @@ function sendBrowserNotification(title, body, onClick){
 function checkFollowupNotifications(){
   if(typeof followups==='undefined') return;
   const now = new Date();
+  const todayEnd = new Date(); todayEnd.setHours(23,59,59,999);
   const overdue = followups.filter(f=>{
     if(f.done || f._notified) return false;
     return new Date(f.date) <= now;
   });
   overdue.forEach(f=>{
     f._notified = true;
-    // Browser notification
     sendBrowserNotification('⏰ Follow-up pendente — CAPTURO', f.leadName+': '+f.note, ()=>{ showPage('pageFollowup'); setSbActive('sb-followup'); });
-    // Email notification
-    const notifEmail = localStorage.getItem('capturo-notifEmail')==='1';
-    const emailAddr = localStorage.getItem('capturo-notifEmailAddr')||'';
-    if(notifEmail && emailAddr){
-      const subject = encodeURIComponent(`⏰ Follow-up pendente: ${f.leadName}`);
-      const body = encodeURIComponent(`Olá!\n\nVocê tem um follow-up pendente no CAPTURO:\n\n📌 Lead: ${f.leadName}\n📝 Lembrete: ${f.note}\n📅 Data: ${new Date(f.date).toLocaleDateString('pt-BR')}\n\nAcesse o CAPTURO para ver os detalhes.`);
-      window.open(`mailto:${emailAddr}?subject=${subject}&body=${body}`, '_blank');
-    }
-    // WhatsApp notification
-    const notifWA = localStorage.getItem('capturo-notifWA')==='1';
-    const waNum = localStorage.getItem('capturo-notifWANum')||'';
-    if(notifWA && waNum){
-      const msg = encodeURIComponent(`⏰ *Follow-up pendente — CAPTURO*\n\n📌 Lead: ${f.leadName}\n📝 ${f.note}\n📅 ${new Date(f.date).toLocaleDateString('pt-BR')}`);
-      window.open(`https://web.whatsapp.com/send?phone=${waNum.replace(/\D/g,'')}&text=${msg}`, '_blank');
-    }
   });
   if(overdue.length>0) saveFollowups && saveFollowups();
 }
@@ -9596,16 +9533,16 @@ function renderVisualFunnel(stages){
 }
 
 
-/* ─────────── 6. ONBOARDING TOUR (MELHORADO v2) ───────────── */
+/* ─────────── 6. ONBOARDING TOUR (v2 — melhorado) ─────────── */
 const TOUR_STEPS = [
-  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em 2 minutos. Clique em 🔊 para ativar a narração por voz — o sistema vai narrar cada etapa no seu idioma!', target:null, pos:'center' },
-  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente. Comece criando a primeira!', target:'.campaigns-grid', pos:'top' },
-  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência, máxima cobertura).', target:'#sb-prospectar', pos:'right' },
-  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique no card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
-  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads. O CAPTURO avisa pelo navegador, por e-mail e pelo WhatsApp quando o prazo chegar. Configure em ⚙️ Perfil → Notificações.', target:'#sb-followup', pos:'right' },
+  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em poucos minutos. Clique em 🔊 para ativar narração por voz. Clique no botão 🧭 no canto inferior direito para rever o tour a qualquer momento!', target:null, pos:'center' },
+  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente.', target:'.campaigns-grid', pos:'top' },
+  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência para máxima cobertura).', target:'#sb-prospectar', pos:'right' },
+  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique em qualquer card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
+  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads. O CAPTURO te avisa pelo navegador quando o prazo chegar. Configure em ⚙️ Perfil.', target:'#sb-followup', pos:'right' },
   { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente — sem sair da tela atual.', target:'.gs-btn', pos:'bottom' },
-  { title:'📥 Importar CSV', desc:'Já tem uma lista de leads? Importe via CSV com um clique. Acesse o botão "Importar CSV" na tela de Prospecção. O sistema mapeia as colunas automaticamente.', target:null, pos:'center' },
-  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Para rever o tour a qualquer momento, clique no botão 🧭 no canto inferior direito da tela.', target:null, pos:'center' }
+  { title:'📥 Importar / Exportar CSV', desc:'Importe listas de leads via CSV com um clique. O CSV exportado agora inclui todas as colunas: bairro, segmento, telefone, WhatsApp, e-mail, endereço, pitch IA e muito mais!', target:null, pos:'center' },
+  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Para rever este tour a qualquer momento, clique no botão 🧭 no canto inferior direito da tela.', target:null, pos:'center' }
 ];
 
 let tourStep = 0;
@@ -9634,12 +9571,13 @@ function speakTour(text){
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
   const voices = window.speechSynthesis.getVoices();
-  const ptVoice = voices.find(v=>v.lang.startsWith('pt'));
+  const ptVoice = voices.find(v=>v.lang&&v.lang.startsWith('pt'));
   if(ptVoice) utter.voice = ptVoice;
   utter.lang = 'pt-BR';
   utter.rate = 0.95;
   window.speechSynthesis.speak(utter);
 }
+if(window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); }; }
 
 function startOnboardingTour(){
   if(localStorage.getItem('capturo-tour-done')) return;
@@ -9650,13 +9588,13 @@ function startOnboardingTour(){
 function showTourStep(idx){
   const step = TOUR_STEPS[idx];
   if(!step){ endTour(); return; }
-  const ov = document.getElementById('tourOverlay');
+  const ov     = document.getElementById('tourOverlay');
   const bubble = document.getElementById('tourBubble');
-  const sp = document.getElementById('tourSpotlight');
-  const arrow = document.getElementById('tourArrow');
+  const sp     = document.getElementById('tourSpotlight');
+  const arrow  = document.getElementById('tourArrow');
   ov.style.display='block'; bubble.style.display='block';
   document.getElementById('tourTitle').textContent = step.title;
-  document.getElementById('tourDesc').textContent = step.desc;
+  document.getElementById('tourDesc').textContent  = step.desc;
   document.getElementById('tourStepLabel').textContent = (idx+1)+'/'+TOUR_STEPS.length;
   document.getElementById('tourDots').innerHTML = TOUR_STEPS.map((_,i)=>`<div class="tour-dot ${i===idx?'active':''}"></div>`).join('');
   document.getElementById('tourBtnNext').textContent = idx===TOUR_STEPS.length-1?'✅ Começar!':'Próximo →';
@@ -9667,8 +9605,8 @@ function showTourStep(idx){
     const el = document.querySelector(step.target);
     if(el){
       el.scrollIntoView({behavior:'smooth', block:'nearest'});
-      const r = el.getBoundingClientRect();
-      const pad=8;
+      const r   = el.getBoundingClientRect();
+      const pad = 8;
       sp.style.cssText=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
       ov.style.pointerEvents='none';
       if(arrow){
@@ -9688,16 +9626,16 @@ function showTourStep(idx){
 
 function positionTourBubble(step, sp){
   const bubble = document.getElementById('tourBubble');
-  const r = sp.getBoundingClientRect();
-  const bw=340, bh=200;
-  const vw=window.innerWidth, vh=window.innerHeight;
+  const r  = sp.getBoundingClientRect();
+  const bw = 340, bh = 200;
+  const vw = window.innerWidth, vh = window.innerHeight;
   let top, left;
-  if(step.pos==='right'){ top=Math.min(r.top,vh-bh-20); left=Math.min(r.right+18,vw-bw-20); }
-  else if(step.pos==='bottom'){ top=r.bottom+18; left=Math.max(20,r.left+r.width/2-bw/2); }
-  else if(step.pos==='top'){ top=Math.max(20,r.top-bh-18); left=Math.max(20,r.left+r.width/2-bw/2); }
-  else { top=vh/2-bh/2; left=vw/2-bw/2; }
-  top=Math.max(10,Math.min(top,vh-bh-10));
-  left=Math.max(10,Math.min(left,vw-bw-10));
+  if(step.pos==='right')       { top=Math.min(r.top,vh-bh-20);      left=Math.min(r.right+18,vw-bw-20); }
+  else if(step.pos==='bottom') { top=r.bottom+18;                    left=Math.max(20,r.left+r.width/2-bw/2); }
+  else if(step.pos==='top')    { top=Math.max(20,r.top-bh-18);       left=Math.max(20,r.left+r.width/2-bw/2); }
+  else                         { top=vh/2-bh/2;                      left=vw/2-bw/2; }
+  top  = Math.max(10, Math.min(top,  vh-bh-10));
+  left = Math.max(10, Math.min(left, vw-bw-10));
   bubble.style.cssText=`display:block;top:${top}px;left:${left}px;transform:none;max-width:${bw}px`;
 }
 
@@ -9721,8 +9659,6 @@ function maybeStartTour(){
     setTimeout(startOnboardingTour, 1200);
   }
 }
-// Preload voices for Web Speech API
-if(window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); }; }
 
 
 /* ─────────── 7. BOTÃO IMPORTAR CSV NA PROSPECÇÃO ─────────── */
