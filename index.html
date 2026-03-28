@@ -62,6 +62,10 @@
 /* CAPTURO © Felipe Uchoa 2024-2025 — CAP-7B3E92A1F0C84D56 — Uso não autorizado é proibido */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+@keyframes tourArrowPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.35);opacity:.7}
+}
 /* ── RADAR ANIMATIONS ── */
 @keyframes radarSpin{
   from{transform:rotate(0deg)}
@@ -781,7 +785,7 @@ select option{background:#8a9099}
 </head>
 <body class="theme-blue">
 <!-- CAPTURO authorship watermark — do not remove -->
-<span aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none;opacity:0" data-cap="CAP-7B3E92A1F0C84D56" data-author="Felipe Uchoa" data-year="2025">CAPTURO v5.0 © 2024-2025 Felipe Uchoa felipelabat@hotmail.com</span>
+<span aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none;opacity:0" data-cap="CAP-7B3E92A1F0C84D56" data-author="Felipe Uchoa" data-year="2025">CAPTURO v5.0 © 2024-2025 Felipe Uchoa <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dcbab9b0b5acb9b0bdbebda89cb4b3a8b1bdb5b0f2bfb3b1">[email&#160;protected]</a></span>
 
 <!-- ══ LOGIN SCREEN ══════════════════════════════════════════ -->
 <div id="loginScreen" style="display:flex;position:fixed;inset:0;z-index:99999;background:var(--bg);align-items:center;justify-content:center;padding:20px">
@@ -842,7 +846,7 @@ select option{background:#8a9099}
 </div>
 <!-- ══ /LOGIN SCREEN ══════════════════════════════════════════ -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /**
  * CAPTURO v5.0 — Sistema de Prospecção Inteligente de Leads
  * @author    Felipe Uchoa <felipelabat@hotmail.com>
@@ -858,9 +862,9 @@ const CAPTURO_SIGNATURE = {
   build:     'CAP-7B3E92A1F0C84D56',
   hash:      '7b3e92a1f0c84d563f291ae8b047209901f3da849d1bf54d1ebdcb10f72a4c1e',
   copyright: '© 2024-2025 Felipe Uchoa. Reprodução não autorizada proibida.',
-  verify:    () => console.info('%cCAPTURO%c © Felipe Uchoa — Build CAP-7B3E92A1F0C84D56', 'color:#007aff;font-weight:bold;font-size:14px','color:#888;font-size:11px')
+  verify:    () => { try{ (console.info||console.log).call(console,'%cCAPTURO%c © Felipe Uchoa — Build CAP-7B3E92A1F0C84D56','color:#007aff;font-weight:bold;font-size:14px','color:#888;font-size:11px'); }catch(e){} }
 };
-if (typeof console !== 'undefined') { CAPTURO_SIGNATURE.verify(); }
+if (typeof console !== 'undefined') { try{ CAPTURO_SIGNATURE.verify(); }catch(e){} }
 
 // Warn if not running via localhost
 if(location.protocol === 'file:'){
@@ -2233,6 +2237,55 @@ function toast(msg, type='info', duration=3500){
             <input type="text" id="cfgEmojiFrozen" placeholder="❄️" style="font-size:18px">
           </div>
         </div>
+
+        <!-- NOTIFICAÇÕES DE FOLLOW-UP -->
+        <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;margin-top:20px">🔔 Notificações de Follow-up</div>
+        <div style="font-size:11px;color:var(--muted2);margin-bottom:12px;line-height:1.6">Quando um follow-up estiver pendente, o CAPTURO pode te avisar pelo navegador, por e-mail e/ou WhatsApp.</div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px">
+          <!-- Navegador -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text)">🌐 Notificação no navegador</div>
+              <div style="font-size:10px;color:var(--muted2)">Alerta direto no browser quando o prazo chegar</div>
+            </div>
+            <button onclick="requestNotificationPermission().then(()=>toast('🔔 Permissão de notificação solicitada','info',2500))" style="font-size:10px;padding:5px 12px;border-radius:6px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent);cursor:pointer;font-weight:600">Ativar</button>
+          </div>
+
+          <!-- E-mail -->
+          <div style="padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text)">📧 Notificação por e-mail</div>
+                <div style="font-size:10px;color:var(--muted2)">Abre seu cliente de e-mail com o alerta pronto para enviar</div>
+              </div>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                <input type="checkbox" id="cfgNotifEmail" onchange="localStorage.setItem('capturo-notifEmail',this.checked?'1':'0')" style="width:14px;height:14px;accent-color:var(--accent)">
+                <span style="font-size:10px;color:var(--muted2)">Ativo</span>
+              </label>
+            </div>
+            <div class="field" style="margin:0">
+              <input type="email" id="cfgNotifEmailAddr" placeholder="seu@email.com" style="font-size:11px">
+            </div>
+          </div>
+
+          <!-- WhatsApp -->
+          <div style="padding:10px 12px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--text)">💬 Notificação por WhatsApp</div>
+                <div style="font-size:10px;color:var(--muted2)">Abre o WhatsApp Web com a mensagem de alerta pronta</div>
+              </div>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+                <input type="checkbox" id="cfgNotifWA" onchange="localStorage.setItem('capturo-notifWA',this.checked?'1':'0')" style="width:14px;height:14px;accent-color:var(--green)">
+                <span style="font-size:10px;color:var(--muted2)">Ativo</span>
+              </label>
+            </div>
+            <div class="field" style="margin:0">
+              <input type="tel" id="cfgNotifWANum" placeholder="5511999999999 (com DDI)" style="font-size:11px">
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- TAB: INTEGRAÇÕES (todas as API keys) -->
@@ -2352,10 +2405,6 @@ function toast(msg, type='info', duration=3500){
       <!-- TAB: INTERFACE -->
       <div id="stab-content-interface" style="display:none">
         <div style="font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">🎨 Aparência</div>
-        <div class="field" style="margin-bottom:14px">
-          <label>Nome do sistema (aparece no topo)</label>
-          <input type="text" id="cfgTitulo" placeholder="CAPTURO">
-        </div>
         <div style="margin-bottom:18px">
           <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:10px">Tema de cores</label>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -3415,22 +3464,82 @@ function createCampaign(){
   const country=currentMarket==='internacional'?$('countryDD').value:'BR';
   const nichoData=(currentMarket==='nacional'?NICHOS_BR:NICHOS_INT).find(n=>n.v===nicho);
 
-  // If multiple cities selected, create one campaign per city (or one combined)
+  // If multiple cities selected, show custom modal with 3 options
   if(cities.length > 1){
-    const doMulti = confirm(`Criar ${cities.length} campanhas separadas (uma por cidade)?\n\nCidades: ${cities.join(', ')}\n\nOK = ${cities.length} campanhas · Cancelar = só a primeira (${cities[0]})`);
-    if(doMulti){
-      cities.forEach((ct,i)=>{
-        const cName = `${nicho} — ${ct}, ${state}`;
-        const camp={id:'c'+Date.now()+'_'+i,name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:ct,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString(),cityList:cities};
-        campaigns.push(camp);
-      });
-      saveCampaigns(); closeCampaignModal(); renderCampaignsList();
-      toast(`✅ ${cities.length} campanhas criadas!`,'success',3000);
-      return;
-    }
+    _showMultiCityModal(cities, nicho, state, city, neighborhood, country, nichoData, radius, name);
+    return;
   }
   const c={id:'c'+Date.now(),name,nicho,nichoEn:nichoData?.en||nicho,state,city,cityList:cities,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
   campaigns.push(c); saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(c.id);
+}
+
+// ══════════════════════════════════════════
+// MULTI-CITY CAMPAIGN MODAL
+// ══════════════════════════════════════════
+function _showMultiCityModal(cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName){
+  // Remove old modal if exists
+  const old = document.getElementById('multiCityModal');
+  if(old) old.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'multiCityModal';
+  modal.style.cssText='position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)';
+  modal.innerHTML=`
+    <div style="background:var(--s1);border-radius:16px;padding:24px 28px;max-width:480px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);border:1px solid var(--border)">
+      <div style="font-size:15px;font-weight:800;margin-bottom:4px">🏙️ ${cities.length} cidades selecionadas</div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:16px;font-family:'IBM Plex Mono',monospace">${cities.join(' · ')}</div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+
+        <button onclick="_multiCityChoice('separate')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">📂 Criar ${cities.length} campanhas separadas</div>
+          <div style="font-size:11px;color:var(--muted2)">Uma campanha por cidade — funil e leads independentes por cidade</div>
+        </button>
+
+        <button onclick="_multiCityChoice('combined')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">📋 Uma campanha com todas as cidades</div>
+          <div style="font-size:11px;color:var(--muted2)">Todos os leads na mesma campanha — prospecta todas as cidades de uma vez</div>
+        </button>
+
+        <button onclick="_multiCityChoice('first')" style="text-align:left;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--s2);cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--orange)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px">🎯 Só a primeira cidade (${cities[0]})</div>
+          <div style="font-size:11px;color:var(--muted2)">Cria apenas a campanha de ${cities[0]} agora</div>
+        </button>
+      </div>
+
+      <button onclick="document.getElementById('multiCityModal').remove()" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;font-size:11px">Cancelar</button>
+    </div>`;
+
+  // Store data on window for callback
+  window._mcc = {cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName};
+  document.body.appendChild(modal);
+}
+
+function _multiCityChoice(choice){
+  const {cities, nicho, state, city, neighborhood, country, nichoData, radius, baseName} = window._mcc || {};
+  const modal = document.getElementById('multiCityModal');
+  if(modal) modal.remove();
+  if(!cities) return;
+
+  if(choice === 'separate'){
+    cities.forEach((ct,i)=>{
+      const cName = `${nicho} — ${ct}, ${state}`;
+      const camp={id:'c'+Date.now()+'_'+i,name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:ct,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString(),cityList:cities};
+      campaigns.push(camp);
+    });
+    saveCampaigns(); closeCampaignModal(); renderCampaignsList();
+    toast(`✅ ${cities.length} campanhas criadas!`,'success',3000);
+  } else if(choice === 'combined'){
+    const cName = `${nicho} — ${cities.join(', ')}, ${state}`;
+    const camp={id:'c'+Date.now(),name:cName,nicho,nichoEn:nichoData?.en||nicho,state,city:cities[0],cityList:cities,neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
+    campaigns.push(camp);
+    saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(camp.id);
+    toast(`✅ Campanha única criada com ${cities.length} cidades!`,'success',3000);
+  } else {
+    // first only
+    const c={id:'c'+Date.now(),name:baseName,nicho,nichoEn:nichoData?.en||nicho,state,city,cityList:[city],neighborhood,country,market:currentMarket,radius,leads:[],isAltoPadrao:window._altoPadraoList?.length>1,altoPadraoList:window._altoPadraoList||[],createdAt:new Date().toISOString()};
+    campaigns.push(c); saveCampaigns(); closeCampaignModal(); renderCampaignsList(); openCampaign(c.id);
+  }
 }
 
 // ══════════════════════════════════════════
@@ -3618,9 +3727,15 @@ async function testSerpKey(){
   if(!proxyBase){_setKeyStatus('serpStatus',false,'Configure o proxy');return;}
   _setKeyLoading('serpStatus');
   try{
-    const url=`${proxyBase}?action=serp&query=test&serpKey=${encodeURIComponent(key)}`;
+    const url=`${proxyBase}?action=serp&query=${encodeURIComponent('restaurante')}&serpKey=${encodeURIComponent(key)}`;
     const r=await fetch(url,{signal:AbortSignal.timeout(15000)});
-    if(r.ok){ const d=await r.json(); _setKeyStatus('serpStatus',!d.error,'SerpAPI '+(d.error?'inválida':'OK')); }
+    if(r.ok){
+      const d=await r.json();
+      // 404 from SerpAPI means no results but key is valid; error.type===auth means invalid
+      const isInvalid = d.error && (d.error.toLowerCase().includes('invalid')|| d.error.toLowerCase().includes('auth'));
+      _setKeyStatus('serpStatus',!isInvalid,'SerpAPI '+(isInvalid?'inválida':'OK'));
+    }
+    else if(r.status===404){ _setKeyStatus('serpStatus',true,'SerpAPI OK'); } // 404 = key ok, sem resultados
     else _setKeyStatus('serpStatus',false,'Erro '+r.status);
   }catch(e){ _setKeyStatus('serpStatus',false,'Timeout/Proxy off'); }
 }
@@ -7373,9 +7488,13 @@ function setSbActive(id){
 function openSettings(){
   $('cfgVendedor').value = appSettings.vendedor||'';
   $('cfgWA').value = appSettings.wa||'';
+  // Notification settings
+  const notifEmailEl = $('cfgNotifEmail'); if(notifEmailEl) notifEmailEl.checked = localStorage.getItem('capturo-notifEmail')==='1';
+  const notifEmailAddrEl = $('cfgNotifEmailAddr'); if(notifEmailAddrEl) notifEmailAddrEl.value = localStorage.getItem('capturo-notifEmailAddr')||'';
+  const notifWAEl = $('cfgNotifWA'); if(notifWAEl) notifWAEl.checked = localStorage.getItem('capturo-notifWA')==='1';
+  const notifWANumEl = $('cfgNotifWANum'); if(notifWANumEl) notifWANumEl.value = localStorage.getItem('capturo-notifWANum')||'';
   $('cfgPrecoAvista').value = appSettings.precoAvista||'3000';
   $('cfgJuros').value = appSettings.juros||'0';
-  $('cfgTitulo').value = appSettings.titulo||'';
   calcParcelas($('cfgPrecoAvista').value, $('cfgJuros').value);
   $('cfgPrecoAvista').oninput = ()=>calcParcelas($('cfgPrecoAvista').value,$('cfgJuros').value);
   $('cfgJuros').oninput = ()=>calcParcelas($('cfgPrecoAvista').value,$('cfgJuros').value);
@@ -7420,11 +7539,16 @@ function saveSettings(){
   const j=parseFloat(juros)||0;
   let val12; if(j===0){val12=v/12;}else{const r=j/100;val12=v*(r*Math.pow(1+r,12))/(Math.pow(1+r,12)-1);}
   appSettings.parcelas = `12x R$ ${val12.toFixed(0)}`;
-  appSettings.titulo = $('cfgTitulo').value.trim();
+  appSettings.titulo = 'CAPTURO';
   appSettings.emojiVolcano = $('cfgEmojiVolcano').value||'🌋';
   appSettings.emojiHot = $('cfgEmojiHot').value||'🔥';
   appSettings.emojiWarm = $('cfgEmojiWarm').value||'☀️';
   appSettings.emojiFrozen = $('cfgEmojiFrozen').value||'❄️';
+  // Save notification prefs
+  const notifEmailEl=$('cfgNotifEmail'); if(notifEmailEl) localStorage.setItem('capturo-notifEmail', notifEmailEl.checked?'1':'0');
+  const notifEmailAddrEl=$('cfgNotifEmailAddr'); if(notifEmailAddrEl) localStorage.setItem('capturo-notifEmailAddr', notifEmailAddrEl.value.trim());
+  const notifWAEl=$('cfgNotifWA'); if(notifWAEl) localStorage.setItem('capturo-notifWA', notifWAEl.checked?'1':'0');
+  const notifWANumEl=$('cfgNotifWANum'); if(notifWANumEl) localStorage.setItem('capturo-notifWANum', notifWANumEl.value.trim());
   localStorage.setItem('capturo-settings', JSON.stringify(appSettings));
   // Save API keys securely in separate localStorage keys
   const saveKey = (id, key, val) => { if(val!==undefined) localStorage.setItem(key, val); };
@@ -9006,8 +9130,20 @@ initAuth();
 <div class="tour-overlay" id="tourOverlay" style="display:none">
   <div class="tour-spotlight" id="tourSpotlight"></div>
 </div>
+<!-- Tour arrow pointer -->
+<div id="tourArrow" style="display:none;position:fixed;z-index:99002;pointer-events:none;transition:all .4s cubic-bezier(.4,0,.2,1)">
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <circle cx="24" cy="24" r="14" fill="#007aff" opacity="0.15"/>
+    <circle cx="24" cy="24" r="8" fill="#007aff" filter="url(#glow)"/>
+    <circle cx="24" cy="24" r="4" fill="white"/>
+  </svg>
+</div>
 <div class="tour-bubble" id="tourBubble" style="display:none">
-  <div class="tour-title" id="tourTitle"></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px">
+    <div class="tour-title" id="tourTitle" style="flex:1"></div>
+    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narração por voz" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 7px;cursor:pointer;font-size:13px;color:var(--muted2);flex-shrink:0" title="Narrar em voz alta">🔊</button>
+  </div>
   <div class="tour-desc" id="tourDesc"></div>
   <div class="tour-nav">
     <button class="tour-btn-skip" onclick="endTour()">Pular tour</button>
@@ -9018,6 +9154,8 @@ initAuth();
     </div>
   </div>
 </div>
+<!-- Floating tour access button — always visible -->
+<button id="tourFloatBtn" onclick="restartTourFromFloat()" title="Abrir tour / manual interativo" style="position:fixed;bottom:24px;right:24px;z-index:9500;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:18px;box-shadow:0 4px 18px rgba(0,122,255,.45);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 24px rgba(0,122,255,.6)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 18px rgba(0,122,255,.45)'">🧭</button>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -9338,14 +9476,29 @@ function sendBrowserNotification(title, body, onClick){
 function checkFollowupNotifications(){
   if(typeof followups==='undefined') return;
   const now = new Date();
-  const todayEnd = new Date(); todayEnd.setHours(23,59,59,999);
   const overdue = followups.filter(f=>{
     if(f.done || f._notified) return false;
     return new Date(f.date) <= now;
   });
   overdue.forEach(f=>{
     f._notified = true;
+    // Browser notification
     sendBrowserNotification('⏰ Follow-up pendente — CAPTURO', f.leadName+': '+f.note, ()=>{ showPage('pageFollowup'); setSbActive('sb-followup'); });
+    // Email notification
+    const notifEmail = localStorage.getItem('capturo-notifEmail')==='1';
+    const emailAddr = localStorage.getItem('capturo-notifEmailAddr')||'';
+    if(notifEmail && emailAddr){
+      const subject = encodeURIComponent(`⏰ Follow-up pendente: ${f.leadName}`);
+      const body = encodeURIComponent(`Olá!\n\nVocê tem um follow-up pendente no CAPTURO:\n\n📌 Lead: ${f.leadName}\n📝 Lembrete: ${f.note}\n📅 Data: ${new Date(f.date).toLocaleDateString('pt-BR')}\n\nAcesse o CAPTURO para ver os detalhes.`);
+      window.open(`mailto:${emailAddr}?subject=${subject}&body=${body}`, '_blank');
+    }
+    // WhatsApp notification
+    const notifWA = localStorage.getItem('capturo-notifWA')==='1';
+    const waNum = localStorage.getItem('capturo-notifWANum')||'';
+    if(notifWA && waNum){
+      const msg = encodeURIComponent(`⏰ *Follow-up pendente — CAPTURO*\n\n📌 Lead: ${f.leadName}\n📝 ${f.note}\n📅 ${new Date(f.date).toLocaleDateString('pt-BR')}`);
+      window.open(`https://web.whatsapp.com/send?phone=${waNum.replace(/\D/g,'')}&text=${msg}`, '_blank');
+    }
   });
   if(overdue.length>0) saveFollowups && saveFollowups();
 }
@@ -9384,19 +9537,50 @@ function renderVisualFunnel(stages){
 }
 
 
-/* ─────────── 6. ONBOARDING TOUR ─────────────────────────── */
+/* ─────────── 6. ONBOARDING TOUR (MELHORADO v2) ───────────── */
 const TOUR_STEPS = [
-  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos. Em 2 minutos você estará prospectando leads profissionalmente!', target:null, pos:'center' },
-  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Comece criando a primeira!', target:'.campaigns-grid', pos:'top' },
-  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios via Google Maps, Bio Links ou Busca Completa automaticamente.', target:'#sb-prospectar', pos:'right' },
-  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados em colunas por temperatura (🌋 Vulcão → 🧊 Gelado). Arraste para mover entre estágios.', target:'#sb-leads', pos:'right' },
-  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads específicos. O CAPTURO te notifica no navegador quando o prazo chega.', target:'#sb-followup', pos:'right' },
-  { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente.', target:'.gs-btn', pos:'bottom' },
-  { title:'📥 Importar CSV', desc:'Já tem uma lista de leads? Importe via CSV com um clique. Acesse o botão na tela de Prospecção → Entrada Manual.', target:null, pos:'center' },
-  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Qualquer dúvida, consulte o Manual na sidebar.', target:null, pos:'center' }
+  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em 2 minutos. Clique em 🔊 para ativar a narração por voz — o sistema vai narrar cada etapa no seu idioma!', target:null, pos:'center' },
+  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente. Comece criando a primeira!', target:'.campaigns-grid', pos:'top' },
+  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência, máxima cobertura).', target:'#sb-prospectar', pos:'right' },
+  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique no card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
+  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads. O CAPTURO avisa pelo navegador, por e-mail e pelo WhatsApp quando o prazo chegar. Configure em ⚙️ Perfil → Notificações.', target:'#sb-followup', pos:'right' },
+  { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente — sem sair da tela atual.', target:'.gs-btn', pos:'bottom' },
+  { title:'📥 Importar CSV', desc:'Já tem uma lista de leads? Importe via CSV com um clique. Acesse o botão "Importar CSV" na tela de Prospecção. O sistema mapeia as colunas automaticamente.', target:null, pos:'center' },
+  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Para rever o tour a qualquer momento, clique no botão 🧭 no canto inferior direito da tela.', target:null, pos:'center' }
 ];
 
 let tourStep = 0;
+let tourAudioEnabled = false;
+
+function restartTourFromFloat(){
+  localStorage.removeItem('capturo-tour-done');
+  tourStep = 0;
+  showTourStep(0);
+}
+
+function toggleTourAudio(){
+  tourAudioEnabled = !tourAudioEnabled;
+  const btn = document.getElementById('tourAudioBtn');
+  if(btn) btn.textContent = tourAudioEnabled ? '🔇' : '🔊';
+  if(tourAudioEnabled){
+    const desc = document.getElementById('tourDesc');
+    if(desc) speakTour(desc.textContent);
+  } else {
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+}
+
+function speakTour(text){
+  if(!tourAudioEnabled || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  const ptVoice = voices.find(v=>v.lang.startsWith('pt'));
+  if(ptVoice) utter.voice = ptVoice;
+  utter.lang = 'pt-BR';
+  utter.rate = 0.95;
+  window.speechSynthesis.speak(utter);
+}
 
 function startOnboardingTour(){
   if(localStorage.getItem('capturo-tour-done')) return;
@@ -9410,27 +9594,35 @@ function showTourStep(idx){
   const ov = document.getElementById('tourOverlay');
   const bubble = document.getElementById('tourBubble');
   const sp = document.getElementById('tourSpotlight');
+  const arrow = document.getElementById('tourArrow');
   ov.style.display='block'; bubble.style.display='block';
   document.getElementById('tourTitle').textContent = step.title;
   document.getElementById('tourDesc').textContent = step.desc;
   document.getElementById('tourStepLabel').textContent = (idx+1)+'/'+TOUR_STEPS.length;
-  // Dots
   document.getElementById('tourDots').innerHTML = TOUR_STEPS.map((_,i)=>`<div class="tour-dot ${i===idx?'active':''}"></div>`).join('');
-  // Last step
   document.getElementById('tourBtnNext').textContent = idx===TOUR_STEPS.length-1?'✅ Começar!':'Próximo →';
-  // Spotlight
+  // Narrate
+  speakTour(step.desc);
+  // Spotlight + animated arrow
   if(step.target && step.pos!=='center'){
     const el = document.querySelector(step.target);
     if(el){
+      el.scrollIntoView({behavior:'smooth', block:'nearest'});
       const r = el.getBoundingClientRect();
       const pad=8;
       sp.style.cssText=`left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px`;
       ov.style.pointerEvents='none';
-    } else { sp.style.cssText='display:none'; }
-    // Position bubble
+      if(arrow){
+        arrow.style.cssText=`display:block;position:fixed;z-index:99002;pointer-events:none;left:${r.left+r.width/2-24}px;top:${r.top+r.height/2-24}px;animation:tourArrowPulse 1s ease-in-out infinite`;
+      }
+    } else {
+      sp.style.cssText='display:none';
+      if(arrow) arrow.style.display='none';
+    }
     positionTourBubble(step, sp);
   } else {
     sp.style.cssText='display:none';
+    if(arrow) arrow.style.display='none';
     bubble.style.cssText='display:block;top:50%;left:50%;transform:translate(-50%,-50%)';
   }
 }
@@ -9438,12 +9630,12 @@ function showTourStep(idx){
 function positionTourBubble(step, sp){
   const bubble = document.getElementById('tourBubble');
   const r = sp.getBoundingClientRect();
-  const bw=340, bh=180;
+  const bw=340, bh=200;
   const vw=window.innerWidth, vh=window.innerHeight;
   let top, left;
-  if(step.pos==='right'){ top=Math.min(r.top,vh-bh-20); left=Math.min(r.right+12,vw-bw-20); }
-  else if(step.pos==='bottom'){ top=r.bottom+12; left=Math.max(20,r.left+r.width/2-bw/2); }
-  else if(step.pos==='top'){ top=Math.max(20,r.top-bh-12); left=Math.max(20,r.left+r.width/2-bw/2); }
+  if(step.pos==='right'){ top=Math.min(r.top,vh-bh-20); left=Math.min(r.right+18,vw-bw-20); }
+  else if(step.pos==='bottom'){ top=r.bottom+18; left=Math.max(20,r.left+r.width/2-bw/2); }
+  else if(step.pos==='top'){ top=Math.max(20,r.top-bh-18); left=Math.max(20,r.left+r.width/2-bw/2); }
   else { top=vh/2-bh/2; left=vw/2-bw/2; }
   top=Math.max(10,Math.min(top,vh-bh-10));
   left=Math.max(10,Math.min(left,vw-bw-10));
@@ -9457,17 +9649,21 @@ function nextTourStep(){
 }
 
 function endTour(){
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
   document.getElementById('tourOverlay').style.display='none';
   document.getElementById('tourBubble').style.display='none';
+  const arrow = document.getElementById('tourArrow');
+  if(arrow) arrow.style.display='none';
   localStorage.setItem('capturo-tour-done','1');
 }
 
-// Start tour for new users (campaigns empty + first time)
 function maybeStartTour(){
   if(!localStorage.getItem('capturo-tour-done') && (!campaigns||campaigns.length===0)){
     setTimeout(startOnboardingTour, 1200);
   }
 }
+// Preload voices for Web Speech API
+if(window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); }; }
 
 
 /* ─────────── 7. BOTÃO IMPORTAR CSV NA PROSPECÇÃO ─────────── */
@@ -9514,13 +9710,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 // Also hook into initAuth completion to start notifications + tour
-const _origInitAuth = typeof window.initAuth==='function' ? window.initAuth : null;
-// Patching via inline call after auth init
-window._postAuthInit = function(){
-  initNotifications();
-  setTimeout(maybeStartTour, 800);
-};
-</script>
-
-</body>
-</html>
+const _origInitAu
