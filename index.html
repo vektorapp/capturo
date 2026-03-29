@@ -1138,7 +1138,7 @@ function toast(msg, type='info', duration=3500){
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <div style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace" id="dashGreeting">Carregando...</div>
-        <button onclick="localStorage.removeItem('capturo-tour-done');startOnboardingTour()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;padding:0 4px" title="Reiniciar tour de onboarding">🧭 Tour</button>
+        <button onclick="localStorage.removeItem('capturo-tour-done');restartTourFromFloat()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;padding:0 4px" title="Reiniciar tour de onboarding">🧭 Tour</button>
         <button class="btn btn-primary" onclick="openCampaignModal()" style="font-size:11px;padding:6px 14px">+ Nova Campanha</button>
       </div>
     </div>
@@ -8947,43 +8947,71 @@ async function saveToSupabase(){
   if(!sb || !currentUser) return;
   try{
     const snap = JSON.parse(JSON.stringify(campaigns));
+    // Merge active leads into the active campaign snapshot
     if(typeof activeCampaignId!=='undefined' && activeCampaignId){
       const c = snap.find(x=>x.id===activeCampaignId);
       if(c) c.leads = typeof leads!=='undefined' ? [...leads] : c.leads||[];
     }
     for(const camp of snap){
+      // Save campaign — use all real fields
       await sb.from('campaigns').upsert({
-        id: camp.id,
-        user_id: currentUser.id,
-        name: camp.name||'Campanha',
-        niche: camp.niche||'',
-        city: camp.city||'',
-        settings: camp.settings||{},
-        updated_at: new Date().toISOString()
-      });
+        id:          camp.id,
+        user_id:     currentUser.id,
+        name:        camp.name    || 'Campanha',
+        nicho:       camp.nicho   || camp.niche || '',
+        city:        camp.city    || '',
+        state:       camp.state   || '',
+        country:     camp.country || 'BR',
+        market:      camp.market  || 'nacional',
+        radius:      camp.radius  || '10km',
+        neighborhood: camp.neighborhood || '',
+        settings:    {
+          isAltoPadrao: camp.isAltoPadrao||false,
+          altoPadraoList: camp.altoPadraoList||[],
+          cityList: camp.cityList||[],
+          disabled: camp.disabled||false
+        },
+        updated_at:  new Date().toISOString()
+      }, { onConflict: 'id' });
+
+      // Save leads — map ALL real lead fields
       const campLeads = (camp.leads||[]).map(l=>({
-        id: l.id,
-        campaign_id: camp.id,
-        user_id: currentUser.id,
-        name: l.name||'',
-        niche: l.niche||'',
-        city: l.city||'',
-        address: l.address||'',
-        phone: l.phone||'',
-        whatsapp: l.whatsapp||'',
-        email: l.email||'',
-        website: l.website||l.site||'',
-        instagram: l.instagram||'',
-        temperature: l.temp||'cold',
-        status: l.status||'new',
-        is_favorite: l.favorite||false,
-        notes: l.notes||'',
-        ai_analysis: l.ai||{},
-        source: l.source||'manual',
-        updated_at: new Date().toISOString()
+        id:                  l.id,
+        campaign_id:         camp.id,
+        user_id:             currentUser.id,
+        name:                l.name                    || '',
+        nicho:               l.nicho                   || camp.nicho || '',
+        city:                l.city                    || camp.city  || '',
+        state:               l.state                   || camp.state || '',
+        formatted_address:   l.formatted_address       || '',
+        formatted_phone:     l.formatted_phone_number  || '',
+        whatsapp:            l.whatsapp || l.manualWa  || '',
+        email:               l.email                   || '',
+        email_verified:      l.emailVerified            || false,
+        email_confidence:    l.emailConfidence          || '',
+        website:             l.website                 || '',
+        bio_url:             l.bioUrl                  || '',
+        instagram:           l.instagram               || '',
+        facebook:            l.facebook                || '',
+        rating:              l.rating                  || null,
+        ratings_total:       l.user_ratings_total      || null,
+        temperature:         l.t                       || 'cold',
+        score:               l.score                   || 0,
+        site_score:          l.siteScore               || null,
+        site_issues:         l.siteIssues              || [],
+        status:              l.status                  || 'new',
+        is_favorite:         l.favorito                || false,
+        notes:               (l.notes||'').replace(/\n/g,' '),
+        pitch:               l.pitch                   || l.aiPitch || '',
+        ai_analysis:         l.aiAnalysis              || {},
+        source:              l.source                  || 'manual',
+        place_id:            l.place_id                || '',
+        latitude:            l.geometry?.location?.lat || null,
+        longitude:           l.geometry?.location?.lng || null,
+        updated_at:          new Date().toISOString()
       }));
       if(campLeads.length > 0){
-        await sb.from('leads').upsert(campLeads);
+        await sb.from('leads').upsert(campLeads, { onConflict: 'id' });
       }
     }
   }catch(e){
@@ -9001,42 +9029,73 @@ async function loadFromSupabase(){
       .eq('user_id', currentUser.id)
       .order('created_at',{ ascending:true });
     if(campErr){ console.error('[CAPTURO] load campaigns:',campErr); return; }
-    if(!campData || campData.length === 0){ return; } // primeiro acesso
+    if(!campData || campData.length === 0){ return; }
 
-    const { data:leadsData } = await sb
+    const { data:leadsData, error:leadsErr } = await sb
       .from('leads').select('*')
       .eq('user_id', currentUser.id);
+    if(leadsErr){ console.error('[CAPTURO] load leads:',leadsErr); }
 
-    campaigns = campData.map(c=>({
-      id: c.id,
-      name: c.name,
-      niche: c.niche||'',
-      city: c.city||'',
-      settings: c.settings||{},
-      leads: (leadsData||[]).filter(l=>l.campaign_id===c.id).map(l=>({
-        id: l.id,
-        name: l.name,
-        niche: l.niche,
-        city: l.city,
-        address: l.address,
-        phone: l.phone,
-        whatsapp: l.whatsapp,
-        email: l.email,
-        site: l.website,
-        website: l.website,
-        instagram: l.instagram,
-        temp: l.temperature,
-        status: l.status,
-        favorite: l.is_favorite,
-        notes: l.notes,
-        ai: l.ai_analysis,
-        source: l.source
-      }))
-    }));
+    campaigns = campData.map(c=>{
+      const cfg = c.settings || {};
+      return {
+        id:              c.id,
+        name:            c.name         || '',
+        nicho:           c.nicho        || c.niche || '',
+        nichoEn:         c.nicho_en     || '',
+        city:            c.city         || '',
+        state:           c.state        || '',
+        country:         c.country      || 'BR',
+        market:          c.market       || 'nacional',
+        radius:          c.radius       || '10km',
+        neighborhood:    c.neighborhood || '',
+        isAltoPadrao:    cfg.isAltoPadrao    || false,
+        altoPadraoList:  cfg.altoPadraoList  || [],
+        cityList:        cfg.cityList        || [],
+        disabled:        cfg.disabled        || false,
+        createdAt:       c.created_at,
+        leads: (leadsData||[]).filter(l=>l.campaign_id===c.id).map(l=>({
+          id:                    l.id,
+          name:                  l.name               || '',
+          nicho:                 l.nicho               || '',
+          city:                  l.city                || '',
+          state:                 l.state               || '',
+          formatted_address:     l.formatted_address   || '',
+          formatted_phone_number:l.formatted_phone     || '',
+          whatsapp:              l.whatsapp            || '',
+          manualWa:              l.whatsapp            || '',
+          email:                 l.email               || '',
+          emailVerified:         l.email_verified      || false,
+          emailConfidence:       l.email_confidence    || '',
+          website:               l.website             || '',
+          bioUrl:                l.bio_url             || '',
+          instagram:             l.instagram           || '',
+          facebook:              l.facebook            || '',
+          rating:                l.rating              || '',
+          user_ratings_total:    l.ratings_total       || '',
+          t:                     l.temperature         || 'cold',
+          score:                 l.score               || 0,
+          siteScore:             l.site_score          || '',
+          siteIssues:            l.site_issues         || [],
+          status:                l.status              || 'new',
+          favorito:              l.is_favorite         || false,
+          notes:                 l.notes               || '',
+          pitch:                 l.pitch               || '',
+          aiPitch:               l.pitch               || '',
+          aiAnalysis:            l.ai_analysis         || {},
+          source:                l.source              || 'manual',
+          place_id:              l.place_id            || '',
+          geometry: l.latitude && l.longitude ? { location:{ lat:l.latitude, lng:l.longitude } } : null,
+          createdAt:             l.created_at          || ''
+        }))
+      };
+    });
 
     try{ localStorage.setItem('pr6', JSON.stringify(campaigns)); }catch(e){}
     if(typeof renderNavTabs==='function') renderNavTabs();
-    toast(`☁️ ${campData.length} campanha(s) carregada(s) da nuvem`,'success',3000);
+    if(typeof renderCampaignsList==='function') renderCampaignsList();
+    const total = (leadsData||[]).length;
+    toast(`☁️ ${campData.length} campanha(s) e ${total} lead(s) carregados da nuvem`,'success',3500);
   }catch(e){
     console.error('[CAPTURO] loadFromSupabase error:',e);
   }
@@ -9166,7 +9225,7 @@ initAuth();
   </div>
 </div>
 <!-- Botão flutuante sempre visível -->
-<button id="tourFloatBtn" onclick="restartTourFromFloat()" title="Abrir tour interativo / ajuda" style="position:fixed;bottom:24px;right:24px;z-index:99100;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:20px;box-shadow:0 4px 20px rgba(0,122,255,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 28px rgba(0,122,255,.7)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(0,122,255,.5)'">🧭</button>
+<button id="tourFloatBtn" onclick="localStorage.removeItem('capturo-tour-done');tourStep=0;showTourStep(0);" title="Abrir tour interativo / ajuda" style="position:fixed;bottom:24px;right:24px;z-index:99100;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:20px;box-shadow:0 4px 20px rgba(0,122,255,.5);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 28px rgba(0,122,255,.7)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 20px rgba(0,122,255,.5)'">🧭</button>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -9537,7 +9596,7 @@ function renderVisualFunnel(stages){
 const TOUR_STEPS = [
   { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em poucos minutos. Clique em 🔊 para ativar narração por voz. Clique no botão 🧭 no canto inferior direito para rever o tour a qualquer momento!', target:null, pos:'center' },
   { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente.', target:'.campaigns-grid', pos:'top' },
-  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência para máxima cobertura).', target:'#sb-prospectar', pos:'right' },
+  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência para máxima cobertura).', target:'#sb-home', pos:'right' },
   { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique em qualquer card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
   { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads. O CAPTURO te avisa pelo navegador quando o prazo chegar. Configure em ⚙️ Perfil.', target:'#sb-followup', pos:'right' },
   { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente — sem sair da tela atual.', target:'.gs-btn', pos:'bottom' },
@@ -9551,6 +9610,10 @@ let tourAudioEnabled = false;
 function restartTourFromFloat(){
   localStorage.removeItem('capturo-tour-done');
   tourStep = 0;
+  const ov = document.getElementById('tourOverlay');
+  const bubble = document.getElementById('tourBubble');
+  if(ov) ov.style.display = 'block';
+  if(bubble) bubble.style.display = 'block';
   showTourStep(0);
 }
 
@@ -9704,5 +9767,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 
-// Also hook into initAuth completion to start notifications + tour
-const _origInitAu
+// Hook into initAuth completion to start tour after auth resolves
+const _origInitAuth = typeof initAuth === 'function' ? initAuth : null;
+if(_origInitAuth){
+  window.initAuth = async function(){
+    await _origInitAuth();
+    maybeStartTour();
+  };
+}
+</script>
+</body>
+</html>
