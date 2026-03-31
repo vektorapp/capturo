@@ -30,6 +30,7 @@
   .nav-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 8px; }
   .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .nav-by { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 2px; }
+  .nav-ai-badge { font-size: 10px; font-weight: 700; color: var(--accent2); background: var(--accent-glow); border: 1px solid var(--accent-border); padding: 2px 7px; border-radius: 20px; letter-spacing: 0.05em; margin-left: 2px; }
   .nav-links { display: flex; align-items: center; gap: 32px; }
   .nav-links a { color: var(--muted2); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.2s; }
   .nav-links a:hover { color: var(--white); }
@@ -47,6 +48,28 @@
   .hero-sub { font-size: 18px; color: var(--muted2); font-weight: 300; max-width: 520px; margin: 0 auto 44px; line-height: 1.75; }
   .capture-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
   .capture-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FORMULÁRIO COMPLETO (nome + email + whatsapp) ── */
+  .full-form { display:flex; flex-direction:column; gap:12px; width:100%; max-width:480px; margin:0 auto; }
+  .full-form input { background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:10px; padding:14px 20px; color:var(--white); font-family:var(--font); font-size:15px; outline:none; width:100%; transition:border-color 0.2s; }
+  .full-form input::placeholder { color:rgba(255,255,255,0.25); }
+  .full-form input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,.12); }
+  .full-form .input-group { position:relative; }
+  .full-form .input-prefix { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:14px; color:var(--muted2); font-weight:500; pointer-events:none; }
+  .full-form .input-with-prefix { padding-left:42px !important; }
+
+  /* ── MODAL DE SUCESSO ── */
+  .success-modal { display:none; position:fixed; inset:0; z-index:9999; background:rgba(8,8,16,.92); backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:20px; }
+  .success-modal.open { display:flex; }
+  .success-box { background:var(--surface2); border:1px solid var(--accent-border); border-radius:24px; padding:52px 44px; max-width:480px; width:100%; text-align:center; box-shadow:0 0 80px rgba(99,102,241,.15); animation:fadeUp .4s ease; }
+  .success-icon { font-size:56px; margin-bottom:20px; }
+  .success-title { font-size:26px; font-weight:800; color:var(--white); letter-spacing:-.5px; margin-bottom:12px; line-height:1.2; }
+  .success-sub { font-size:15px; color:var(--muted2); line-height:1.7; margin-bottom:32px; font-weight:300; }
+  .success-wa-btn { display:flex; align-items:center; justify-content:center; gap:10px; background:#25D366; color:#fff; border:none; font-family:var(--font); font-size:16px; font-weight:700; padding:16px 32px; border-radius:12px; text-decoration:none; cursor:pointer; transition:opacity .2s,transform .2s; box-shadow:0 8px 28px rgba(37,211,102,.3); width:100%; margin-bottom:12px; }
+  .success-wa-btn:hover { opacity:.9; transform:translateY(-2px); }
+  .success-skip { font-size:12px; color:var(--muted); cursor:pointer; background:none; border:none; font-family:var(--font); text-decoration:underline; }
+  .success-skip:hover { color:var(--white); }
+
   .capture-form input[type=email] { background: rgba(255,255,255,0.05); border: 1px solid var(--border2); border-radius: 10px; padding: 14px 20px; color: var(--white); font-family: var(--font); font-size: 15px; outline: none; width: 280px; max-width: 100%; transition: border-color 0.2s; }
   .capture-form input[type=email]::placeholder { color: rgba(255,255,255,0.25); }
   .capture-form input[type=email]:focus { border-color: var(--accent); }
@@ -90,6 +113,7 @@
   .testimonial-text { font-size: 14px; color: rgba(240,238,255,.75); line-height: 1.8; font-weight: 300; margin-bottom: 24px; font-style: italic; }
   .testimonial-author { display: flex; align-items: center; gap: 12px; }
   .author-avatar { width:38px; height:38px; border-radius:50%; background:var(--accent-glow); border:1px solid var(--accent-border); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--accent2); }
+  .author-avatar-img { width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--accent-border); }
   .author-name { font-size: 13px; font-weight: 600; color: var(--white); }
   .author-role { font-size: 11px; color: var(--muted); }
 
@@ -155,6 +179,7 @@
     <div class="nav-dot"></div>
     Capturo
     <span class="nav-by">by Noxvy</span>
+    <span class="nav-ai-badge">AI</span>
   </a>
   <div class="nav-links">
     <a href="#como-funciona">Como funciona</a>
@@ -162,29 +187,34 @@
     <a href="#plano">Plano</a>
     <a href="#depoimentos">Cases</a>
   </div>
-  <a href="app.html" class="nav-cta">Acessar sistema</a>
+  <a href="#plano" class="nav-cta">🚀 Quero participar</a>
 </nav>
 
 <section class="hero">
   <div class="hero-glow"></div>
   <div class="hero-content">
-    <div class="hero-badge fade-up">Prospecção inteligente de leads</div>
-    <h1 class="fade-up">Encontre os clientes<br><em>certos.</em><br>No momento certo.</h1>
-    <p class="hero-sub fade-up">O Capturo varre o mercado, qualifica oportunidades e entrega uma lista pronta de prospects — para você só focar em vender.</p>
+    <div class="hero-badge fade-up">🎯 Prospecção cirúrgica — só quem precisa do seu serviço</div>
+    <h1 class="fade-up">Pare de prospectar<br>no <em>escuro.</em></h1>
+    <p class="hero-sub fade-up">O Capturo encontra negócios que <strong style="color:var(--white);font-weight:600">já precisam</strong> do que você vende — sem site, com site fraco, sem tráfego. Você chega na hora certa, com o argumento certo.</p>
     <div class="fade-up">
       <div class="capture-wrap">
-        <div class="capture-form">
+        <div class="full-form">
+          <input type="text"  id="heroNome"  placeholder="Seu nome" autocomplete="name">
           <input type="email" id="heroEmail" placeholder="Seu melhor e-mail" autocomplete="email">
-          <button class="btn-primary" onclick="capturarLead('heroEmail','heroMsg')">Entrar na lista →</button>
+          <div class="input-group">
+            <span class="input-prefix">🇧🇷</span>
+            <input type="tel" id="heroWa" placeholder="WhatsApp (DDD + número)" autocomplete="tel" class="input-with-prefix" oninput="mascaraWa(this)">
+          </div>
+          <button class="btn-primary" style="width:100%" onclick="capturarLeadCompleto('hero')">Quero participar da Live →</button>
         </div>
         <div class="capture-msg" id="heroMsg"></div>
-        <div class="hero-note">✓ Acesso antecipado &nbsp;·&nbsp; ✓ Sem compromisso</div>
+        <div class="hero-note">✓ Gratuito &nbsp;·&nbsp; ✓ Preço revelado na Live &nbsp;·&nbsp; ✓ Condição especial para inscritos</div>
       </div>
     </div>
     <div class="hero-stats fade-up">
-      <div><div class="stat-num">10x<span>+</span></div><div class="stat-label">mais prospects por hora</div></div>
-      <div><div class="stat-num"><span>+</span>30</div><div class="stat-label">filtros de qualificação</div></div>
-      <div><div class="stat-num">0<span>min</span></div><div class="stat-label">de pesquisa manual</div></div>
+      <div><div class="stat-num">10x<span>+</span></div><div class="stat-label">mais rápido que pesquisa manual</div></div>
+      <div><div class="stat-num"><span>0</span></div><div class="stat-label">minutos perdidos no Google</div></div>
+      <div><div class="stat-num"><span>100%</span></div><div class="stat-label">leads com necessidade real</div></div>
     </div>
   </div>
 </section>
@@ -192,83 +222,151 @@
 <section class="how" id="como-funciona">
   <div class="container">
     <div class="section-tag">Como funciona</div>
-    <h2 class="section-title">Três passos.<br>Uma lista pronta.</h2>
-    <p class="section-sub">O Capturo faz o trabalho pesado. Sem pesquisa manual, sem planilhas, sem perda de tempo.</p>
+    <h2 class="section-title">Simples assim:<br>você define, ele encontra.</h2>
+    <p class="section-sub">Enquanto você fecha negócios, o Capturo encontra os próximos. Sem esforço, sem achismo, sem tempo desperdiçado.</p>
     <div class="steps-grid">
-      <div class="step"><div class="step-num">01</div><div class="step-icon">🎯</div><div class="step-title">Defina seu alvo</div><div class="step-desc">Escolha o nicho, segmento, cidade e perfil ideal. O Capturo entende exatamente quem você quer alcançar.</div></div>
-      <div class="step"><div class="step-num">02</div><div class="step-icon">⚡</div><div class="step-title">Varredura automática</div><div class="step-desc">Nossa inteligência varre o mercado em segundos, identificando empresas e contatos com alto potencial de conversão.</div></div>
-      <div class="step"><div class="step-num">03</div><div class="step-icon">📋</div><div class="step-title">Receba sua lista</div><div class="step-desc">Lista qualificada, organizada e pronta para abordagem. Você só precisa entrar em contato e fechar.</div></div>
+      <div class="step"><div class="step-num">01</div><div class="step-icon">🎯</div><div class="step-title">Diga quem você quer</div><div class="step-desc">Escolha o nicho, cidade e o perfil do cliente ideal. Dentista sem site em Uberlândia? Restaurante sem tráfego pago em São Paulo? O Capturo entende.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-icon">⚡</div><div class="step-title">Varredura em segundos</div><div class="step-desc">O sistema varre o mercado, identifica quem tem necessidade real do seu serviço e descarta quem não tem. Só sobra quem vale a pena abordar.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-icon">💰</div><div class="step-title">Aborde e feche</div><div class="step-desc">Você recebe nome, telefone, WhatsApp, e-mail e um pitch personalizado por IA para cada lead. Só chegar e propor.</div></div>
     </div>
   </div>
 </section>
 
 <section id="features">
   <div class="container">
-    <div class="section-tag">Recursos</div>
-    <h2 class="section-title">Tudo que você precisa<br>para prospectar melhor.</h2>
+
+    <!-- BLOCO DE DOR -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:48px 52px;margin-bottom:80px;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 0% 50%,rgba(99,102,241,.05),transparent);pointer-events:none"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px">A realidade de quem prospecta sem o Capturo</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">⏳</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px">Horas perdidas no Google</div>
+            <div style="font-size:13px;color:var(--muted2);line-height:1.6">Pesquisa manual, aba por aba, sem saber se o lead vai ou não comprar.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">💸</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px">Dinheiro jogado fora</div>
+            <div style="font-size:13px;color:var(--muted2);line-height:1.6">Tráfego pago para lead que não tem perfil, abordagem para quem já tem solução.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">🎲</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px">Prospecção no escuro</div>
+            <div style="font-size:13px;color:var(--muted2);line-height:1.6">Sem saber se o lead precisa do seu serviço. Chutando e esperando o melhor.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <span style="font-size:20px;flex-shrink:0">😤</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px">Rejeição constante</div>
+            <div style="font-size:13px;color:var(--muted2);line-height:1.6">Abordando quem não precisa, ouvindo "não" de quem nunca ia comprar mesmo.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid var(--border);font-size:16px;font-weight:600;color:var(--white)">
+        O Capturo resolve tudo isso. <span style="color:var(--accent2)">Você prospecta só quem tem necessidade real.</span>
+      </div>
+    </div>
+
+    <div class="section-tag">Por que o Capturo funciona</div>
+    <h2 class="section-title">Você não precisa de<br>mais leads. Precisa dos <em style="color:var(--accent2);font-style:normal">certos.</em></h2>
     <div class="features-grid">
-      <div class="feature"><div class="feature-icon">🔍</div><div class="feature-title">Busca por nicho e região</div><div class="feature-desc">Encontre empresas de qualquer segmento, em qualquer cidade do Brasil e do mundo. Filtre por setor, porte e localização.</div></div>
-      <div class="feature"><div class="feature-icon">🌐</div><div class="feature-title">Detecta quem não tem site</div><div class="feature-desc">Identifique automaticamente negócios sem presença digital — o prospect perfeito para vender sites e tráfego pago.</div></div>
-      <div class="feature"><div class="feature-icon">📊</div><div class="feature-title">Qualificação automática</div><div class="feature-desc">Cada lead é analisado e pontuado. Você recebe só os melhores prospects, organizados por temperatura e prioridade.</div></div>
-      <div class="feature"><div class="feature-icon">📧</div><div class="feature-title">Enriquecimento de contatos</div><div class="feature-desc">Encontre e-mails verificados, telefone, Instagram e WhatsApp de cada empresa. Dados prontos para abordagem imediata.</div></div>
-      <div class="feature"><div class="feature-icon">🤖</div><div class="feature-title">IA para análise e pitch</div><div class="feature-desc">Análise inteligente de cada lead e geração automática de pitch personalizado para aumentar sua taxa de conversão.</div></div>
-      <div class="feature"><div class="feature-icon">📤</div><div class="feature-title">Pipeline Kanban e exportação</div><div class="feature-desc">Organize seus prospects em pipeline visual. Exporte em planilha a qualquer momento com todos os dados completos.</div></div>
+      <div class="feature"><div class="feature-icon">🌐</div><div class="feature-title">Detecta quem não tem site</div><div class="feature-desc">Encontra negócios que ainda vivem no boca a boca — sem presença digital, sem Google, sem nada. São os mais fáceis de convencer e os mais lucrativos para você.</div></div>
+      <div class="feature"><div class="feature-icon">📉</div><div class="feature-title">Identifica sites fracos</div><div class="feature-desc">Negócios com site lento, desatualizado ou sem conversão. Você chega com diagnóstico em mãos e a solução no bolso. A venda já está meio feita.</div></div>
+      <div class="feature"><div class="feature-icon">🎯</div><div class="feature-title">Filtra quem precisa de tráfego</div><div class="feature-desc">Empresas com presença digital mas sem anúncios. São o público ideal para gestão de tráfego pago. O Capturo já separa eles para você.</div></div>
+      <div class="feature"><div class="feature-icon">📧</div><div class="feature-title">Contato direto na mão</div><div class="feature-desc">E-mail verificado, telefone, WhatsApp e Instagram de cada lead. Sem precisar ficar procurando no Google. Você recebe tudo pronto para abordar.</div></div>
+      <div class="feature"><div class="feature-icon">🤖</div><div class="feature-title">Pitch gerado por IA</div><div class="feature-desc">Para cada lead, a IA escreve um argumento de venda personalizado com base nos problemas reais do negócio. Você só precisa enviar.</div></div>
+      <div class="feature"><div class="feature-icon">🌡️</div><div class="feature-title">Temperatura de cada lead</div><div class="feature-desc">Volcano, quente, morno, frio. O Capturo classifica cada oportunidade automaticamente para você priorizar quem vai fechar mais rápido.</div></div>
     </div>
   </div>
 </section>
 
 <section class="testimonials" id="depoimentos">
   <div class="container">
-    <div class="section-tag">Cases</div>
-    <h2 class="section-title">Quem usa,<br>não volta para o manual.</h2>
+    <div class="section-tag">Beta testers</div>
+    <h2 class="section-title">Quem parou de adivinhar<br>e começou a <em style="color:var(--accent2);font-style:normal">fechar.</em></h2>
     <div class="testimonials-grid">
-      <div class="testimonial"><p class="testimonial-text">Em uma semana com o Capturo prospectei mais do que em três meses pesquisando no Google. A lista chegou qualificada, foi só ligar e fechar.</p><div class="testimonial-author"><div class="author-avatar">M</div><div><div class="author-name">Marcos Oliveira</div><div class="author-role">Agência de sites · São Paulo</div></div></div></div>
-      <div class="testimonial"><p class="testimonial-text">Consigo identificar negócios sem site em qualquer cidade do Brasil em minutos. Isso virou meu maior diferencial na hora de oferecer tráfego pago.</p><div class="testimonial-author"><div class="author-avatar">A</div><div><div class="author-name">Ana Ferreira</div><div class="author-role">Gestora de tráfego · Belo Horizonte</div></div></div></div>
-      <div class="testimonial"><p class="testimonial-text">Antes eu gastava horas pesquisando. Hoje o Capturo faz em segundos e uso meu tempo para fechar negócios. Minha carteira triplicou em 2 meses.</p><div class="testimonial-author"><div class="author-avatar">R</div><div><div class="author-name">Rafael Costa</div><div class="author-role">Freelancer de marketing · Curitiba</div></div></div></div>
+      <div class="testimonial"><p class="testimonial-text">Em uma semana prospectei mais do que em três meses pesquisando no Google. O Capturo já me entrega o lead com problema identificado — chego na conversa sabendo exatamente o que oferecer.</p><div class="testimonial-author"><div class="author-avatar-img"><img src="https://api.dicebear.com/7.x/notionists/svg?seed=Marcos&backgroundColor=1e1e3a&radius=50" alt="Marcos Oliveira" style="width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;background:#1e1e3a"></div><div><div class="author-name">Marcos Oliveira</div><div class="author-role">Agência de sites · São Paulo</div></div></div></div>
+      <div class="testimonial"><p class="testimonial-text">Identifico negócios sem site em qualquer cidade do Brasil em minutos. Hoje eu não ligo pra quem não precisa — só abordo quem o Capturo já marcou como oportunidade quente. Minha taxa de fechamento dobrou.</p><div class="testimonial-author"><div class="author-avatar-img"><img src="https://api.dicebear.com/7.x/notionists/svg?seed=Ana&backgroundColor=1e1e3a&radius=50" alt="Ana Ferreira" style="width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;background:#1e1e3a"></div><div><div class="author-name">Ana Ferreira</div><div class="author-role">Gestora de tráfego · Belo Horizonte</div></div></div></div>
+      <div class="testimonial"><p class="testimonial-text">Parei de gastar tempo e dinheiro com lead que nunca ia comprar. O Capturo filtra quem realmente precisa do que eu vendo. Em 2 meses minha carteira triplicou sem aumentar o esforço.</p><div class="testimonial-author"><div class="author-avatar-img"><img src="https://api.dicebear.com/7.x/notionists/svg?seed=Rafael&backgroundColor=1e1e3a&radius=50" alt="Rafael Costa" style="width:44px;height:44px;border-radius:50%;object-fit:cover;display:block;background:#1e1e3a"></div><div><div class="author-name">Rafael Costa</div><div class="author-role">Freelancer de marketing · Curitiba</div></div></div></div>
     </div>
   </div>
 </section>
 
 <section class="plans" id="plano">
   <div class="container">
-    <div class="section-tag">Plano</div>
-    <h2 class="section-title">Um plano.<br>Acesso completo.</h2>
-    <p class="section-sub">Sem limitações artificiais. Tudo que o Capturo tem, disponível desde o primeiro dia.</p>
+    <div class="section-tag">Lançamento em breve</div>
+    <h2 class="section-title">Tudo que você precisa.<br>Um preço que vai te <em style="color:var(--accent2);font-style:normal">surpreender.</em></h2>
+    <p class="section-sub">O valor será revelado na Live de lançamento — exclusivamente para quem estiver presente. Early adopters terão condição especial.</p>
+
     <div class="plan-wrap">
       <div class="plan-card">
-        <div class="plan-badge-top">✦ Capturo Pro</div>
+        <div class="plan-badge-top">🚀 Lançamento oficial em breve</div>
         <div class="plan-name">Capturo Pro</div>
-        <div class="plan-tagline">Para freelancers, gestores de tráfego e agências que levam prospecção a sério.</div>
-        <div class="plan-price-row">
-          <div class="plan-currency">R$</div>
-          <div class="plan-price-num">97</div>
-          <div class="plan-period">/mês</div>
+        <div class="plan-tagline">Para freelancers, gestores de tráfego e agências que querem prospectar com precisão e fechar mais.</div>
+
+        <!-- PREÇO BORRADO -->
+        <div style="margin-bottom:8px;position:relative;display:inline-block">
+          <div style="display:flex;align-items:flex-end;gap:6px;filter:blur(8px);user-select:none;pointer-events:none" aria-hidden="true">
+            <div style="font-size:22px;font-weight:700;color:var(--accent2);margin-bottom:8px">R$</div>
+            <div style="font-size:64px;font-weight:900;color:var(--white);letter-spacing:-3px;line-height:1">???</div>
+            <div style="font-size:15px;color:var(--muted);margin-bottom:8px">/mês</div>
+          </div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+            <div style="background:rgba(99,102,241,.15);border:1px solid var(--accent-border);border-radius:10px;padding:8px 18px;font-size:13px;font-weight:600;color:var(--accent2);white-space:nowrap;backdrop-filter:blur(2px)">
+              🔒 Revelado na Live de lançamento
+            </div>
+          </div>
         </div>
-        <div class="plan-sub">✦ Inclui 40 prospecções mensais — renova automaticamente</div>
+
+        <div style="font-size:13px;color:var(--accent2);margin-bottom:40px;font-weight:500">✦ Condição especial para quem participar da Live</div>
+
         <div class="plan-divider"></div>
+
         <ul class="plan-features">
-          <li>Busca por nicho, cidade e região</li>
-          <li>Detecção de negócios sem site</li>
-          <li>Qualificação automática por IA</li>
-          <li>E-mails verificados por lead</li>
-          <li>Telefone e WhatsApp do negócio</li>
-          <li>Instagram e presença digital</li>
-          <li>Pipeline Kanban visual</li>
-          <li>Pitch personalizado por IA</li>
-          <li>Análise de oportunidade por lead</li>
-          <li>Follow-up e anotações</li>
-          <li>Exportação em planilha</li>
-          <li>Dados salvos na nuvem</li>
+          <li>Busca por nicho, cidade e região — Brasil e mundo</li>
+          <li>Detecta negócios <strong style="color:var(--white)">sem site</strong> (seus melhores prospects)</li>
+          <li>Detecta sites fracos e desatualizados</li>
+          <li>Identifica quem não faz tráfego pago</li>
+          <li>E-mail verificado de cada lead</li>
+          <li>Telefone e WhatsApp direto do negócio</li>
+          <li>Instagram e presença digital mapeada</li>
+          <li>Temperatura do lead (volcano, quente, morno, frio)</li>
+          <li>Pitch personalizado gerado por IA</li>
+          <li>Análise de problemas do negócio por IA</li>
+          <li>Pipeline Kanban para organizar sua prospecção</li>
+          <li>Exportação em planilha com tudo</li>
+          <li>Dados salvos na nuvem — acesse de qualquer lugar</li>
         </ul>
-        <a href="app.html" class="plan-cta-btn">Acessar o Capturo Pro →</a>
-        <div class="plan-guarantee">🔒 Acesso imediato após confirmação</div>
+
+        <!-- CTA para lista de espera -->
+        <div style="margin-top:44px">
+          <div class="full-form">
+            <input type="text"  id="planNome"  placeholder="Seu nome" autocomplete="name">
+            <input type="email" id="planEmail" placeholder="Seu melhor e-mail" autocomplete="email">
+            <div class="input-group">
+              <span class="input-prefix">🇧🇷</span>
+              <input type="tel" id="planWa" placeholder="WhatsApp (DDD + número)" autocomplete="tel" class="input-with-prefix" oninput="mascaraWa(this)">
+            </div>
+            <button class="plan-cta-btn" onclick="capturarLeadCompleto('plan')">Quero participar da Live e saber o preço →</button>
+          </div>
+          <div class="capture-msg" id="planMsg" style="margin-top:10px"></div>
+        </div>
+
+        <div class="plan-guarantee">🔒 Sem compromisso — você recebe o convite e decide na hora</div>
       </div>
-      <div class="recharges">
-        <div class="recharges-title">Precisa de mais? Adicione prospecções avulsas</div>
-        <div class="recharges-grid">
-          <div class="recharge-item"><div class="recharge-qty">50</div><div class="recharge-label">prospecções</div><div class="recharge-price">R$ 97</div></div>
-          <div class="recharge-item"><div class="recharge-qty">150</div><div class="recharge-label">prospecções</div><div class="recharge-price">R$ 197</div></div>
-          <div class="recharge-item"><div class="recharge-qty">400</div><div class="recharge-label">prospecções</div><div class="recharge-price">R$ 397</div></div>
+
+      <!-- URGÊNCIA -->
+      <div style="margin-top:32px;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:28px 32px;text-align:center">
+        <div style="font-size:13px;color:var(--muted2);line-height:1.7">
+          ⚡ <strong style="color:var(--white)">Early adopters terão acesso vitalício com desconto.</strong><br>
+          Quem entrar na lista antes da Live garante condição que não será repetida após o lançamento.
         </div>
       </div>
     </div>
@@ -276,55 +374,109 @@
 </section>
 
 <section class="cta-section">
-  <h2>Pronto para parar de<br><em style="color:var(--accent2);font-style:normal">perder tempo</em> prospectando?</h2>
-  <p>Entre na lista e seja um dos primeiros a acessar o Capturo.</p>
-  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1">
-    <div class="capture-form">
+  <h2>O lançamento está chegando.<br>Você vai estar <em style="color:var(--accent2);font-style:normal">dentro?</em></h2>
+  <p>Inscreva-se agora e garanta sua vaga na Live.<br>O preço especial de lançamento é exclusivo para quem estiver presente.</p>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;width:100%">
+    <div class="full-form">
+      <input type="text"  id="ctaNome"  placeholder="Seu nome" autocomplete="name">
       <input type="email" id="ctaEmail" placeholder="Seu melhor e-mail" autocomplete="email">
-      <button class="btn-primary" onclick="capturarLead('ctaEmail','ctaMsg')">Quero acesso antecipado →</button>
+      <div class="input-group">
+        <span class="input-prefix">🇧🇷</span>
+        <input type="tel" id="ctaWa" placeholder="WhatsApp (DDD + número)" autocomplete="tel" class="input-with-prefix" oninput="mascaraWa(this)">
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="capturarLeadCompleto('cta')">Garantir minha vaga na Live →</button>
     </div>
     <div class="capture-msg" id="ctaMsg"></div>
+    <div class="hero-note" style="margin-top:8px">✓ Gratuito &nbsp;·&nbsp; ✓ Sem compromisso &nbsp;·&nbsp; ✓ Early adopters com desconto exclusivo</div>
   </div>
 </section>
+
+<!-- MODAL DE SUCESSO → CANAL WHATSAPP -->
+<div class="success-modal" id="successModal">
+  <div class="success-box">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">Você está dentro!</div>
+    <div class="success-sub">Sua vaga na Live está garantida.<br>Agora entre no nosso Canal do WhatsApp para receber a data, o horário e o link com antecedência.</div>
+    <a href="https://whatsapp.com/channel/LINK_DO_SEU_CANAL" target="_blank" class="success-wa-btn" id="waChannelBtn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.855L0 24l6.335-1.509A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.889.936-3.618-.235-.372A9.818 9.818 0 1112 21.818z"/></svg>
+      Entrar no Canal do WhatsApp
+    </a>
+    <button class="success-skip" onclick="document.getElementById('successModal').classList.remove('open')">Prefiro só receber por e-mail</button>
+  </div>
+</div>
 
 <footer>
   <div class="footer-logo">Capturo <span>·</span> by Noxvy</div>
   <div class="footer-links">
     <a href="https://noxvy.com.br">Noxvy</a>
     <a href="#plano">Plano</a>
-    <a href="mailto:contato@noxvy.com.br">Suporte</a>
+    <a href="/cdn-cgi/l/email-protection#6e1d1b1e011c1a0b2e0001161817400d0103400c1c">Suporte</a>
   </div>
   <div class="footer-copy">© 2025 Noxvy. Todos os direitos reservados.</div>
 </footer>
 
-<script>
-async function capturarLead(inputId, msgId) {
-  const email = document.getElementById(inputId)?.value?.trim();
-  const msg = document.getElementById(msgId);
-  if (!email || !/^[^\@\s]+@[^\@\s]+\.[^\@\s]+$/.test(email)) {
-    if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Por favor, insira um e-mail válido.'; }
-    return;
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── Configuração Supabase ─────────────────────────────────────
+const SUPA_URL = 'https://qnxabfowdvohrolamktx.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFueGFiZm93ZHZvaHJvbGFta3R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0ODc0MTQsImV4cCI6MjA5MDA2MzQxNH0.FrhemfUDOWL4O632KchesHxM7f3BXDlPfuhZibn7PZ4';
+
+// ── Link do seu Canal do WhatsApp ─────────────────────────────
+// Depois de criar o canal: cole o link aqui
+const WA_CANAL = 'https://whatsapp.com/channel/LINK_DO_SEU_CANAL';
+
+// ── Máscara WhatsApp brasileiro ───────────────────────────────
+function mascaraWa(el) {
+  let v = el.value.replace(/\D/g, '').slice(0, 11);
+  if (v.length > 10) v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  else if (v.length > 6) v = v.replace(/^(\d{2})(\d{4})(\d*)$/, '($1) $2-$3');
+  else if (v.length > 2) v = v.replace(/^(\d{2})(\d*)$/, '($1) $2');
+  el.value = v;
+}
+
+// ── Captura completa: nome + email + whatsapp ─────────────────
+async function capturarLeadCompleto(prefixo) {
+  const nome  = document.getElementById(prefixo + 'Nome')?.value?.trim()  || '';
+  const email = document.getElementById(prefixo + 'Email')?.value?.trim() || '';
+  const wa    = document.getElementById(prefixo + 'Wa')?.value?.trim()    || '';
+  const msg   = document.getElementById(prefixo + 'Msg');
+  const btn   = event.target;
+
+  if (!nome) {
+    if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Por favor, insira seu nome.'; }
+    document.getElementById(prefixo + 'Nome')?.focus(); return;
   }
-  const btn = event.target;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Por favor, insira um e-mail válido.'; }
+    document.getElementById(prefixo + 'Email')?.focus(); return;
+  }
+  if (!wa || wa.replace(/\D/g,'').length < 10) {
+    if (msg) { msg.style.color = '#f87171'; msg.textContent = 'Por favor, insira seu WhatsApp com DDD.'; }
+    document.getElementById(prefixo + 'Wa')?.focus(); return;
+  }
+
   btn.disabled = true; btn.textContent = 'Enviando...';
+  if (msg) msg.textContent = '';
+
   try {
-    const SUPA_URL = 'https://qnxabfowdvohrolamktx.supabase.co';
-    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFueGFiZm93ZHZvaHJvbGFta3R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0ODc0MTQsImV4cCI6MjA5MDA2MzQxNH0.FrhemfUDOWL4O632KchesHxM7f3BXDlPfuhZibn7PZ4';
     const res = await fetch(SUPA_URL + '/rest/v1/waitlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ email, source: 'landing', created_at: new Date().toISOString() })
+      body: JSON.stringify({ nome, email, whatsapp: wa.replace(/\D/g,''), source: 'landing_' + prefixo, created_at: new Date().toISOString() })
     });
     if (res.ok || res.status === 409) {
-      document.getElementById(inputId).value = '';
-      if (msg) { msg.style.color = '#818cf8'; msg.textContent = '✓ Você está na lista! Entraremos em contato em breve.'; }
-      btn.textContent = '✓ Na lista!';
-    } else { throw new Error(); }
+      ['Nome','Email','Wa'].forEach(f => { const el = document.getElementById(prefixo + f); if (el) el.value = ''; });
+      btn.textContent = '✓ Inscrito!';
+      document.getElementById('waChannelBtn').href = WA_CANAL;
+      document.getElementById('successModal').classList.add('open');
+    } else { throw new Error('status ' + res.status); }
   } catch(e) {
-    if (msg) { msg.style.color = '#818cf8'; msg.textContent = '✓ Recebido! Entraremos em contato em breve.'; }
-    btn.disabled = false; btn.textContent = 'Entrar na lista →';
+    ['Nome','Email','Wa'].forEach(f => { const el = document.getElementById(prefixo + f); if (el) el.value = ''; });
+    btn.textContent = '✓ Inscrito!';
+    document.getElementById('waChannelBtn').href = WA_CANAL;
+    document.getElementById('successModal').classList.add('open');
+    console.warn('Supabase error:', e);
   }
 }
-</script>
-</body>
-</html>
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementByI
