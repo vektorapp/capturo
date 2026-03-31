@@ -9211,7 +9211,7 @@ initAuth();
 <div class="tour-bubble" id="tourBubble" style="display:none">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
     <div class="tour-title" id="tourTitle" style="flex:1"></div>
-    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narrar em voz alta" style="display:none">🔊</button>
+    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Ativar narração" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:13px;flex-shrink:0;color:var(--muted2);transition:all .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">🔈 Narrar</button>
   </div>
   <div class="tour-desc" id="tourDesc"></div>
   <div class="tour-nav">
@@ -9593,14 +9593,23 @@ function renderVisualFunnel(stages){
 
 /* ─────────── 6. ONBOARDING TOUR (v2 — melhorado) ─────────── */
 const TOUR_STEPS = [
-  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em poucos minutos. Clique no botão 🧭 no canto inferior direito para rever o tour a qualquer momento!', target:null, pos:'center' },
-  { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente.', target:'.campaigns-grid', pos:'top' },
-  { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência para máxima cobertura).', target:'#sb-prospectar', pos:'right' },
-  { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique em qualquer card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
-  { title:'🔔 Follow-ups', desc:'Agende lembretes para retornar a leads. O CAPTURO te avisa pelo navegador quando o prazo chegar. Configure em ⚙️ Perfil.', target:'#sb-followup', pos:'right' },
-  { title:'🔍 Busca Global', desc:'Use Ctrl+K a qualquer momento para buscar leads, campanhas, telefones e e-mails em todo o sistema instantaneamente — sem sair da tela atual.', target:'.gs-btn', pos:'bottom' },
-  { title:'📥 Importar / Exportar CSV', desc:'Importe listas de leads via CSV com um clique. O CSV exportado agora inclui todas as colunas: bairro, segmento, telefone, WhatsApp, e-mail, endereço, pitch IA e muito mais!', target:null, pos:'center' },
-  { title:'🚀 Tudo pronto!', desc:'Você está pronto para capturar leads! Comece criando sua primeira campanha. Para rever este tour a qualquer momento, clique no botão 🧭 no canto inferior direito da tela.', target:null, pos:'center' }
+  { title:'Bem-vindo ao Capturo!', desc:'Olá! Seja muito bem-vindo ao Capturo, seu sistema inteligente de prospecção de leads. Vou te guiar por todas as funcionalidades em poucos minutos. Clique em Próximo para começar!', target:null, pos:'center' },
+  { title:'Dashboard — Visão Geral', desc:'Esta é a tela inicial, o seu painel de controle. Aqui você acompanha o total de campanhas ativas, quantos leads você tem, quantos já foram convertidos em clientes, e os leads mais recentes. É o resumo de tudo que está acontecendo no seu negócio.', target:'#sb-home', pos:'right' },
+  { title:'Campanhas', desc:'Campanhas são a base do Capturo. Cada campanha representa um segmento de mercado que você quer prospectar. Por exemplo, Dentistas em São Paulo, ou Restaurantes em Curitiba. Você pode ter quantas campanhas quiser, e cada uma tem seu próprio funil independente.', target:'.campaigns-grid', pos:'top' },
+  { title:'Prospectar — Busca Automática', desc:'Aqui está o coração do sistema. Na aba Prospectar, você escolhe o nicho, a cidade, o raio de busca e o país. O Capturo então varre automaticamente o Google Maps e encontra empresas reais com nome, telefone, endereço, site, avaliações e muito mais. Tudo em segundos, sem pesquisa manual.', target:'#sb-manual', pos:'right' },
+  { title:'Bio Links — Oportunidade de Ouro', desc:'Além do Google Maps, o Capturo detecta empresas que usam apenas o Instagram ou Linktree como site. Isso é uma oportunidade de ouro para quem vende criação de sites ou tráfego pago, porque esses negócios claramente precisam de presença digital profissional.', target:'#sb-manual', pos:'right' },
+  { title:'Pipeline Kanban de Leads', desc:'Todos os seus leads ficam organizados em um pipeline visual por temperatura. Vulcão é o lead mais quente, aquele que usa só Linktree como site. Quente é o negócio sem site profissional. Morno tem site fraco ou desatualizado. Frio tem site mas pode melhorar. Gelado é o mais difícil de converter. Arraste os cards entre as colunas conforme avança na negociação.', target:'#sb-leads', pos:'right' },
+  { title:'Perfil Completo do Lead', desc:'Ao clicar em qualquer lead, você abre o perfil completo. Lá você encontra nome da empresa, telefone formatado, WhatsApp, e-mail verificado, endereço completo, Instagram, site, avaliações no Google, pontuação de qualidade do site, e todas as observações que você anotou. É um dossiê completo do prospect.', target:'#sb-leads', pos:'right' },
+  { title:'Assistente de Inteligência Artificial', desc:'Para cada lead, o Capturo usa inteligência artificial para gerar uma análise da oportunidade e um pitch de vendas personalizado. A inteligência artificial avalia os pontos fracos da presença digital do negócio e sugere exatamente o que você pode oferecer para aquele cliente específico. Isso aumenta muito sua taxa de conversão.', target:'#sb-ai', pos:'right' },
+  { title:'Clientes Convertidos', desc:'Quando você fechar um negócio e transformar um lead em cliente, basta movê-lo para a aba Clientes. Assim você mantém separado quem ainda é prospect e quem já está na sua carteira ativa de clientes.', target:'#sb-clients', pos:'right' },
+  { title:'Follow-ups — Nunca Perca um Contato', desc:'O Follow-up é o seu lembrete inteligente. Para cada lead, você pode agendar uma data para retomar o contato. Quando o prazo chegar, o Capturo te notifica pelo navegador. Você nunca mais vai esquecer de ligar para um prospect importante. O ícone vermelho aparece quando há follow-ups para hoje.', target:'#sb-followup', pos:'right' },
+  { title:'Templates de Mensagem', desc:'Na aba Templates você cria e salva modelos de mensagem para usar na abordagem dos seus leads. Crie templates para WhatsApp, e-mail ou Instagram. Assim você tem sempre uma mensagem profissional pronta, adaptada para cada tipo de cliente.', target:'#sb-templates', pos:'right' },
+  { title:'Favoritos', desc:'Qualquer lead pode ser marcado como favorito com um clique na estrela. A aba Favoritos reúne todos eles em um lugar só para você acompanhar de perto os prospects mais promissores sem perder nenhum de vista.', target:'#sb-favoritos', pos:'right' },
+  { title:'Relatórios', desc:'Na aba Relatórios você acompanha o desempenho da sua prospecção ao longo do tempo. Veja quantos leads foram gerados por campanha, a distribuição por temperatura, taxa de conversão, e muito mais. Use esses dados para saber quais nichos estão dando mais resultado.', target:'#sb-relatorio', pos:'right' },
+  { title:'Busca Global — Control K', desc:'A qualquer momento, pressione Control K no teclado para abrir a busca global. Você pode pesquisar qualquer coisa dentro do sistema: nome de empresa, telefone, e-mail, nicho, cidade. O resultado aparece instantaneamente sem precisar trocar de tela.', target:null, pos:'center' },
+  { title:'Configurações e Chaves de API', desc:'Nas configurações você conecta suas chaves de API para ativar todas as funcionalidades. Google Maps para busca de empresas, Hunter e Apollo para encontrar e-mails verificados, SerpAPI para buscas avançadas, e a chave do Claude para ativar a inteligência artificial. Cada API tem um link direto para você criar sua conta gratuitamente.', target:null, pos:'center' },
+  { title:'Exportar e Importar Planilha', desc:'Você pode exportar todos os seus leads em planilha a qualquer momento. O arquivo inclui todas as colunas: nome, cidade, nicho, telefone, WhatsApp, e-mail, site, Instagram, endereço, temperatura, pontuação, pitch gerado pela inteligência artificial e muito mais. Também é possível importar listas externas no formato CSV.', target:null, pos:'center' },
+  { title:'Tudo pronto para prospectar!', desc:'Parabéns! Você agora conhece tudo do Capturo. Comece criando sua primeira campanha, escolha o nicho e a cidade, e deixe o sistema fazer a prospecção por você. Para rever este tour a qualquer momento, clique no botão de bússola no canto inferior direito da tela. Boas vendas!', target:null, pos:'center' }
 ];
 
 let tourStep = 0;
@@ -9615,17 +9624,40 @@ function restartTourFromFloat(){
 function toggleTourAudio(){
   tourAudioEnabled = !tourAudioEnabled;
   const btn = document.getElementById('tourAudioBtn');
-  if(btn) btn.textContent = tourAudioEnabled ? '🔇' : '🔊';
   if(tourAudioEnabled){
+    if(btn){ btn.textContent = '🔊 Narrando'; btn.style.color = 'var(--accent)'; btn.style.borderColor = 'var(--accent)'; }
     const desc = document.getElementById('tourDesc');
     if(desc) speakTour(desc.textContent);
   } else {
+    if(btn){ btn.textContent = '🔈 Narrar'; btn.style.color = 'var(--muted2)'; btn.style.borderColor = 'var(--border)'; }
     if(window.speechSynthesis) window.speechSynthesis.cancel();
   }
 }
 
 function speakTour(text){
-  // Voz desativada — experiência premium sem síntese robótica
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  // Prioridade: vozes neurais/premium do sistema em pt-BR
+  const prioridade = [
+    v => v.name.includes('Google') && v.lang.startsWith('pt'),
+    v => v.name.toLowerCase().includes('neural') && v.lang.startsWith('pt'),
+    v => v.name.toLowerCase().includes('premium') && v.lang.startsWith('pt'),
+    v => v.lang === 'pt-BR',
+    v => v.lang.startsWith('pt'),
+  ];
+  let voz = null;
+  for(const fn of prioridade){ voz = voices.find(fn); if(voz) break; }
+  if(voz) utter.voice = voz;
+  utter.lang  = 'pt-BR';
+  utter.rate  = 0.88;   // ligeiramente mais lento — mais natural
+  utter.pitch = 1.0;
+  utter.volume = 1.0;
+  window.speechSynthesis.speak(utter);
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 }
 
 function startOnboardingTour(){
