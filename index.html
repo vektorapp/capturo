@@ -606,7 +606,7 @@
   <div class="footer-copy">© 2025 Noxvy. Todos os direitos reservados.</div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Captura de lead (salva no Supabase ou exibe confirmação) ──
 async function capturarLead(inputId, msgId) {
   const email = document.getElementById(inputId)?.value?.trim();
@@ -637,8 +637,3 @@ async function capturarLead(inputId, msgId) {
       if (msg) { msg.style.color = 'var(--accent)'; msg.textContent = '✓ Você está na lista! Entraremos em contato em breve.'; }
     } else {
       throw new Error('status ' + res.status);
-    }
-  } catch(e) {
-    // Fallback: só confirma visualmente
-    document.getElementById(inputId).value = '';
-    if (msg) { msg.style.color = 'var(--accent)'; msg.textContent = '✓ Recebido

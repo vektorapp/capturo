@@ -828,10 +828,9 @@ select option{background:#8a9099}
       <!-- Mensagem de erro/sucesso -->
       <div id="authMsg" style="margin-top:12px;font-size:12px;text-align:center;min-height:18px;color:var(--red)"></div>
 
-      <!-- Toggle login/cadastro -->
+      <!-- Acesso restrito -->
       <div style="text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-        <span id="authToggleText" style="font-size:13px;color:var(--muted2)">Não tem conta? </span>
-        <button id="authToggleBtn" onclick="toggleAuthMode()" style="background:none;border:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Criar conta grátis</button>
+        <span style="font-size:12px;color:var(--muted2)">🔒 Acesso restrito a membros</span>
       </div>
     </div>
 
@@ -9212,7 +9211,7 @@ initAuth();
 <div class="tour-bubble" id="tourBubble" style="display:none">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
     <div class="tour-title" id="tourTitle" style="flex:1"></div>
-    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narrar em voz alta" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;cursor:pointer;font-size:13px;flex-shrink:0">🔊</button>
+    <button id="tourAudioBtn" onclick="toggleTourAudio()" title="Narrar em voz alta" style="display:none">🔊</button>
   </div>
   <div class="tour-desc" id="tourDesc"></div>
   <div class="tour-nav">
@@ -9594,7 +9593,7 @@ function renderVisualFunnel(stages){
 
 /* ─────────── 6. ONBOARDING TOUR (v2 — melhorado) ─────────── */
 const TOUR_STEPS = [
-  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em poucos minutos. Clique em 🔊 para ativar narração por voz. Clique no botão 🧭 no canto inferior direito para rever o tour a qualquer momento!', target:null, pos:'center' },
+  { title:'🎉 Bem-vindo ao CAPTURO v5.0!', desc:'Este tour vai te guiar pelos principais recursos em poucos minutos. Clique no botão 🧭 no canto inferior direito para rever o tour a qualquer momento!', target:null, pos:'center' },
   { title:'🗂 Campanhas', desc:'Aqui você cria campanhas para organizar seus leads por nicho e cidade. Ex: "Dentistas — São Paulo". Cada campanha tem seu próprio funil independente.', target:'.campaigns-grid', pos:'top' },
   { title:'🔍 Motor de Prospecção', desc:'Na aba Prospectar você busca negócios automaticamente via Google Maps, Bio Links ou Busca Completa (Maps + Bio Links em sequência para máxima cobertura).', target:'#sb-prospectar', pos:'right' },
   { title:'📊 Kanban de Leads', desc:'Seus leads ficam organizados por temperatura: 🌋 Vulcão → 🧊 Gelado. Arraste os cards para mover entre estágios do funil. Clique em qualquer card para ver o perfil completo.', target:'#sb-leads', pos:'right' },
@@ -9626,17 +9625,8 @@ function toggleTourAudio(){
 }
 
 function speakTour(text){
-  if(!tourAudioEnabled || !window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  const ptVoice = voices.find(v=>v.lang&&v.lang.startsWith('pt'));
-  if(ptVoice) utter.voice = ptVoice;
-  utter.lang = 'pt-BR';
-  utter.rate = 0.95;
-  window.speechSynthesis.speak(utter);
+  // Voz desativada — experiência premium sem síntese robótica
 }
-if(window.speechSynthesis){ window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); }; }
 
 function startOnboardingTour(){
   if(localStorage.getItem('capturo-tour-done')) return;
