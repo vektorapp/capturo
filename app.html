@@ -3875,6 +3875,11 @@ async function startMapsSearch(){
   const c=campaigns.find(x=>x.id===activeCampaignId);if(!c)return;
   const useAI=$('enableAI').checked&&('via-edge-function');
   const useHunter=$('enableHunter').checked&&('via-edge-function');
+  // ── Verifica saldo de Sinais ──────────────────────────────────
+  if(sinaisRestantes() < 1){
+    toast('⚡ Você não tem Sinais disponíveis. Recarregue para continuar prospectando.','warn',6000);
+    return;
+  }
   const btn=$('btnS1');btn.disabled=true;btn.textContent='Buscando...';showCancelBtn(true);
   leads=[];setProg(5);setStat('<span class="spinner"></span>Localizando cidade...');
 
@@ -3918,6 +3923,9 @@ async function startMapsSearch(){
         catch(e){det={name:places[i].name,formatted_address:places[i].vicinity};}
         const t=classifyBasic(det);
         const lead={...det,id:'m'+Date.now()+nbIdx+'_'+i,name:det.name||places[i].name,formatted_address:(det.formatted_address||places[i].vicinity||'').replace(', USA',''),t,score:calcScore(det,t),status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'maps',mapsUrl:det.url||'',neighborhood:nb||''};
+        // ── Consome 1 Sinal; para se sem saldo ───────────────────
+        const ok = await consumirSinal('maps_search', {lead_name:lead.name, campaign_id:activeCampaignId});
+        if(!ok){ setStat('⚡ Sinais esgotados! Recarregue para continuar.'); toast('⚡ Sinais esgotados! Acesse o painel para recarregar.','warn',8000); break; }
         leads.push(lead);
         setProg(5+Math.round(((nbIdx+(i+1)/places.length)/nbList.length)*25));
         setStat(`<span class="spinner"></span>[${nb||c.city}] ${i+1}/${places.length}: ${lead.name}`);
@@ -3981,6 +3989,11 @@ async function startBioSearch(){
   const c=campaigns.find(x=>x.id===activeCampaignId);if(!c)return;
   const activeBio=getActiveBiolinks();
   if(!activeBio.length){alert('Ative pelo menos um site de bio link!');return;}
+  // ── Verifica saldo de Sinais ──────────────────────────────────
+  if(sinaisRestantes() < 1){
+    toast('⚡ Você não tem Sinais disponíveis. Recarregue para continuar prospectando.','warn',6000);
+    return;
+  }
   const btn=$('btnS2');btn.disabled=true;btn.textContent='Buscando...';showCancelBtn(true);
   leads=[];setProg(5);
   const query=c.market==='nacional'?c.nicho:c.nichoEn;
@@ -4052,6 +4065,11 @@ async function startFullSearch(){
   const gKey='via-edge-function'; // chave no servidor
   // gKey via edge function
   if(!activeCampaignId){alert('Selecione uma campanha!');return;}
+  // ── Verifica saldo de Sinais ──────────────────────────────────
+  if(sinaisRestantes() < 1){
+    toast('⚡ Você não tem Sinais disponíveis. Recarregue para continuar prospectando.','warn',6000);
+    return;
+  }
   // Run Maps first
   $('btnS3').disabled=true;$('btnS3').textContent='Buscando Maps...';
   const savedAI=$('enableAI').checked;
@@ -4157,6 +4175,9 @@ async function startBioSearchInternal(gKey,cseId){
         if(countryExclude.length && countryExclude.some(kw=>snippet.includes(kw)))continue;
         const name=(item.title||'').replace(/\|.*$/,'').replace(/-.*$/,'').trim();
         const phoneMatch=(item.snippet||'').match(/[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}/);
+        // ── Consome 1 Sinal; para se sem saldo ───────────────────
+        const okBio = await consumirSinal('bio_search', {lead_name:name, campaign_id:activeCampaignId});
+        if(!okBio){ setStat('⚡ Sinais esgotados! Recarregue para continuar.'); toast('⚡ Sinais esgotados! Acesse o painel para recarregar.','warn',8000); return; }
         leads.push({id:'g'+Date.now()+bi+'_'+ii,name,formatted_address:(item.snippet||'').substring(0,120),t:'volcano',score:10,status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'google',bioUrl:item.link,bioSite:bioSite.domain,snippet:item.snippet||'',formatted_phone_number:phoneMatch?phoneMatch[0]:'',website:item.link,mapsUrl:`https://www.google.com/maps/search/${encodeURIComponent(name)}`,country:isBrasil?'BR':c.country||'US'});
         renderAll();
       }
@@ -4247,9 +4268,7 @@ function renderAll(){
   $('sVolcano').textContent=vl.length;
   $('sHot').textContent=hot.length;
   $('sWarm').textContent=warm.length;
-  // Atualiza badge de Sinais no header
-  const sinaisNum = document.querySelector('#sinaisBadge span[style*="font-weight:700"]');
-  if(sinaisNum) sinaisNum.textContent = leads.length;
+  // Badge de Sinais é atualizado via atualizarBadgeSinais() — não sobrescrever aqui
   $('sCold').textContent=cold.length;
   $('sFrozen').textContent=frozen.length;
   $('sClosed').textContent=closed.length;
@@ -8790,6 +8809,55 @@ let _sb = null;
 let currentUser = null;
 let _authMode = 'login'; // 'login' | 'signup'
 
+// ── SINAIS (créditos) ─────────────────────────────────────────
+let _sinaisProfile = { sinais_limit: 40, sinais_used: 0 };
+
+function sinaisRestantes(){ return Math.max(0, _sinaisProfile.sinais_limit - _sinaisProfile.sinais_used); }
+
+async function loadSinaisProfile(){
+  const sb = getSupabase();
+  if(!sb || !currentUser) return;
+  const { data, error } = await sb
+    .from('profiles')
+    .select('sinais_limit, sinais_used')
+    .eq('id', currentUser.id)
+    .single();
+  if(!error && data){
+    _sinaisProfile = data;
+    atualizarBadgeSinais();
+  }
+}
+
+function atualizarBadgeSinais(){
+  const restantes = sinaisRestantes();
+  const el = document.getElementById('sinaisBadge');
+  if(!el) return;
+  const numEl  = el.querySelector('span.sb-num');
+  const lblEl  = el.querySelector('span.sb-lbl');
+  if(numEl) numEl.textContent = restantes;
+  if(lblEl) lblEl.textContent = 'Sinais';
+  const cor = restantes <= 5 ? 'var(--red)' : restantes <= 15 ? 'var(--warm)' : 'var(--accent)';
+  if(numEl) numEl.style.color = cor;
+  el.style.borderColor = restantes <= 5 ? 'rgba(255,59,48,.3)' : 'rgba(0,122,255,.2)';
+  el.title = `${restantes} sinais restantes de ${_sinaisProfile.sinais_limit}`;
+}
+
+// Debita 1 sinal no Supabase e atualiza o badge local.
+// Retorna true = ok | false = sem saldo (bloquear ação)
+async function consumirSinal(action, meta={}){
+  const sb = getSupabase();
+  if(!sb || !currentUser) return true; // não bloqueia se não logado
+  const { data, error } = await sb.rpc('consume_sinal', {
+    p_user_id: currentUser.id,
+    p_action:  action,
+    p_cost:    1,
+    p_meta:    meta
+  });
+  if(error){ console.error('consumirSinal:', error.message); return false; }
+  if(data === true){ _sinaisProfile.sinais_used++; atualizarBadgeSinais(); return true; }
+  return false; // saldo insuficiente
+}
+
 function getSupabase(){
   if(!_sb && window.supabase){
     _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -8838,6 +8906,7 @@ function hideLoginScreen(){
   const el = document.getElementById('loginScreen');
   if(el) el.style.display = 'none';
   updateUserHeader();
+  loadSinaisProfile(); // carrega saldo real do Supabase
 }
 
 function updateUserHeader(){
@@ -8845,15 +8914,15 @@ function updateUserHeader(){
   if(!el || !currentUser) return;
   const meta = currentUser.user_metadata || {};
   const name = meta.name || currentUser.email.split('@')[0];
-  // Sinais = total leads captados pelo usuário
-  const totalSinais = (window.leads||[]).length;
+  // Sinais = créditos restantes (carregados do Supabase via loadSinaisProfile)
+  const restantes = sinaisRestantes();
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
       <!-- Sinais badge -->
-      <div id="sinaisBadge" title="Sinais captados" style="display:flex;align-items:center;gap:5px;background:var(--accent-bg);border:1px solid rgba(0,122,255,.2);border-radius:20px;padding:3px 10px 3px 7px;cursor:default">
+      <div id="sinaisBadge" title="${restantes} sinais restantes de ${_sinaisProfile.sinais_limit}" style="display:flex;align-items:center;gap:5px;background:var(--accent-bg);border:1px solid rgba(0,122,255,.2);border-radius:20px;padding:3px 10px 3px 7px;cursor:default">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><circle cx="12" cy="12" r="3" fill="var(--accent)"/><circle cx="12" cy="12" r="7" stroke="var(--accent)" stroke-width="1.5" opacity=".4" fill="none"/><circle cx="12" cy="12" r="11" stroke="var(--accent)" stroke-width="1" opacity=".2" fill="none"/></svg>
-        <span style="font-size:11px;font-weight:700;color:var(--accent);font-family:'IBM Plex Mono',monospace">${totalSinais}</span>
-        <span style="font-size:10px;color:var(--muted2)">Sinais</span>
+        <span class="sb-num" style="font-size:11px;font-weight:700;color:var(--accent);font-family:'IBM Plex Mono',monospace">${restantes}</span>
+        <span class="sb-lbl" style="font-size:10px;color:var(--muted2)">Sinais</span>
       </div>
       <!-- Avatar + nome -->
       <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0056cc);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">${name.charAt(0).toUpperCase()}</div>
