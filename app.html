@@ -779,6 +779,88 @@ select option{background:#8a9099}
 .funnel-stage-label{position:absolute;left:calc(100% + 8px);font-size:10px;color:var(--muted2);white-space:nowrap;font-family:'IBM Plex Mono',monospace}
 .funnel-wrap{width:100%;overflow:visible;padding-left:8px}
 
+/* ── USER PROFILE MODAL ── */
+#userProfileModal{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
+#userProfileModal.open{display:flex}
+.up-box{background:var(--s1);border:1px solid var(--border);border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.up-hero{background:linear-gradient(135deg,var(--accent),#0056cc);padding:24px;border-radius:20px 20px 0 0;position:relative}
+.up-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;margin-bottom:10px}
+.up-name{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.up-email{font-size:11px;color:rgba(255,255,255,.75);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.up-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.up-close:hover{background:rgba(255,255,255,.3)}
+.up-body{padding:20px}
+.up-section{margin-bottom:20px}
+.up-section-title{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.up-plan-card{background:var(--accent-bg);border:1px solid rgba(0,122,255,.2);border-radius:12px;padding:14px;display:flex;align-items:center;justify-content:space-between}
+.up-plan-name{font-size:14px;font-weight:700;color:var(--accent2)}
+.up-plan-sub{font-size:11px;color:var(--muted2);margin-top:2px}
+.up-leads-bar-wrap{margin-top:10px}
+.up-leads-bar{height:8px;background:var(--border);border-radius:20px;overflow:hidden}
+.up-leads-fill{height:100%;border-radius:20px;transition:width .5s}
+.up-leads-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);margin-top:4px;font-family:'IBM Plex Mono',monospace}
+.up-stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.up-stat-row:last-child{border:none}
+.up-stat-label{color:var(--muted2)}
+.up-stat-val{color:var(--text);font-weight:600;font-family:'IBM Plex Mono',monospace}
+.up-credits-log{max-height:180px;overflow-y:auto}
+.up-log-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:11px}
+.up-log-row:last-child{border:none}
+.up-log-op{display:flex;align-items:center;gap:6px}
+.up-log-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.up-pwd-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+.up-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.up-btn{padding:9px 16px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.up-btn-primary{background:var(--accent);color:#fff}
+.up-btn-primary:hover{opacity:.88}
+.up-btn-ghost{background:var(--s2);color:var(--muted2);border:1px solid var(--border2)}
+.up-btn-ghost:hover{color:var(--text)}
+.up-btn-danger{background:var(--volcano-bg);color:var(--volcano);border:1px solid rgba(255,59,48,.25)}
+.up-btn-danger:hover{background:rgba(255,59,48,.2)}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:640px){
+  .sidebar{width:0!important;left:-60px!important;transition:left .25s ease!important}
+  .sidebar.mobile-open{left:0!important;width:200px!important}
+  .main-wrap{margin-left:0!important;width:100%!important}
+  .topnav-row1{padding:0 12px!important;flex-wrap:nowrap!important;overflow-x:auto}
+  .topnav-swatches{display:none!important}
+  .nav-tabs{display:none!important}
+  #btnMobileMenu{display:flex!important}
+  .keys-grid{grid-template-columns:1fr!important}
+  .state-city-row{grid-template-columns:1fr!important}
+  .cmodal-grid{grid-template-columns:1fr!important}
+  .engine-tabs{flex-direction:column!important}
+  .engine-tab{flex:none!important}
+  .stats-row{grid-template-columns:repeat(2,1fr)!important}
+  .campaigns-grid{grid-template-columns:1fr!important}
+  .kanban{grid-template-columns:1fr!important;overflow-x:visible!important}
+  .modal-overlay{padding:0!important;align-items:flex-end!important}
+  .modal-box{border-radius:20px 20px 0 0!important;max-height:92vh!important;overflow-y:auto!important;max-width:100%!important}
+  .cmodal-overlay{padding:0!important;align-items:flex-end!important}
+  .cmodal-box{border-radius:20px 20px 0 0!important;max-width:100%!important;width:100%!important}
+  .pipeline-grid{grid-template-columns:repeat(3,minmax(180px,1fr))!important}
+  .mrr-widget{grid-template-columns:repeat(2,1fr)!important}
+  .gs-box{width:95vw!important;max-height:80vh!important}
+  .gs-btn{display:none!important}
+  .btn-new{display:none!important}
+  .logo span:last-child{display:none!important}
+  .up-box{max-width:100%;border-radius:20px 20px 0 0}
+  #userProfileModal{align-items:flex-end;padding:0}
+  .recarga-cards{grid-template-columns:1fr!important}
+  .manual-grid{grid-template-columns:1fr!important}
+  .clients-grid{grid-template-columns:1fr!important}
+  .report-kpis{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:480px){
+  .kanban,.pipeline-grid{grid-template-columns:repeat(2,minmax(180px,1fr))!important;overflow-x:auto!important;padding-bottom:12px!important;width:100%!important}
+  .topnav-row1{min-height:48px!important}
+  .kpi-card{padding:14px 16px!important}
+}
+#mobileSidebarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:94;backdrop-filter:blur(2px)}
+#mobileSidebarOverlay.open{display:block}
+#btnMobileMenu{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:6px;flex-shrink:0;align-items:center;justify-content:center}
+
 /* ── ONBOARDING TOUR ── */
 .tour-overlay{position:fixed;inset:0;z-index:99000;pointer-events:none}
 .tour-spotlight{position:absolute;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none}
@@ -1046,6 +1128,9 @@ function toast(msg, type='info', duration=3500){
 </div>
 
 <!-- SIDEBAR -->
+<!-- Mobile sidebar overlay -->
+<div id="mobileSidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
 <div class="sidebar" id="mainSidebar">
   <div class="sb-item active" id="sb-home" onclick="showPage('pageHome');setSbActive('sb-home')">
     <span class="sb-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="sb-label">Dashboard</span>
@@ -1097,6 +1182,10 @@ function toast(msg, type='info', duration=3500){
 
 <div class="topnav">
   <div class="topnav-row1" style="padding-left:14px">
+    <!-- Mobile hamburger -->
+    <button id="btnMobileMenu" onclick="toggleMobileSidebar()" title="Menu" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="logo" onclick="goHome();setSbActive('sb-home')" style="cursor:pointer;flex-shrink:0;display:flex;align-items:center;gap:10px" title="Dashboard">
       <!-- RADAR SVG -->
       <div style="position:relative;width:36px;height:36px;flex-shrink:0">
@@ -1140,6 +1229,7 @@ function toast(msg, type='info', duration=3500){
     </div>
     <!-- User info + logout -->
     <div id="userHeaderInfo" style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-left:8px;border-left:1px solid var(--border)"></div>
+    <button onclick="openUserProfile()" title="Meu Perfil" style="background:none;border:1px solid var(--border2);border-radius:20px;padding:5px 12px;color:var(--muted2);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;flex-shrink:0" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">👤 Perfil</button>
     <button class="btn-new" onclick="openCampaignModal()" style="flex-shrink:0">+ Campanha</button>
   </div>
 </div>
@@ -4087,6 +4177,7 @@ async function startBioSearch(){
         }
         const items=data.organic_results||[];
         for(let ii=0;ii<items.length;ii++){
+          if(searchAborted)break;
           const item=items[ii];
           const name=(item.title||'').replace(/\|.*$/,'').replace(/-.*$/,'').trim();
           const bioUrl=item.link;
@@ -4099,7 +4190,17 @@ async function startBioSearch(){
           const lead={id:'g'+Date.now()+bi+'_'+ii,name,formatted_address:(item.snippet||'').substring(0,120),t:'volcano',score:10,status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'google',bioUrl,bioSite:bioSite.domain,snippet:item.snippet||'',formatted_phone_number:phone,website:bioUrl,mapsUrl:`https://www.google.com/maps/search/${encodeURIComponent(name)}`,country:isBrasil?'BR':c.country||'US'};
           leads.push(lead);
           renderAll();
+          // ── Auto-save a cada 50 leads ──────────────────────────
+          if(leads.length>0 && leads.length%50===0){
+            saveCampaigns();
+            if(typeof currentUser!=='undefined'&&currentUser){
+              clearTimeout(window._supabaseSyncTimeout);
+              await saveToSupabase();
+              toast(`☁️ ${leads.length} leads salvos automaticamente na nuvem.`,'info',2500);
+            }
+          }
         }
+        if(searchAborted)break;
       }catch(e){
         console.error('SerpAPI fetch error:',e.message);
         setStat(`⚠️ Erro ao buscar ${bioSite.label}: ${e.message}`);
@@ -4107,38 +4208,51 @@ async function startBioSearch(){
       await new Promise(r=>setTimeout(r,500));
     }
     finishSearch();
-  }catch(e){setStat('✗ Erro: '+e.message);setProg(0);}
+  }catch(e){
+    setStat('✗ Erro: '+e.message);setProg(0);
+    showCancelBtn(false);
+    if(leads.length){saveCampaigns();if(typeof currentUser!=='undefined'&&currentUser){clearTimeout(window._supabaseSyncTimeout);saveToSupabase();}}
+  }
   btn.disabled=false;btn.textContent='🌋 Buscar Bio Links';
+  showCancelBtn(false);
 }
 
 // ══════════════════════════════════════════
 // ENGINE 3: FULL (Maps + Bio)
 // ══════════════════════════════════════════
 async function startFullSearch(){
-  const gKey='via-edge-function'; // chave no servidor
-  // gKey via edge function
+  const gKey='via-edge-function';
   if(!activeCampaignId){alert('Selecione uma campanha!');return;}
-  // ── Verifica saldo de Leads ───────────────────────────────────
   if(leadsRestantes() < 1){
     toast('⚡ Você não tem Leads disponíveis. Recarregue para continuar prospectando.','warn',6000);
     return;
   }
   _leadsEsgotadosAlertado = false;
-  // Run Maps first
   $('btnS3').disabled=true;$('btnS3').textContent='Buscando Maps...';
+  showCancelBtn(true); // ← botão PARAR visível desde o início
   const savedAI=$('enableAI').checked;
   const savedHunter=$('enableHunter').checked;
   $('enableAI').checked=$('enableAI3').checked;
   $('enableHunter').checked=$('enableHunter3').checked;
   await startMapsSearchInternal(gKey);
-  // then Bio Links
-  $('btnS3').textContent='Buscando Bio Links...';
-  const cseId=localStorage.getItem('capturo-cseId')||'80d765485a3f94fa9';
-  await startBioSearchInternal(gKey,cseId);
+  if(!searchAborted){
+    $('btnS3').textContent='Buscando Bio Links...';
+    const cseId=localStorage.getItem('capturo-cseId')||'80d765485a3f94fa9';
+    await startBioSearchInternal(gKey,cseId);
+  }
   // restore
   $('enableAI').checked=savedAI;
   $('enableHunter').checked=savedHunter;
   $('btnS3').disabled=false;$('btnS3').textContent='🚀 Busca Completa';
+  showCancelBtn(false);
+  // Save imediato ao terminar (não depende do debounce de 2s)
+  if(leads.length){
+    saveCampaigns();
+    if(typeof currentUser!=='undefined'&&currentUser){
+      clearTimeout(window._supabaseSyncTimeout);
+      await saveToSupabase();
+    }
+  }
   finishSearch();
 }
 
@@ -4238,6 +4352,7 @@ async function startBioSearchInternal(gKey,cseId){
       }
       const items=data.organic_results||[];
       for(let ii=0;ii<items.length;ii++){
+        if(searchAborted)break;
         const item=items[ii];
         if(leads.find(l=>l.bioUrl===item.link))continue;
         const snippet=(item.snippet||'').toLowerCase();
@@ -4249,14 +4364,23 @@ async function startBioSearchInternal(gKey,cseId){
         if(!okBio){ setStat('⚡ Leads esgotados! Recarregue para continuar.'); if(!_leadsEsgotadosAlertado){_leadsEsgotadosAlertado=true; toast('⚡ Leads esgotados! Recarregue seus Leads para continuar.','warn',5000); setTimeout(()=>abrirModalRecarga('Seus Leads acabaram durante a busca. Escolha um pack para continuar.'),600);} return; }
         leads.push({id:'g'+Date.now()+bi+'_'+ii,name,formatted_address:(item.snippet||'').substring(0,120),t:'volcano',score:10,status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'google',bioUrl:item.link,bioSite:bioSite.domain,snippet:item.snippet||'',formatted_phone_number:phoneMatch?phoneMatch[0]:'',website:item.link,mapsUrl:`https://www.google.com/maps/search/${encodeURIComponent(name)}`,country:isBrasil?'BR':c.country||'US'});
         renderAll();
+        // ── Auto-save a cada 50 leads ──────────────────────────
+        if(leads.length>0 && leads.length%50===0){
+          saveCampaigns();
+          if(typeof currentUser!=='undefined'&&currentUser){
+            clearTimeout(window._supabaseSyncTimeout);
+            await saveToSupabase();
+            toast(`☁️ ${leads.length} leads salvos automaticamente na nuvem.`,'info',2500);
+          }
+        }
       }
+      if(searchAborted)break;
     }catch(e){ console.error('SerpAPI internal error:',e.message); }
     await new Promise(r=>setTimeout(r,500));
   }
 }
 
 function finishSearch(){
-  // Record last search date
   const c=campaigns.find(x=>x.id===activeCampaignId);
   if(c) c.lastSearchAt=new Date().toISOString();
   saveCampaigns();
@@ -4268,6 +4392,13 @@ function finishSearch(){
   const emails=leads.filter(l=>l.email).length;
   const dupNote=dupCount>0?` · ⚠️ ${dupCount} já prospectados`:'';
   setStat(`✓ Concluído! ${leads.length} leads — 🌋 ${vol} vulcão · 🔥 ${hot} quentes · ✉ ${emails} emails${dupNote}`);
+  // ── Save imediato no Supabase (sem debounce) ──
+  if(typeof currentUser!=='undefined'&&currentUser){
+    clearTimeout(window._supabaseSyncTimeout);
+    saveToSupabase().then(()=>{
+      toast(`☁️ ${leads.length} leads salvos na nuvem!`,'success',3000);
+    });
+  }
   saveCampaigns();renderCampaignsList();
   setTimeout(()=>setProg(0),1000);
   setTimeout(()=>syncToSheets(),1500);
@@ -5264,6 +5395,17 @@ async function sendAIMessage(text){
     const reply=data.content?.[0]?.text||'Não consegui processar.';
     appendAIMsg('assistant',reply);
     aiChatHistory.push({role:'assistant',content:reply});
+    // ── Persiste histórico no Supabase (debounced) ────────────
+    clearTimeout(window._chatSaveTimeout);
+    window._chatSaveTimeout=setTimeout(async()=>{
+      const sb=getSupabase();
+      if(sb&&currentUser){
+        await sb.from('profiles').update({
+          ai_chat_history: aiChatHistory.slice(-40),
+          updated_at: new Date().toISOString()
+        }).eq('id',currentUser.id);
+      }
+    },2000);
   }catch(e){
     removeAITyping();
     appendAIMsg('assistant','Erro ao conectar com a IA: '+e.message);
@@ -9467,6 +9609,20 @@ async function saveToSupabase(){
         await sb.from('leads').upsert(campLeads, { onConflict: 'id' });
       }
     }
+    // ── Salva templates customizados ──────────────────────────
+    if(typeof customTemplates!=='undefined' && customTemplates.length>0){
+      await sb.from('profiles').update({
+        custom_templates: customTemplates,
+        updated_at: new Date().toISOString()
+      }).eq('id', currentUser.id);
+    }
+    // ── Salva histórico do chat IA ─────────────────────────────
+    if(typeof aiChatHistory!=='undefined' && aiChatHistory.length>0){
+      await sb.from('profiles').update({
+        ai_chat_history: aiChatHistory.slice(-40),
+        updated_at: new Date().toISOString()
+      }).eq('id', currentUser.id);
+    }
   }catch(e){
     console.error('[CAPTURO] saveToSupabase error:',e);
   }
@@ -9545,6 +9701,30 @@ async function loadFromSupabase(){
     });
 
     try{ localStorage.setItem('pr6', JSON.stringify(campaigns)); }catch(e){}
+    // ── Carrega templates e chat history do perfil ────────────
+    const { data:profileData } = await sb.from('profiles')
+      .select('custom_templates, ai_chat_history')
+      .eq('id', currentUser.id).single();
+    if(profileData?.custom_templates?.length){
+      customTemplates = profileData.custom_templates;
+      try{ localStorage.setItem('capturo-templates', JSON.stringify(customTemplates)); }catch(e){}
+      if(typeof renderTemplates==='function') renderTemplates();
+    }
+    if(profileData?.ai_chat_history?.length){
+      aiChatHistory = profileData.ai_chat_history;
+      // Restaura mensagens visuais do chat
+      const msgs=document.getElementById('aiChatMessages');
+      if(msgs){
+        msgs.innerHTML='';
+        aiChatHistory.forEach(m=>{
+          const d=document.createElement('div');
+          d.style.cssText=`display:flex;gap:10px;align-items:flex-start;${m.role==='user'?'flex-direction:row-reverse':''}`;
+          d.innerHTML=`<div style="max-width:80%;padding:10px 14px;border-radius:${m.role==='user'?'16px 4px 16px 16px':'4px 16px 16px 16px'};background:${m.role==='user'?'var(--accent)':'var(--s2)'};color:${m.role==='user'?'#fff':'var(--text)'};font-size:13px;line-height:1.5">${(m.content||'').replace(/\n/g,'<br>')}</div>`;
+          msgs.appendChild(d);
+        });
+        msgs.scrollTop=msgs.scrollHeight;
+      }
+    }
     if(typeof renderNavTabs==='function') renderNavTabs();
     if(typeof renderCampaignsList==='function') renderCampaignsList();
     const total = (leadsData||[]).length;
@@ -10288,6 +10468,170 @@ window._postAuthInit = function(){
 };
 </script>
 
+<!-- ══ MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
+<div id="userProfileModal" role="dialog" aria-modal="true" aria-label="Meu Perfil" onclick="if(event.target===this)closeUserProfile()">
+  <div class="up-box">
+    <div class="up-hero">
+      <button class="up-close" onclick="closeUserProfile()">✕</button>
+      <div class="up-avatar" id="upAvatar">?</div>
+      <div class="up-name" id="upName">—</div>
+      <div class="up-email" id="upEmail">—</div>
+    </div>
+    <div class="up-body">
+      <div class="up-section">
+        <div class="up-section-title">Plano Atual</div>
+        <div class="up-plan-card">
+          <div>
+            <div class="up-plan-name" id="upPlanName">Carregando...</div>
+            <div class="up-plan-sub" id="upPlanSub">—</div>
+          </div>
+          <button onclick="fecharUserProfile_e_recarga()" class="up-btn up-btn-primary" style="font-size:11px;padding:7px 14px">⚡ Recarregar</button>
+        </div>
+        <div class="up-leads-bar-wrap">
+          <div class="up-leads-bar"><div class="up-leads-fill" id="upLeadsBar" style="width:0%;background:var(--accent)"></div></div>
+          <div class="up-leads-labels"><span id="upLeadsUsed">0 usados</span><span id="upLeadsTotal">— disponíveis</span></div>
+        </div>
+      </div>
+      <div class="up-section">
+        <div class="up-section-title">Estatísticas da Conta</div>
+        <div class="up-stat-row"><span class="up-stat-label">Membro desde</span><span class="up-stat-val" id="upMemberSince">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Campanhas criadas</span><span class="up-stat-val" id="upCampaignsCount">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Total de leads capturados</span><span class="up-stat-val" id="upLeadsCount">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Clientes convertidos</span><span class="up-stat-val" id="upClientsCount">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Leads restantes agora</span><span class="up-stat-val" id="upLeadsRestantes" style="color:var(--accent)">—</span></div>
+      </div>
+      <div class="up-section">
+        <div class="up-section-title">Histórico de Recargas</div>
+        <div class="up-credits-log" id="upCreditsLog">
+          <div style="text-align:center;padding:20px;color:var(--muted2);font-size:11px;font-family:'IBM Plex Mono',monospace">Carregando...</div>
+        </div>
+      </div>
+      <div class="up-section">
+        <div class="up-section-title">Segurança — Alterar Senha</div>
+        <div class="up-pwd-row">
+          <input type="password" id="upNewPwd" placeholder="Nova senha (mín. 8 caracteres)" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:13px;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" onkeydown="if(event.key==='Enter')trocarSenha()">
+          <button onclick="trocarSenha()" class="up-btn up-btn-ghost" style="white-space:nowrap;flex-shrink:0">🔐 Alterar</button>
+        </div>
+        <div id="upPwdMsg" style="font-size:11px;margin-top:6px;min-height:16px"></div>
+      </div>
+      <div class="up-actions">
+        <button onclick="closeUserProfile()" class="up-btn up-btn-ghost">Fechar</button>
+        <button onclick="logoutUser()" class="up-btn up-btn-danger">↩ Sair da Conta</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ══ /MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
+
+<script>
+// ── USER PROFILE MODAL ─────────────────────────────────────────
+async function openUserProfile(){
+  const modal=document.getElementById('userProfileModal');
+  if(!modal||!currentUser)return;
+  modal.classList.add('open');
+  const email=currentUser.email||'—';
+  const name=(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||email.split('@')[0]||'?');
+  document.getElementById('upAvatar').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('upName').textContent=name;
+  document.getElementById('upEmail').textContent=email;
+  const createdAt=currentUser.created_at?new Date(currentUser.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):'—';
+  document.getElementById('upMemberSince').textContent=createdAt;
+  const totalLeads=(campaigns||[]).reduce((s,c)=>s+(c.leads||[]).length,0);
+  const totalClients=typeof clients!=='undefined'?(clients||[]).length:0;
+  document.getElementById('upCampaignsCount').textContent=(campaigns||[]).length;
+  document.getElementById('upLeadsCount').textContent=totalLeads;
+  document.getElementById('upClientsCount').textContent=totalClients;
+  const restantes=leadsRestantes();
+  const limite=_leadsProfile.sinais_limit||0;
+  const usados=_leadsProfile.sinais_used||0;
+  const pct=limite>0?Math.min(100,Math.round((usados/limite)*100)):0;
+  const cor=restantes<=5?'var(--red)':restantes<=15?'var(--warm)':'var(--accent)';
+  document.getElementById('upLeadsBar').style.width=pct+'%';
+  document.getElementById('upLeadsBar').style.background=cor;
+  document.getElementById('upLeadsUsed').textContent=usados+' usados';
+  document.getElementById('upLeadsTotal').textContent=restantes+' restantes de '+limite;
+  document.getElementById('upLeadsRestantes').textContent=restantes;
+  document.getElementById('upLeadsRestantes').style.color=cor;
+  const planLabel=limite>=400?'🥇 Pack Grande (400 leads)':limite>=150?'🥈 Pack Médio (150 leads)':limite>=50?'🥉 Pack Inicial (50 leads)':limite>0?'📅 Plano Mensal':'🆓 Trial Gratuito';
+  document.getElementById('upPlanName').textContent=planLabel;
+  document.getElementById('upPlanSub').textContent=usados+' leads usados · '+restantes+' restantes';
+  await loadCreditsLog();
+}
+
+async function loadCreditsLog(){
+  const sb=getSupabase();
+  const log=document.getElementById('upCreditsLog');
+  if(!sb||!currentUser||!log)return;
+  try{
+    const{data,error}=await sb.from('credits_log').select('operation,amount,reason,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(20);
+    if(error||!data?.length){log.innerHTML='<div style="text-align:center;padding:16px;color:var(--muted2);font-size:11px">Nenhuma recarga registrada ainda.</div>';return;}
+    log.innerHTML=data.map(r=>{
+      const isAdd=r.operation==='add';
+      const cor=isAdd?'var(--green)':'var(--volcano)';
+      const sinal=isAdd?'+':'−';
+      const dt=new Date(r.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
+      const hr=new Date(r.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      const reason=(r.reason||'—').replace(/\[.*?\]/g,'').trim().substring(0,50)||'Recarga';
+      return`<div class="up-log-row"><div class="up-log-op"><div class="up-log-dot" style="background:${cor}"></div><span style="color:${cor};font-weight:700;font-family:'IBM Plex Mono',monospace;min-width:36px">${sinal}${r.amount}</span><span style="color:var(--muted2);font-size:10px">${reason}</span></div><span style="color:var(--muted2);font-size:10px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;margin-left:8px">${dt} ${hr}</span></div>`;
+    }).join('');
+  }catch(e){log.innerHTML='<div style="color:var(--volcano);font-size:11px;padding:10px">Erro ao carregar histórico: '+e.message+'</div>';}
+}
+
+function closeUserProfile(){
+  const m=document.getElementById('userProfileModal');
+  if(m)m.classList.remove('open');
+}
+function fecharUserProfile_e_recarga(){closeUserProfile();setTimeout(()=>abrirModalRecarga(),150);}
+
+async function trocarSenha(){
+  const pwd=document.getElementById('upNewPwd').value.trim();
+  const msg=document.getElementById('upPwdMsg');
+  if(!pwd||pwd.length<8){msg.style.color='var(--volcano)';msg.textContent='A senha deve ter pelo menos 8 caracteres.';return;}
+  const sb=getSupabase();
+  if(!sb)return;
+  msg.style.color='var(--muted2)';msg.textContent='Alterando...';
+  const{error}=await sb.auth.updateUser({password:pwd});
+  if(error){msg.style.color='var(--volcano)';msg.textContent='Erro: '+error.message;}
+  else{msg.style.color='var(--green)';msg.textContent='✅ Senha alterada com sucesso!';document.getElementById('upNewPwd').value='';setTimeout(()=>{msg.textContent='';},4000);}
+}
+
+async function logoutUser(){
+  if(!confirm('Deseja sair da sua conta?'))return;
+  closeUserProfile();
+  const sb=getSupabase();
+  if(sb)await sb.auth.signOut();
+}
+
+// ── MOBILE SIDEBAR ──────────────────────────────────────────────
+function toggleMobileSidebar(){
+  const sidebar=document.getElementById('mainSidebar');
+  const overlay=document.getElementById('mobileSidebarOverlay');
+  if(!sidebar)return;
+  const isOpen=sidebar.classList.contains('mobile-open');
+  if(isOpen){sidebar.classList.remove('mobile-open');if(overlay)overlay.classList.remove('open');}
+  else{sidebar.classList.add('mobile-open');if(overlay)overlay.classList.add('open');}
+}
+
+// Fecha sidebar mobile ao clicar em item
+(function(){
+  const run=()=>{
+    const sidebar=document.getElementById('mainSidebar');
+    if(!sidebar)return;
+    sidebar.querySelectorAll('.sb-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        if(window.innerWidth<=640){
+          sidebar.classList.remove('mobile-open');
+          const ov=document.getElementById('mobileSidebarOverlay');
+          if(ov)ov.classList.remove('open');
+        }
+      });
+    });
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
+  else run();
+})();
+</script>
+
 <style>
 /* ── Modal Recarga de Leads ── */
 #modalRecarga{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center}
@@ -10358,6 +10702,242 @@ window._postAuthInit = function(){
     </div>
   </div>
 </div>
+
+<!-- ── MOBILE SIDEBAR OVERLAY ── -->
+<div id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ══ MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
+<div id="userProfileModal" role="dialog" aria-modal="true" aria-label="Meu Perfil" onclick="if(event.target===this)closeUserProfile()">
+  <div class="up-box">
+    <!-- Hero -->
+    <div class="up-hero">
+      <button class="up-close" onclick="closeUserProfile()">✕</button>
+      <div class="up-avatar" id="upAvatar">?</div>
+      <div class="up-name" id="upName">—</div>
+      <div class="up-email" id="upEmail">—</div>
+    </div>
+    <!-- Body -->
+    <div class="up-body">
+
+      <!-- Plano Atual -->
+      <div class="up-section">
+        <div class="up-section-title">📦 Plano Atual</div>
+        <div class="up-plan-card">
+          <div>
+            <div class="up-plan-name" id="upPlanName">Carregando...</div>
+            <div class="up-plan-sub" id="upPlanSub">—</div>
+          </div>
+          <button onclick="fecharUserProfile_abrirRecarga()" style="background:var(--accent);color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer">⚡ Recarregar</button>
+        </div>
+        <div class="up-leads-bar-wrap">
+          <div class="up-leads-bar">
+            <div class="up-leads-fill" id="upLeadsBar" style="width:0%;background:var(--accent)"></div>
+          </div>
+          <div class="up-leads-labels">
+            <span id="upLeadsUsed">0 usados</span>
+            <span id="upLeadsTotal">de 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="up-section">
+        <div class="up-section-title">📊 Suas Estatísticas</div>
+        <div class="up-stat-row"><span class="up-stat-label">Leads disponíveis</span><span class="up-stat-val" id="upStatDisp">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Leads usados</span><span class="up-stat-val" id="upStatUsed">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Campanhas ativas</span><span class="up-stat-val" id="upStatCamp">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Total de leads captados</span><span class="up-stat-val" id="upStatLeads">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Clientes convertidos</span><span class="up-stat-val" id="upStatClients">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Membro desde</span><span class="up-stat-val" id="upStatSince">—</span></div>
+      </div>
+
+      <!-- Histórico de Recargas -->
+      <div class="up-section">
+        <div class="up-section-title">🧾 Histórico de Recargas</div>
+        <div class="up-credits-log" id="upCreditsLog">
+          <div style="text-align:center;padding:20px;color:var(--muted2);font-size:11px">
+            <span class="spinner"></span> Carregando...
+          </div>
+        </div>
+      </div>
+
+      <!-- Trocar Senha -->
+      <div class="up-section">
+        <div class="up-section-title">🔒 Trocar Senha</div>
+        <div class="up-pwd-row">
+          <input type="password" id="upNewPwd" placeholder="Nova senha (mín. 8 caracteres)" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:13px;outline:none">
+          <button onclick="changeUserPassword()" class="up-btn up-btn-primary" style="white-space:nowrap">Salvar</button>
+        </div>
+        <div id="upPwdMsg" style="font-size:11px;margin-top:6px;min-height:16px;color:var(--green)"></div>
+      </div>
+
+      <!-- Ações -->
+      <div class="up-actions">
+        <button onclick="closeUserProfile()" class="up-btn up-btn-ghost">Fechar</button>
+        <button onclick="signOutUser()" class="up-btn up-btn-danger">🚪 Sair da conta</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── MOBILE SIDEBAR ────────────────────────────────────────────
+function toggleMobileSidebar(){
+  const sb = document.getElementById('mainSidebar');
+  const ov = document.getElementById('mobileSidebarOverlay');
+  if(!sb || !ov) return;
+  const isOpen = sb.classList.contains('mobile-open');
+  if(isOpen){ closeMobileSidebar(); }
+  else { sb.classList.add('mobile-open'); ov.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeMobileSidebar(){
+  const sb = document.getElementById('mainSidebar');
+  const ov = document.getElementById('mobileSidebarOverlay');
+  if(sb) sb.classList.remove('mobile-open');
+  if(ov) ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+// Close mobile sidebar when a nav item is clicked
+document.addEventListener('click', function(e){
+  const item = e.target.closest('.sb-item');
+  if(item && window.innerWidth <= 640){ closeMobileSidebar(); }
+});
+
+// ── PERFIL DO USUÁRIO ─────────────────────────────────────────
+function openUserProfile(){
+  const modal = document.getElementById('userProfileModal');
+  if(!modal) return;
+  modal.classList.add('open');
+  populateUserProfile();
+}
+function closeUserProfile(){
+  const modal = document.getElementById('userProfileModal');
+  if(modal) modal.classList.remove('open');
+}
+function fecharUserProfile_abrirRecarga(){
+  closeUserProfile();
+  setTimeout(()=>abrirModalRecarga(), 200);
+}
+function signOutUser(){
+  if(!confirm('Deseja sair da conta?')) return;
+  const sb = typeof getSupabase==='function' ? getSupabase() : null;
+  if(sb) sb.auth.signOut();
+  closeUserProfile();
+}
+
+async function populateUserProfile(){
+  // Dados básicos do usuário logado
+  const user = typeof currentUser !== 'undefined' ? currentUser : null;
+  const name = user?.user_metadata?.name || user?.email?.split('@')[0] || '?';
+  const email = user?.email || '—';
+  const since = user?.created_at ? new Date(user.created_at).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}) : '—';
+  const initials = name.charAt(0).toUpperCase();
+
+  document.getElementById('upAvatar').textContent = initials;
+  document.getElementById('upName').textContent = name;
+  document.getElementById('upEmail').textContent = email;
+  document.getElementById('upStatSince').textContent = since;
+
+  // Campanhas e leads locais
+  const camps = typeof campaigns !== 'undefined' ? campaigns : [];
+  const totalLeads = camps.reduce((s,c)=>(s+(c.leads||[]).length),0);
+  const totalClients = camps.reduce((s,c)=>s+(c.leads||[]).filter(l=>l.status==='closed').length,0);
+  document.getElementById('upStatCamp').textContent = camps.length;
+  document.getElementById('upStatLeads').textContent = totalLeads;
+  document.getElementById('upStatClients').textContent = totalClients;
+
+  // Dados do perfil Supabase
+  const sb = typeof getSupabase === 'function' ? getSupabase() : null;
+  if(!sb || !user) {
+    document.getElementById('upPlanName').textContent = 'Não autenticado';
+    document.getElementById('upPlanSub').textContent = '—';
+    document.getElementById('upCreditsLog').innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted2);font-size:11px">Faça login para ver o histórico.</div>';
+    return;
+  }
+
+  try {
+    // Perfil de sinais
+    const { data: profile } = await sb.from('profiles')
+      .select('sinais_limit, sinais_used, created_at, plan')
+      .eq('id', user.id).single();
+
+    if(profile) {
+      const limit = profile.sinais_limit || 0;
+      const used  = profile.sinais_used  || 0;
+      const free  = Math.max(0, limit - used);
+      const pct   = limit > 0 ? Math.min(100, Math.round((used/limit)*100)) : 0;
+      const planName = profile.plan === 'mensal' ? '📅 Plano Mensal' : profile.plan === 'pack_400' ? '📦 Pack 400' : profile.plan === 'pack_150' ? '📦 Pack 150' : profile.plan === 'pack_50' ? '📦 Pack 50' : '🔑 Acesso Gratuito';
+
+      document.getElementById('upPlanName').textContent = planName;
+      document.getElementById('upPlanSub').textContent = `${free} leads disponíveis de ${limit}`;
+      document.getElementById('upStatDisp').textContent = free;
+      document.getElementById('upStatUsed').textContent = used;
+      document.getElementById('upLeadsUsed').textContent = `${used} usados`;
+      document.getElementById('upLeadsTotal').textContent = `de ${limit}`;
+
+      const bar = document.getElementById('upLeadsBar');
+      bar.style.width = pct + '%';
+      bar.style.background = pct >= 90 ? 'var(--red)' : pct >= 70 ? 'var(--orange)' : 'var(--accent)';
+    }
+
+    // Histórico de recargas (credits_log)
+    const { data: logs } = await sb.from('credits_log')
+      .select('operation, amount, reason, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    const logEl = document.getElementById('upCreditsLog');
+    if(!logs || !logs.length){
+      logEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted2);font-size:11px;font-family:monospace">Nenhuma recarga encontrada ainda.</div>';
+    } else {
+      logEl.innerHTML = logs.map(l => {
+        const isAdd = l.operation === 'add';
+        const dt = new Date(l.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+        const reason = (l.reason||'').replace(/\[Admin.*?\]\s*/,'');
+        return `<div class="up-log-row">
+          <div class="up-log-op">
+            <div class="up-log-dot" style="background:${isAdd?'var(--green)':'var(--red)'}"></div>
+            <div>
+              <div style="font-weight:600;color:${isAdd?'var(--green)':'var(--red)'}">${isAdd?'+':'−'}${l.amount} leads</div>
+              <div style="font-size:10px;color:var(--muted2);font-family:monospace;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${reason}">${reason||'Operação'}</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted2);font-family:monospace;white-space:nowrap;flex-shrink:0">${dt}</div>
+        </div>`;
+      }).join('');
+    }
+  } catch(e) {
+    console.error('populateUserProfile:', e);
+    document.getElementById('upCreditsLog').innerHTML = '<div style="text-align:center;padding:16px;color:var(--red);font-size:11px">Erro ao carregar dados.</div>';
+  }
+}
+
+async function changeUserPassword(){
+  const pwd = document.getElementById('upNewPwd').value.trim();
+  const msg = document.getElementById('upPwdMsg');
+  if(!pwd || pwd.length < 8){
+    msg.textContent = '❌ Senha deve ter pelo menos 8 caracteres.';
+    msg.style.color = 'var(--red)';
+    return;
+  }
+  const sb = typeof getSupabase === 'function' ? getSupabase() : null;
+  if(!sb){ msg.textContent = '❌ Não autenticado.'; msg.style.color='var(--red)'; return; }
+  try {
+    msg.textContent = '⏳ Salvando...';
+    msg.style.color = 'var(--muted2)';
+    const { error } = await sb.auth.updateUser({ password: pwd });
+    if(error) throw error;
+    msg.textContent = '✅ Senha alterada com sucesso!';
+    msg.style.color = 'var(--green)';
+    document.getElementById('upNewPwd').value = '';
+    setTimeout(()=>{ msg.textContent = ''; }, 4000);
+  } catch(e) {
+    msg.textContent = '❌ ' + (e.message || 'Erro ao alterar senha.');
+    msg.style.color = 'var(--red)';
+  }
+}
+</script>
 
 <script>
 // ── Modal Recarga ──────────────────────────────────────────────

@@ -198,6 +198,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="sb-section">Usuários</div>
     <div class="sb-item" onclick="showPage('pageUsers',this)">👤 Usuários</div>
     <div class="sb-item" onclick="showPage('pageWaitlist',this)">⏳ Waitlist</div>
+    <div class="sb-section">Financeiro</div>
+    <div class="sb-item" onclick="showPage('pageHotmart',this);loadHotmartWebhooks()">🛒 Hotmart / Webhooks</div>
     <div class="sb-section">Sistema</div>
     <div class="sb-item" onclick="showPage('pageAPIs',this)">🔑 APIs Globais</div>
     <div class="sb-item" onclick="showPage('pageConfig',this)">⚙️ Configurações</div>
@@ -318,6 +320,96 @@ tr:hover td{background:rgba(255,255,255,.02)}
             <tr><td colspan="6" style="text-align:center;color:var(--muted2);padding:32px">Carregando...</td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ── HOTMART WEBHOOKS ── -->
+    <div class="page" id="pageHotmart">
+      <div class="page-header">
+        <div class="page-title">Hotmart / Webhooks <span>// créditos automáticos</span></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" onclick="reprocessarPendentes()" title="Creditar usuários que compraram antes de criar conta">♻️ Reprocessar Pendentes</button>
+          <button class="btn btn-ghost" onclick="loadHotmartWebhooks()">↻ Atualizar</button>
+        </div>
+      </div>
+
+      <!-- KPIs Hotmart -->
+      <div class="kpi-grid" id="hotmartKpis" style="margin-bottom:16px">
+        <div class="kpi-card"><div class="kpi-label">Carregando...</div><div class="kpi-value">—</div></div>
+      </div>
+
+      <!-- URL do Webhook -->
+      <div class="table-wrap" style="padding:20px;margin-bottom:16px">
+        <div class="table-title" style="margin-bottom:12px">🔗 URL do Webhook (configurar no painel Hotmart)</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <code id="webhookUrl" style="flex:1;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:var(--mono);color:var(--accent2);word-break:break-all">
+            https://qnxabfowdvohrolamktx.supabase.co/functions/v1/hotmart-webhook
+          </code>
+          <button class="btn btn-ghost" onclick="navigator.clipboard.writeText(document.getElementById('webhookUrl').textContent.trim());toast('URL copiada!','ok')">📋 Copiar</button>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--muted2);line-height:1.7">
+          <strong>Como configurar:</strong> Hotmart → Ferramentas → Webhooks → Adicionar URL acima → Ativar eventos:
+          <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px">PURCHASE_APPROVED</code>
+          <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px">PURCHASE_COMPLETE</code>
+          <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px">SUBSCRIPTION_ACTIVE</code>
+          <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:10px">PURCHASE_REFUNDED</code>
+        </div>
+      </div>
+
+      <!-- Crédito manual rápido -->
+      <div class="table-wrap" style="padding:20px;margin-bottom:16px">
+        <div class="table-title" style="margin-bottom:12px">⚡ Crédito Manual Rápido</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div style="flex:1;min-width:200px">
+            <label class="form-label">E-mail do comprador</label>
+            <input class="input" type="email" id="manualCreditEmail" placeholder="cliente@email.com" style="width:100%">
+          </div>
+          <div style="width:120px">
+            <label class="form-label">Pack</label>
+            <select class="input" id="manualCreditPack" style="width:100%">
+              <option value="50">Pack 50</option>
+              <option value="150" selected>Pack 150</option>
+              <option value="400">Pack 400</option>
+              <option value="40">Plano Mensal</option>
+              <option value="custom">Outro...</option>
+            </select>
+          </div>
+          <div id="manualCustomQtd" style="width:100px;display:none">
+            <label class="form-label">Qtd</label>
+            <input class="input" type="number" id="manualCreditQtd" value="100" min="1" style="width:100%">
+          </div>
+          <button class="btn btn-primary" onclick="creditarManualRapido()">✅ Creditar</button>
+        </div>
+      </div>
+
+      <!-- Tabela de webhooks -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">📋 HISTÓRICO DE WEBHOOKS</span>
+          <div style="display:flex;gap:8px">
+            <select class="input" id="webhookFilter" style="width:150px;font-size:12px" onchange="loadHotmartWebhooks()">
+              <option value="">Todos</option>
+              <option value="true">✅ Processados</option>
+              <option value="false">⏳ Pendentes</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr>
+              <th>Data</th>
+              <th>Evento</th>
+              <th>Email</th>
+              <th>Oferta</th>
+              <th>Status</th>
+              <th>Observação</th>
+              <th>Ações</th>
+            </tr></thead>
+            <tbody id="webhooksTableBody">
+              <tr><td colspan="7" style="text-align:center;color:var(--muted2);padding:32px">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -899,6 +991,169 @@ function fmtDate(d){
   return new Date(d).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
 }
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── HOTMART WEBHOOKS ─────────────────────────────────────────────────────
+
+// Mapeamento oferta → créditos (espelha o index.ts da edge function)
+const OFFER_CREDITS_MAP = {
+  'wnajnkwr': { credits: 50,  label: 'Pack 50'       },
+  'si62fm4q': { credits: 150, label: 'Pack 150'       },
+  '1c61zoyq': { credits: 400, label: 'Pack 400'       },
+  '1qnc59s6': { credits: 40,  label: 'Plano Mensal'   },
+};
+
+const CREDIT_EVENTS  = new Set(['PURCHASE_APPROVED','PURCHASE_COMPLETE','SUBSCRIPTION_ACTIVE']);
+const DEBIT_EVENTS   = new Set(['PURCHASE_REFUNDED','PURCHASE_CHARGEBACK','SUBSCRIPTION_CANCELLATION']);
+
+async function loadHotmartWebhooks(){
+  const sb = getSB();
+  const filter = document.getElementById('webhookFilter')?.value;
+  const tbody  = document.getElementById('webhooksTableBody');
+  if(tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted2)"><span class="spinner"></span> Carregando...</td></tr>';
+
+  try {
+    let q = sb.from('hotmart_webhooks').select('*').order('created_at', { ascending: false }).limit(200);
+    if(filter === 'true')  q = q.eq('processed', true);
+    if(filter === 'false') q = q.eq('processed', false);
+
+    const { data, error } = await q;
+    if(error) throw error;
+
+    // KPIs
+    const total     = data?.length || 0;
+    const processados = data?.filter(w=>w.processed).length || 0;
+    const pendentes   = total - processados;
+    const receita     = data?.filter(w=>w.processed && CREDIT_EVENTS.has(w.event))
+                             .reduce((s,w)=>s+(OFFER_CREDITS_MAP[w.offer_code]?.credits||0),0);
+
+    const kpiEl = document.getElementById('hotmartKpis');
+    if(kpiEl) kpiEl.innerHTML = [
+      { label:'Total Webhooks', val: total,      color:'var(--accent)' },
+      { label:'Processados',    val: processados, color:'var(--green)'  },
+      { label:'Pendentes',      val: pendentes,   color: pendentes>0?'var(--orange)':'var(--muted2)' },
+      { label:'Leads Vendidos', val: receita,     color:'var(--green)'  },
+    ].map(k=>`<div class="kpi-card">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="color:${k.color}">${k.val}</div>
+    </div>`).join('');
+
+    // Tabela
+    if(!tbody) return;
+    if(!data?.length){ tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted2)">Nenhum webhook encontrado</td></tr>'; return; }
+
+    tbody.innerHTML = data.map(w=>{
+      const isCredit = CREDIT_EVENTS.has(w.event);
+      const isDebit  = DEBIT_EVENTS.has(w.event);
+      const offerInfo = OFFER_CREDITS_MAP[w.offer_code];
+      const creditsBadge = offerInfo
+        ? `<span style="font-size:10px;background:${isCredit?'rgba(52,199,89,.15)':'rgba(255,59,48,.15)'};color:${isCredit?'var(--green)':'var(--red)'};padding:2px 7px;border-radius:20px;font-weight:700">${isCredit?'+':'−'}${offerInfo.credits} leads</span>`
+        : `<span style="font-size:10px;color:var(--muted2)">${w.offer_code||'—'}</span>`;
+      const statusBadge = w.processed
+        ? `<span style="font-size:10px;background:rgba(52,199,89,.12);color:var(--green);padding:2px 8px;border-radius:20px;font-weight:600">✅ Processado</span>`
+        : `<span style="font-size:10px;background:rgba(255,149,0,.12);color:var(--orange);padding:2px 8px;border-radius:20px;font-weight:600">⏳ Pendente</span>`;
+      const eventBadge = isCredit
+        ? `<span style="font-size:10px;color:var(--green);font-family:var(--mono)">${escHtml(w.event)}</span>`
+        : isDebit
+        ? `<span style="font-size:10px;color:var(--red);font-family:var(--mono)">${escHtml(w.event)}</span>`
+        : `<span style="font-size:10px;color:var(--muted2);font-family:var(--mono)">${escHtml(w.event)}</span>`;
+      return `<tr>
+        <td style="font-size:11px;color:var(--muted2);white-space:nowrap">${fmtDate(w.created_at)}</td>
+        <td>${eventBadge}</td>
+        <td style="font-size:12px">${escHtml(w.buyer_email||'—')}</td>
+        <td>${creditsBadge}</td>
+        <td>${statusBadge}</td>
+        <td style="font-size:11px;color:var(--muted2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(w.notes||'')}">
+          ${escHtml(w.notes||'—')}
+        </td>
+        <td>
+          ${!w.processed && w.buyer_email ? `<button class="btn btn-ghost" style="font-size:10px;padding:3px 8px" onclick="creditarWebhookManual('${w.id}','${escHtml(w.buyer_email)}','${w.offer_code||''}','${w.event}')">▶ Processar</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
+
+  } catch(e) {
+    toast('Erro ao carregar webhooks: ' + e.message, 'error');
+    console.error(e);
+  }
+}
+
+async function creditarWebhookManual(webhookId, email, offerCode, event){
+  if(!confirm(`Processar webhook manualmente?\n\nEmail: ${email}\nOferta: ${offerCode}\nEvento: ${event}`)) return;
+  const sb = getSB();
+  toast('Processando...', 'info');
+  try {
+    // Busca o usuário
+    const { data: profile, error: rpcErr } = await sb.rpc('adm_get_profile_by_email', { p_email: email });
+    if(rpcErr || !profile?.length){ toast(`Usuário ${email} não encontrado no Supabase.`, 'error'); return; }
+
+    const userId  = profile[0].id;
+    const curLimit = profile[0].sinais_limit || 0;
+    const credits  = OFFER_CREDITS_MAP[offerCode]?.credits || 50;
+    const label    = OFFER_CREDITS_MAP[offerCode]?.label   || `Oferta ${offerCode}`;
+    const isCredit = CREDIT_EVENTS.has(event);
+    const newLimit = Math.max(0, curLimit + (isCredit ? credits : -credits));
+
+    await sb.from('profiles').update({ sinais_limit: newLimit, updated_at: new Date().toISOString() }).eq('id', userId);
+    await sb.from('credits_log').insert({ user_id: userId, operation: isCredit?'add':'subtract', amount: credits,
+      reason: `[Admin Manual] Webhook ${event} — ${label} (id: ${webhookId})` });
+    await sb.from('hotmart_webhooks').update({ processed: true, processed_at: new Date().toISOString(),
+      user_id: userId, notes: `${isCredit?'+':'-'}${credits} leads creditados manualmente pelo admin` }).eq('id', webhookId);
+
+    toast(`✅ ${isCredit?'+':'-'}${credits} leads para ${email}. Total: ${newLimit}`, 'ok');
+    loadHotmartWebhooks();
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+}
+
+async function reprocessarPendentes(){
+  if(!confirm('Reprocessar TODOS os webhooks pendentes? Isso tentará creditar usuários que compraram mas ainda não tinham conta.')) return;
+  const sb = getSB();
+  toast('Reprocessando...', 'info');
+  try {
+    const { data, error } = await sb.rpc('process_pending_hotmart_webhooks');
+    if(error) throw error;
+    toast(`✅ ${data} webhook(s) pendentes processados!`, 'ok');
+    loadHotmartWebhooks();
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+}
+
+async function creditarManualRapido(){
+  const email  = document.getElementById('manualCreditEmail').value.trim();
+  const pack   = document.getElementById('manualCreditPack').value;
+  const qtd    = pack === 'custom' ? parseInt(document.getElementById('manualCreditQtd').value)||0 : parseInt(pack);
+  if(!email){ toast('Informe o e-mail.','error'); return; }
+  if(!qtd || qtd <= 0){ toast('Quantidade inválida.','error'); return; }
+
+  const sb = getSB();
+  toast('Creditando...', 'info');
+  try {
+    const { data: profile, error: rpcErr } = await sb.rpc('adm_get_profile_by_email', { p_email: email });
+    if(rpcErr || !profile?.length){ toast(`Usuário ${email} não encontrado.`, 'error'); return; }
+
+    const userId   = profile[0].id;
+    const curLimit = profile[0].sinais_limit || 0;
+    const newLimit = curLimit + qtd;
+
+    await sb.from('profiles').update({ sinais_limit: newLimit, updated_at: new Date().toISOString() }).eq('id', userId);
+    await sb.from('credits_log').insert({ user_id: userId, operation: 'add', amount: qtd,
+      reason: `[Admin Manual Rápido] Pack ${qtd} leads — ${new Date().toLocaleString('pt-BR')}` });
+
+    // Insere um webhook fictício para manter rastreabilidade
+    await sb.from('hotmart_webhooks').insert({
+      event: 'MANUAL_CREDIT', buyer_email: email.toLowerCase(), offer_code: `manual_${qtd}`,
+      transaction_id: 'manual_' + Date.now(), user_id: userId, processed: true,
+      processed_at: new Date().toISOString(), notes: `+${qtd} leads creditados manualmente (admin rápido)`,
+    });
+
+    toast(`✅ +${qtd} leads creditados para ${email}. Total: ${newLimit}`, 'ok');
+    document.getElementById('manualCreditEmail').value = '';
+    loadHotmartWebhooks();
+  } catch(e){ toast('Erro: ' + e.message, 'error'); }
+}
+
+// Mostrar/ocultar campo qtd customizada
+document.getElementById('manualCreditPack')?.addEventListener('change', function(){
+  document.getElementById('manualCustomQtd').style.display = this.value === 'custom' ? 'block' : 'none';
+});
 
 // creditOp change
 document.getElementById('creditOp').addEventListener('change', function(){
