@@ -1257,6 +1257,7 @@ function toast(msg, type='info', duration=3500){
             <span>Buscar emails automaticamente</span>
           </label>
           <button class="btn btn-primary" id="btnS1" onclick="startMapsSearch()" style="height:37px;margin-left:auto">🗺 Buscar via Maps</button>
+          <button id="cancelBtnMaps" onclick="cancelSearch()" style="display:none;height:37px;background:#ff3b30;color:#fff;border:none;border-radius:10px;padding:0 18px;font-size:12px;font-family:monospace;cursor:pointer;white-space:nowrap;font-weight:700;animation:pulse 1s infinite">⏹ PARAR</button>
         </div>
         <div style="margin-top:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px">
           <div id="biolinkChipsMaps"></div>
@@ -1273,6 +1274,7 @@ function toast(msg, type='info', duration=3500){
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <span style="font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">Bio Links Engine ativo</span>
           <button class="btn" id="btnS2" onclick="startBioSearch()" style="height:37px;margin-left:auto;background:var(--volcano);color:#fff;font-weight:700">🌋 Buscar Bio Links</button>
+          <button id="cancelBtnBio" onclick="cancelSearch()" style="display:none;height:37px;background:#ff3b30;color:#fff;border:none;border-radius:10px;padding:0 18px;font-size:12px;font-family:monospace;cursor:pointer;white-space:nowrap;font-weight:700;animation:pulse 1s infinite">⏹ PARAR</button>
         </div>
       </div>
 
@@ -1291,6 +1293,7 @@ function toast(msg, type='info', duration=3500){
             <span>Buscar emails em cascata</span>
           </label>
           <button class="btn" id="btnS3" onclick="startFullSearch()" style="height:37px;margin-left:auto;background:linear-gradient(135deg,var(--volcano),var(--accent));color:#fff;font-weight:700">🚀 Busca Completa</button>
+          <button id="cancelBtnFull" onclick="cancelSearch()" style="display:none;height:37px;background:#ff3b30;color:#fff;border:none;border-radius:10px;padding:0 18px;font-size:12px;font-family:monospace;cursor:pointer;white-space:nowrap;font-weight:700;animation:pulse 1s infinite">⏹ PARAR</button>
         </div>
       </div>
     </div>
@@ -3525,6 +3528,11 @@ function renderCampaignsList(){
 }
 
 function openCampaign(id){
+  if(isSearching && activeCampaignId !== id){
+    _guardNavAction = ()=>{ isSearching=false; openCampaign(id); };
+    _showSearchGuard('trocar de campanha');
+    return;
+  }
   // Save current campaign leads before switching
   if(activeCampaignId && activeCampaignId !== id){
     const prev = campaigns.find(x=>x.id===activeCampaignId);
@@ -3965,6 +3973,15 @@ async function startMapsSearch(){
         setProg(5+Math.round(((nbIdx+(i+1)/places.length)/searchList.length)*25));
         setStat(`<span class="spinner"></span>[${nb||searchCity}] ${i+1}/${places.length}: ${lead.name}`);
         renderAll();
+        // ── Salva na nuvem a cada 50 leads para não perder dados ──
+        if(leads.length>0 && leads.length%50===0){
+          saveCampaigns();
+          if(typeof currentUser!=='undefined'&&currentUser){
+            clearTimeout(window._supabaseSyncTimeout);
+            await saveToSupabase();
+            toast(`☁️ ${leads.length} leads salvos automaticamente na nuvem.`,'info',2500);
+          }
+        }
         await new Promise(r=>setTimeout(r,60));
       }
       await new Promise(r=>setTimeout(r,300)); // small pause between neighborhoods/cities
@@ -5950,18 +5967,34 @@ function exportOpps(){
 let searchAborted = false;
 let isSearching = false;
 function showCancelBtn(show){
+  // Barra de progresso
   const cb=$('cancelBtn');
   if(cb) cb.style.display = show ? 'inline-block' : 'none';
-  isSearching = show; // true ao iniciar, false ao parar
+  // Botões inline em cada engine
+  ['cancelBtnMaps','cancelBtnBio','cancelBtnFull'].forEach(id=>{
+    const b=$( id);if(b)b.style.display=show?'inline-block':'none';
+  });
+  isSearching = show;
 }
 function cancelSearch(){
   searchAborted=true;
+  isSearching=false;
   if($('btnS1')){$('btnS1').disabled=false;$('btnS1').textContent='🗺 Buscar via Maps';}
   if($('btnS2')){$('btnS2').disabled=false;$('btnS2').textContent='🌋 Buscar Bio Links';}
   if($('btnS3')){$('btnS3').disabled=false;$('btnS3').textContent='🚀 Busca Completa';}
   const cb=$('cancelBtn');if(cb)cb.style.display='none';
+  ['cancelBtnMaps','cancelBtnBio','cancelBtnFull'].forEach(id=>{const b=$(id);if(b)b.style.display='none';});
   setStat('⚠️ Cancelado. '+leads.length+' leads salvos.');setProg(0);
-  if(leads.length){saveCampaigns();renderAll();renderCampaignsList();}
+  if(leads.length){
+    // Salva IMEDIATAMENTE no Supabase, sem delay
+    saveCampaigns();
+    if(typeof currentUser!=='undefined'&&currentUser){
+      clearTimeout(window._supabaseSyncTimeout);
+      saveToSupabase();
+    }
+    renderAll();renderCampaignsList();
+    toast('✅ '+leads.length+' leads salvos na nuvem após cancelamento.','success',4000);
+  }
 }
 function resetAllBtns(){
   searchAborted=false;
@@ -5970,11 +6003,74 @@ function resetAllBtns(){
   if($('btnS2')){$('btnS2').disabled=false;$('btnS2').textContent='🌋 Buscar Bio Links';}
   if($('btnS3')){$('btnS3').disabled=false;$('btnS3').textContent='🚀 Busca Completa';}
   const cb=$('cancelBtn');if(cb)cb.style.display='none';
+  ['cancelBtnMaps','cancelBtnBio','cancelBtnFull'].forEach(id=>{const b=$(id);if(b)b.style.display='none';});
 }
 
 // ══════════════════════════════════════════
-// DELETE CAMPAIGN
+// GUARD — protege navegação durante busca
 // ══════════════════════════════════════════
+let _guardNavAction = null;
+
+function _showSearchGuard(destino){
+  const ov = $('searchGuardOverlay');
+  const desc = $('searchGuardDesc');
+  const cnt  = $('searchGuardCount');
+  if(desc) desc.textContent = `Você tentou ${destino}, mas a prospecção está rodando.`;
+  if(cnt)  cnt.textContent  = leads.length > 0 ? `✅ ${leads.length} lead(s) prospectado(s) até agora — não perca!` : '';
+  if(ov)   ov.style.display = 'flex';
+}
+
+async function _guardSaveAndGo(){
+  // Para a busca, salva tudo na nuvem, depois navega
+  searchAborted = true;
+  isSearching   = false;
+  showCancelBtn(false);
+  resetAllBtns();
+  const ov = $('searchGuardOverlay');
+  if(ov) ov.style.display = 'none';
+  if(leads.length){
+    saveCampaigns();
+    if(typeof currentUser!=='undefined' && currentUser){
+      clearTimeout(window._supabaseSyncTimeout);
+      await saveToSupabase();
+    }
+    toast(`☁️ ${leads.length} leads salvos na nuvem!`,'success',4000);
+  }
+  setStat(`⚠️ Busca interrompida. ${leads.length} leads salvos.`); setProg(0);
+  if(typeof _guardNavAction === 'function') _guardNavAction();
+  _guardNavAction = null;
+}
+
+function _guardGoWithoutSave(){
+  searchAborted = true;
+  isSearching   = false;
+  showCancelBtn(false);
+  resetAllBtns();
+  const ov = $('searchGuardOverlay');
+  if(ov) ov.style.display = 'none';
+  setStat('Busca interrompida.'); setProg(0);
+  if(typeof _guardNavAction === 'function') _guardNavAction();
+  _guardNavAction = null;
+}
+
+function _guardCancel(){
+  // Fecha modal e CONTINUA a busca normalmente
+  const ov = $('searchGuardOverlay');
+  if(ov) ov.style.display = 'none';
+  _guardNavAction = null;
+}
+
+// Aviso nativo ao fechar aba / recarregar página
+window.addEventListener('beforeunload', function(e){
+  if(isSearching && leads.length > 0){
+    const msg = `Prospecção em andamento! Você tem ${leads.length} lead(s) não salvos. Tem certeza que quer sair?`;
+    e.preventDefault();
+    e.returnValue = msg;
+    return msg;
+  }
+});
+
+
 
 function pinCampaign(id){
   let pins = JSON.parse(localStorage.getItem('capturo-pinned')||'[]');
@@ -5994,6 +6090,11 @@ function unpinCampaign(id){
   renderCampaignsList();
 }
 function goHome(){
+  if(isSearching){
+    _guardNavAction = ()=>{ isSearching=false; goHome(); };
+    _showSearchGuard('ir para o Dashboard');
+    return;
+  }
   activeCampaignId = null;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   $('pageHome').classList.add('active');
@@ -6503,6 +6604,11 @@ function getSelectedNeighborhoods(){
 // PAGE NAVIGATION
 // ══════════════════════════════════════════
 function showPage(id){
+  if(isSearching){
+    _guardNavAction = ()=>{ isSearching=false; showPage(id); };
+    _showSearchGuard('navegar para outra tela');
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const pg=$(id);if(pg)pg.classList.add('active');
   const wm=$('bgWatermark');if(wm)wm.style.display=(id==='pageHome'?'flex':'none');
@@ -9453,7 +9559,29 @@ initAuth();
 </script>
 <!-- ══ /SUPABASE AUTH + SYNC ═══════════════════════════════════ -->
 
-<!-- ══ GLOBAL SEARCH MODAL ════════════════════════════════════ -->
+<!-- ══ MODAL GUARD DE PROSPECÇÃO EM ANDAMENTO ══════════════════ -->
+<div id="searchGuardOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
+  <div style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:28px 28px 22px;max-width:400px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.25);text-align:center">
+    <div style="font-size:36px;margin-bottom:10px">⚠️</div>
+    <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px">Prospecção em andamento!</div>
+    <div id="searchGuardDesc" style="font-size:13px;color:var(--muted2);margin-bottom:6px">Se você sair agora, a busca será interrompida.</div>
+    <div id="searchGuardCount" style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:20px"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button onclick="_guardSaveAndGo()" style="padding:12px;border-radius:12px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:700;cursor:pointer">
+        ☁️ Salvar leads na nuvem e sair
+      </button>
+      <button onclick="_guardGoWithoutSave()" style="padding:12px;border-radius:12px;border:none;background:var(--volcano);color:#fff;font-size:13px;font-weight:700;cursor:pointer">
+        ⏭ Sair sem salvar
+      </button>
+      <button onclick="_guardCancel()" style="padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-size:13px;cursor:pointer">
+        ↩ Continuar prospectando
+      </button>
+    </div>
+  </div>
+</div>
+<!-- ══ /MODAL GUARD ════════════════════════════════════════════ -->
+
+
 <div class="gs-overlay" id="gsOverlay" onclick="closeGlobalSearch(event)">
   <div class="gs-box" onclick="event.stopPropagation()">
     <div class="gs-header">
