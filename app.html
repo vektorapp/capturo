@@ -163,7 +163,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .logo{font-size:17px;font-weight:700;letter-spacing:-.03em;color:var(--text);white-space:nowrap}
 .logo span{color:var(--accent)}
 .nav-tabs{display:flex;gap:2px;flex-wrap:wrap;align-items:center;width:100%;}
-.nav-tab{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--muted);border:none;background:transparent;transition:all .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif}
+.nav-tabs{display:flex;gap:2px;align-items:center;flex:1;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;min-width:0;padding-bottom:2px}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--muted);border:none;background:transparent;transition:all .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;flex-shrink:0}
 .nav-tab:hover{background:var(--s2);color:var(--text)}
 .nav-tab.active{background:var(--accent-bg);color:var(--accent);font-weight:600}
 .tab-badge{background:var(--accent);color:#fff;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:600}
@@ -2686,14 +2688,14 @@ function toast(msg, type='info', duration=3500){
   <div class="cmodal-box">
     <div class="cmodal-title">Nova Campanha <span class="cmodal-close" onclick="closeCampaignModal()">✕</span></div>
     <div class="cfield">
-      <label>Mercado</label>
+      <label><strong>Mercado</strong></label>
       <div class="market-toggle">
         <button class="market-btn active" id="btnNacional" onclick="setMarket('nacional')">🇧🇷 Nacional</button>
         <button class="market-btn" id="btnInternacional" onclick="setMarket('internacional')">🌐 Internacional</button>
       </div>
     </div>
     <div class="cfield country-select" id="countrySelect">
-      <label>País</label>
+      <label><strong>País</strong></label>
       <select id="countryDD" onchange="updateCountryUI()">
         <option value="US">🇺🇸 United States ($)</option>
         <option value="UK">🇬🇧 United Kingdom</option>
@@ -2705,13 +2707,13 @@ function toast(msg, type='info', duration=3500){
       <div class="country-note">Leads internacionais — fature em $</div>
     </div>
     <div class="cfield">
-      <label>Nicho <span style="color:var(--muted2);font-weight:400;font-size:10px">— ordenado por conversão</span></label>
+      <label><strong>Nicho</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px">— ordenado por conversão</span></label>
       <select id="nichoDD" onchange="autoFillName()"></select>
     </div>
     <div class="state-city-row">
       <!-- ESTADO -->
       <div class="cfield" style="margin:0">
-        <label>Estado</label>
+        <label><strong>Estado</strong></label>
         <!-- Tier quick buttons -->
         <div class="state-tier-row" id="stateTierRow" style="display:none">
           <button type="button" id="stateBtnGold"   onclick="selectStateTier('gold')"   class="tier-quick-btn">⭐ Alto Pot.</button>
@@ -2722,7 +2724,7 @@ function toast(msg, type='info', duration=3500){
       </div>
       <!-- CIDADE — multi-chip selector -->
       <div class="cfield" style="margin:0">
-        <label>Cidade <span style="color:var(--muted2);font-weight:400;font-size:10px" id="cityCountLabel"></span></label>
+        <label><strong>Cidade</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px" id="cityCountLabel"></span></label>
         <!-- Chip container (replaces <select>) -->
         <div id="cityChipContainer" style="display:none">
           <!-- Quick action buttons -->
@@ -2739,7 +2741,7 @@ function toast(msg, type='info', duration=3500){
       </div>
     </div>
     <div class="cfield" id="neighborhoodRow" style="display:none">
-      <label>Bairros <span style="color:var(--muted2);font-weight:400;font-size:10px">— escolha bairros de qualquer cidade selecionada</span></label>
+      <label><strong>Bairros</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px">— escolha bairros de qualquer cidade selecionada</span></label>
       <!-- Cidade inteira toggle -->
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:500">
@@ -2764,7 +2766,7 @@ function toast(msg, type='info', duration=3500){
     </div>
     <!-- MODO DE CRIAÇÃO — só aparece quando 2+ cidades selecionadas -->
     <div class="cfield" id="campModeRow" style="display:none">
-      <label>Como criar as campanhas?</label>
+      <label><strong>Como criar as campanhas?</strong></label>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:12px;background:var(--s2);flex:1;transition:border-color .2s" id="campOptSingle">
           <input type="radio" name="campMode" value="single" checked onchange="updateCampModeUI()">
@@ -2777,7 +2779,7 @@ function toast(msg, type='info', duration=3500){
       </div>
     </div>
     <div class="cfield">
-      <label>Raio de busca</label>
+      <label><strong>Raio de busca</strong></label>
       <select id="radiusDD">
         <option value="2000">2 km / 1.2 mi</option>
         <option value="5000" selected>5 km / 3 mi</option>
@@ -2786,7 +2788,7 @@ function toast(msg, type='info', duration=3500){
       </select>
     </div>
     <div class="cfield">
-      <label>Nome da Campanha</label>
+      <label><strong>Nome da Campanha</strong></label>
       <input type="text" id="campaignNameInput" placeholder="Preenchido automaticamente">
     </div>
     <div class="cmodal-footer">
@@ -3074,6 +3076,116 @@ Object.keys(STATES_US_TIERS).forEach(state => {
   STATES_US[state] = STATES_US_TIERS[state].map(c => c.n);
 });
 
+// ══════════════════════════════════════════
+// INTERNATIONAL COUNTRY DATA
+// ══════════════════════════════════════════
+
+// ── 🇦🇺 AUSTRALIA ──────────────────────────────────────────────
+const STATES_AU_TIERS = {
+  'New South Wales':   [{n:'Sydney',t:'gold'},{n:'Newcastle',t:'gold'},{n:'Wollongong',t:'gold'},{n:'Central Coast',t:'gold'},{n:'Maitland',t:'silver'},{n:'Coffs Harbour',t:'silver'},{n:'Wagga Wagga',t:'silver'},{n:'Albury',t:'silver'},{n:'Tamworth',t:'bronze'},{n:'Orange',t:'bronze'}],
+  'Victoria':          [{n:'Melbourne',t:'gold'},{n:'Geelong',t:'gold'},{n:'Ballarat',t:'gold'},{n:'Bendigo',t:'gold'},{n:'Shepparton',t:'silver'},{n:'Melton',t:'silver'},{n:'Mildura',t:'silver'},{n:'Wodonga',t:'bronze'},{n:'Warrnambool',t:'bronze'}],
+  'Queensland':        [{n:'Brisbane',t:'gold'},{n:'Gold Coast',t:'gold'},{n:'Sunshine Coast',t:'gold'},{n:'Townsville',t:'gold'},{n:'Cairns',t:'silver'},{n:'Toowoomba',t:'silver'},{n:'Mackay',t:'silver'},{n:'Rockhampton',t:'bronze'},{n:'Bundaberg',t:'bronze'}],
+  'Western Australia': [{n:'Perth',t:'gold'},{n:'Mandurah',t:'gold'},{n:'Bunbury',t:'silver'},{n:'Geraldton',t:'silver'},{n:'Kalgoorlie',t:'bronze'},{n:'Albany',t:'bronze'}],
+  'South Australia':   [{n:'Adelaide',t:'gold'},{n:'Mount Gambier',t:'silver'},{n:'Whyalla',t:'silver'},{n:'Murray Bridge',t:'bronze'}],
+  'Tasmania':          [{n:'Hobart',t:'gold'},{n:'Launceston',t:'gold'},{n:'Devonport',t:'silver'},{n:'Burnie',t:'silver'}],
+  'ACT':               [{n:'Canberra',t:'gold'},{n:'Belconnen',t:'gold'},{n:'Tuggeranong',t:'silver'}],
+  'Northern Territory':[{n:'Darwin',t:'gold'},{n:'Alice Springs',t:'silver'}],
+};
+
+// ── 🇵🇹 PORTUGAL ────────────────────────────────────────────────
+const STATES_PT_TIERS = {
+  'Lisboa':          [{n:'Lisboa',t:'gold'},{n:'Sintra',t:'gold'},{n:'Cascais',t:'gold'},{n:'Loures',t:'gold'},{n:'Almada',t:'gold'},{n:'Amadora',t:'silver'},{n:'Oeiras',t:'silver'},{n:'Setúbal',t:'silver'},{n:'Barreiro',t:'bronze'},{n:'Montijo',t:'bronze'}],
+  'Porto':           [{n:'Porto',t:'gold'},{n:'Vila Nova de Gaia',t:'gold'},{n:'Matosinhos',t:'gold'},{n:'Braga',t:'gold'},{n:'Guimarães',t:'silver'},{n:'Barcelos',t:'silver'},{n:'Santo Tirso',t:'bronze'},{n:'Trofa',t:'bronze'}],
+  'Braga':           [{n:'Braga',t:'gold'},{n:'Guimarães',t:'gold'},{n:'Barcelos',t:'silver'},{n:'Famalicão',t:'silver'},{n:'Esposende',t:'bronze'}],
+  'Faro (Algarve)':  [{n:'Faro',t:'gold'},{n:'Portimão',t:'gold'},{n:'Loulé',t:'gold'},{n:'Albufeira',t:'gold'},{n:'Tavira',t:'silver'},{n:'Lagos',t:'silver'},{n:'Olhão',t:'bronze'}],
+  'Aveiro':          [{n:'Aveiro',t:'gold'},{n:'Viseu',t:'silver'},{n:'Ovar',t:'silver'},{n:'Águeda',t:'bronze'}],
+  'Coimbra':         [{n:'Coimbra',t:'gold'},{n:'Figueira da Foz',t:'silver'},{n:'Cantanhede',t:'bronze'}],
+  'Madeira':         [{n:'Funchal',t:'gold'},{n:'Santa Cruz',t:'silver'},{n:'Câmara de Lobos',t:'bronze'}],
+  'Açores':          [{n:'Ponta Delgada',t:'gold'},{n:'Angra do Heroísmo',t:'silver'}],
+};
+
+// ── 🇪🇸 ESPAÑA ──────────────────────────────────────────────────
+const STATES_ES_TIERS = {
+  'Madrid':          [{n:'Madrid',t:'gold'},{n:'Móstoles',t:'gold'},{n:'Alcalá de Henares',t:'gold'},{n:'Fuenlabrada',t:'silver'},{n:'Leganés',t:'silver'},{n:'Getafe',t:'silver'},{n:'Alcorcón',t:'silver'},{n:'Torrejón de Ardoz',t:'bronze'},{n:'Parla',t:'bronze'}],
+  'Cataluña':        [{n:'Barcelona',t:'gold'},{n:'L\'Hospitalet',t:'gold'},{n:'Badalona',t:'gold'},{n:'Terrassa',t:'gold'},{n:'Sabadell',t:'silver'},{n:'Lleida',t:'silver'},{n:'Tarragona',t:'silver'},{n:'Girona',t:'silver'},{n:'Mataró',t:'bronze'}],
+  'Andalucía':       [{n:'Sevilla',t:'gold'},{n:'Málaga',t:'gold'},{n:'Córdoba',t:'gold'},{n:'Granada',t:'gold'},{n:'Almería',t:'silver'},{n:'Jerez de la Frontera',t:'silver'},{n:'Cádiz',t:'silver'},{n:'Huelva',t:'bronze'},{n:'Jaén',t:'bronze'}],
+  'Valencia':        [{n:'Valencia',t:'gold'},{n:'Alicante',t:'gold'},{n:'Elche',t:'gold'},{n:'Castellón',t:'silver'},{n:'Torrent',t:'silver'},{n:'Orihuela',t:'bronze'}],
+  'País Vasco':      [{n:'Bilbao',t:'gold'},{n:'Vitoria-Gasteiz',t:'gold'},{n:'San Sebastián',t:'gold'},{n:'Barakaldo',t:'silver'},{n:'Getxo',t:'silver'}],
+  'Galicia':         [{n:'Vigo',t:'gold'},{n:'A Coruña',t:'gold'},{n:'Ourense',t:'silver'},{n:'Pontevedra',t:'silver'},{n:'Santiago de Compostela',t:'silver'}],
+  'Aragón':          [{n:'Zaragoza',t:'gold'},{n:'Huesca',t:'silver'},{n:'Teruel',t:'bronze'}],
+  'Canarias':        [{n:'Las Palmas',t:'gold'},{n:'Santa Cruz de Tenerife',t:'gold'},{n:'La Laguna',t:'silver'},{n:'Telde',t:'silver'}],
+  'Islas Baleares':  [{n:'Palma',t:'gold'},{n:'Ibiza',t:'gold'},{n:'Manacor',t:'silver'}],
+  'Murcia':          [{n:'Murcia',t:'gold'},{n:'Cartagena',t:'gold'},{n:'Lorca',t:'silver'}],
+};
+
+// ── 🇬🇧 UNITED KINGDOM ──────────────────────────────────────────
+const STATES_UK_TIERS = {
+  'England - London':      [{n:'London',t:'gold'},{n:'Croydon',t:'gold'},{n:'Bromley',t:'gold'},{n:'Ealing',t:'gold'},{n:'Enfield',t:'silver'},{n:'Barnet',t:'silver'},{n:'Brent',t:'silver'},{n:'Lewisham',t:'bronze'},{n:'Southwark',t:'bronze'}],
+  'England - South East':  [{n:'Brighton',t:'gold'},{n:'Southampton',t:'gold'},{n:'Oxford',t:'gold'},{n:'Reading',t:'gold'},{n:'Milton Keynes',t:'silver'},{n:'Portsmouth',t:'silver'},{n:'Guildford',t:'silver'},{n:'Slough',t:'bronze'}],
+  'England - North West':  [{n:'Manchester',t:'gold'},{n:'Liverpool',t:'gold'},{n:'Salford',t:'gold'},{n:'Stockport',t:'silver'},{n:'Bolton',t:'silver'},{n:'Wigan',t:'silver'},{n:'Blackpool',t:'bronze'},{n:'Preston',t:'bronze'}],
+  'England - West Midlands':[{n:'Birmingham',t:'gold'},{n:'Coventry',t:'gold'},{n:'Wolverhampton',t:'gold'},{n:'Solihull',t:'silver'},{n:'Dudley',t:'silver'},{n:'Walsall',t:'bronze'}],
+  'England - Yorkshire':   [{n:'Leeds',t:'gold'},{n:'Sheffield',t:'gold'},{n:'Bradford',t:'gold'},{n:'Hull',t:'silver'},{n:'York',t:'silver'},{n:'Huddersfield',t:'bronze'}],
+  'Scotland':              [{n:'Glasgow',t:'gold'},{n:'Edinburgh',t:'gold'},{n:'Aberdeen',t:'gold'},{n:'Dundee',t:'silver'},{n:'Inverness',t:'silver'},{n:'Perth',t:'bronze'}],
+  'Wales':                 [{n:'Cardiff',t:'gold'},{n:'Swansea',t:'gold'},{n:'Newport',t:'silver'},{n:'Wrexham',t:'silver'},{n:'Barry',t:'bronze'}],
+  'Northern Ireland':      [{n:'Belfast',t:'gold'},{n:'Derry',t:'gold'},{n:'Lisburn',t:'silver'},{n:'Newtownabbey',t:'bronze'}],
+  'England - East':        [{n:'Norwich',t:'gold'},{n:'Ipswich',t:'silver'},{n:'Cambridge',t:'silver'},{n:'Peterborough',t:'silver'},{n:'Luton',t:'bronze'}],
+  'England - South West':  [{n:'Bristol',t:'gold'},{n:'Plymouth',t:'gold'},{n:'Exeter',t:'silver'},{n:'Gloucester',t:'silver'},{n:'Bath',t:'silver'}],
+};
+
+// ── 🇨🇦 CANADA ──────────────────────────────────────────────────
+const STATES_CA_TIERS = {
+  'Ontario':           [{n:'Toronto',t:'gold'},{n:'Ottawa',t:'gold'},{n:'Mississauga',t:'gold'},{n:'Brampton',t:'gold'},{n:'Hamilton',t:'silver'},{n:'London',t:'silver'},{n:'Markham',t:'silver'},{n:'Vaughan',t:'silver'},{n:'Kitchener',t:'bronze'},{n:'Windsor',t:'bronze'}],
+  'British Columbia':  [{n:'Vancouver',t:'gold'},{n:'Surrey',t:'gold'},{n:'Burnaby',t:'gold'},{n:'Richmond',t:'gold'},{n:'Kelowna',t:'silver'},{n:'Abbotsford',t:'silver'},{n:'Coquitlam',t:'silver'},{n:'Victoria',t:'silver'},{n:'Nanaimo',t:'bronze'}],
+  'Alberta':           [{n:'Calgary',t:'gold'},{n:'Edmonton',t:'gold'},{n:'Red Deer',t:'silver'},{n:'Lethbridge',t:'silver'},{n:'St. Albert',t:'silver'},{n:'Medicine Hat',t:'bronze'}],
+  'Quebec':            [{n:'Montreal',t:'gold'},{n:'Quebec City',t:'gold'},{n:'Laval',t:'gold'},{n:'Gatineau',t:'gold'},{n:'Longueuil',t:'silver'},{n:'Sherbrooke',t:'silver'},{n:'Saguenay',t:'bronze'},{n:'Lévis',t:'bronze'}],
+  'Manitoba':          [{n:'Winnipeg',t:'gold'},{n:'Brandon',t:'silver'},{n:'Steinbach',t:'bronze'}],
+  'Saskatchewan':      [{n:'Saskatoon',t:'gold'},{n:'Regina',t:'gold'},{n:'Prince Albert',t:'bronze'}],
+  'Nova Scotia':       [{n:'Halifax',t:'gold'},{n:'Sydney',t:'silver'},{n:'Truro',t:'bronze'}],
+  'New Brunswick':     [{n:'Moncton',t:'gold'},{n:'Fredericton',t:'silver'},{n:'Saint John',t:'silver'}],
+};
+
+// ── NEIGHBORHOODS INTERNACIONAIS ─────────────────────────────────
+const NEIGHBORHOODS_AU = {
+  'Sydney':     {gold:['CBD','Bondi','Surry Hills','Newtown','Mosman','Paddington','Glebe'],silver:['Parramatta','Chatswood','Manly','Ultimo','Redfern'],bronze:['Blacktown','Penrith','Liverpool']},
+  'Melbourne':  {gold:['CBD','Fitzroy','Richmond','St Kilda','South Yarra','Toorak','Carlton'],silver:['Northcote','Brunswick','Prahran','Hawthorn'],bronze:['Footscray','Sunshine','Dandenong']},
+  'Brisbane':   {gold:['CBD','South Bank','New Farm','Fortitude Valley','Paddington','West End'],silver:['Spring Hill','Milton','Woolloongabba'],bronze:['Ipswich','Logan','Caboolture']},
+  'Perth':      {gold:['CBD','Fremantle','Subiaco','Cottesloe','Leederville','Northbridge'],silver:['Victoria Park','Mount Lawley','Scarborough'],bronze:['Midland','Armadale','Rockingham']},
+  'Adelaide':   {gold:['CBD','Glenelg','North Adelaide','Unley','Norwood'],silver:['Port Adelaide','Campbelltown'],bronze:['Elizabeth','Salisbury']},
+  'Canberra':   {gold:['City','Braddon','Kingston','Manuka','Barton'],silver:['Woden','Belconnen'],bronze:['Tuggeranong','Gungahlin']},
+};
+
+const NEIGHBORHOODS_PT = {
+  'Lisboa':     {gold:['Chiado','Bairro Alto','Príncipe Real','Alfama','Baixa','Avenidas Novas','Campo de Ourique'],silver:['Mouraria','Intendente','Arroios','Alvalade'],bronze:['Olivais','Marvila','Chelas']},
+  'Porto':      {gold:['Foz','Boavista','Bonfim','Cedofeita','Baixa','Miragaia','Massarelos'],silver:['Lordelo','Campanhã','Paranhos'],bronze:['Ramalde','Aldoar','Nevogilde']},
+  'Funchal':    {gold:['Sé','Santo António','Santa Luzia'],silver:['Monte','São Martinho'],bronze:['Câmara de Lobos']},
+  'Faro':       {gold:['Centro Histórico','Baixa de Faro'],silver:['Montenegro','Gambelas'],bronze:['São Pedro','Santa Bárbara de Nexe']},
+};
+
+const NEIGHBORHOODS_ES = {
+  'Madrid':     {gold:['Salamanca','Chamberí','Retiro','Centro','Chamartín','Moncloa'],silver:['Hortaleza','Barajas','Fuencarral','Moratalaz'],bronze:['Vallecas','Carabanchel','Villaverde']},
+  'Barcelona':  {gold:['Eixample','Gràcia','Sarrià-Sant Gervasi','Les Corts','Sant Martí'],silver:['Horta-Guinardó','Nou Barris','Sants-Montjuïc'],bronze:['Nou Barris','Sant Andreu']},
+  'Sevilla':    {gold:['Triana','Santa Cruz','Centro','Los Remedios'],silver:['Nervión','San Pablo'],bronze:['Bellavista','Torreblanca']},
+  'Valencia':   {gold:['L\'Eixample','Russafa','El Carmen','Pla del Real'],silver:['Benimaclet','Patraix'],bronze:['Quatre Carreres','Poblats Marítims']},
+  'Málaga':     {gold:['Centro','El Limonar','Pedregalejo','La Malagueta'],silver:['Cruz de Humilladero','Campanillas'],bronze:['Palma-Palmilla','Churriana']},
+};
+
+const NEIGHBORHOODS_UK = {
+  'London':     {gold:['Mayfair','Chelsea','Kensington','Notting Hill','Shoreditch','Soho','Covent Garden','Knightsbridge'],silver:['Islington','Hackney','Brixton','Peckham','Clapham'],bronze:['Croydon','Ilford','Romford','Wembley']},
+  'Manchester': {gold:['Northern Quarter','Ancoats','Spinningfields','Castlefield','Didsbury'],silver:['Fallowfield','Withington','Chorlton'],bronze:['Wythenshawe','Moss Side','Gorton']},
+  'Birmingham': {gold:['Jewellery Quarter','Digbeth','Moseley','Edgbaston','Harborne'],silver:['Erdington','Selly Oak','Kings Heath'],bronze:['Handsworth','Sparkbrook','Tyseley']},
+  'Edinburgh':  {gold:['New Town','Old Town','Marchmont','Stockbridge','Bruntsfield'],silver:['Leith','Morningside','Portobello'],bronze:['Craigmillar','Gilmerton','Wester Hailes']},
+  'Glasgow':    {gold:['West End','Merchant City','Finnieston','Shawlands'],silver:['Dennistoun','Partick','Mount Florida'],bronze:['Parkhead','Govan','Pollok']},
+};
+
+const NEIGHBORHOODS_CA = {
+  'Toronto':    {gold:['Downtown','Yorkville','King West','Distillery District','Leslieville','The Annex','Rosedale'],silver:['Danforth','Junction','Little Italy','Kensington Market'],bronze:['Scarborough','Etobicoke','North York']},
+  'Vancouver':  {gold:['Downtown','Yaletown','Gastown','Kitsilano','West End','Coal Harbour'],silver:['Commercial Drive','Main Street','Mount Pleasant'],bronze:['Surrey','Burnaby','Richmond']},
+  'Montreal':   {gold:['Plateau-Mont-Royal','Westmount','Mile End','Old Montreal','NDG'],silver:['Rosemont','Verdun','Côte-des-Neiges'],bronze:['Montréal-Nord','Saint-Laurent','LaSalle']},
+  'Calgary':    {gold:['Beltline','Kensington','Inglewood','Mission','Bridgeland'],silver:['Marda Loop','Sunalta','Capitol Hill'],bronze:['Forest Lawn','Martindale','Falconridge']},
+  'Ottawa':     {gold:['Centretown','Glebe','Westboro','ByWard Market'],silver:['Alta Vista','Hintonburg','Vanier'],bronze:['Orléans','Barrhaven','Kanata']},
+  'Edmonton':   {gold:['Downtown','Whyte Avenue','Glenora','Oliver'],silver:['Strathcona','Garneau','Queen Alexandra'],bronze:['Millwoods','Castledowns','Beverly']},
+};
+
 const BIOLINKS=[
   // ── PRINCIPAIS (alto volume) ──
   {domain:'linktr.ee',       label:'Linktree',    icon:'🌳', on:true,  cat:'principal'},
@@ -3300,23 +3412,44 @@ function populateStates(){
     });
     dd.appendChild(bGroup);
   } else {
-    // US states — ordered by wealth tier
-    const goldStates = STATES_US_ORDER.filter(s=>s.tier==='gold');
-    const silverStates = STATES_US_ORDER.filter(s=>s.tier==='silver');
-    const gGroup=document.createElement('optgroup');gGroup.label='⭐ Alto potencial (PIB/Renda)';
-    goldStates.forEach(s=>{
-      const o=document.createElement('option');o.value=s.state;
-      o.textContent='🥇 '+s.state;o.style.fontWeight='700';o.style.color='#f5b833';
-      gGroup.appendChild(o);
-    });
-    dd.appendChild(gGroup);
-    const sGroup=document.createElement('optgroup');sGroup.label='Médio potencial';
-    silverStates.forEach(s=>{
-      const o=document.createElement('option');o.value=s.state;
-      o.textContent='◈ '+s.state;o.style.fontWeight='600';
-      sGroup.appendChild(o);
-    });
-    dd.appendChild(sGroup);
+    // Internacional — usa dados do país selecionado
+    const country = (document.getElementById('countryDD')?.value) || 'US';
+    const countryTiers = {
+      'US': STATES_US_TIERS,
+      'AU': STATES_AU_TIERS,
+      'PT': STATES_PT_TIERS,
+      'ES': STATES_ES_TIERS,
+      'UK': STATES_UK_TIERS,
+      'CA': STATES_CA_TIERS,
+    }[country] || STATES_US_TIERS;
+
+    // Para US mantém a lógica de tiers separados
+    if(country === 'US'){
+      const goldStates = STATES_US_ORDER.filter(s=>s.tier==='gold');
+      const silverStates = STATES_US_ORDER.filter(s=>s.tier==='silver');
+      const gGroup=document.createElement('optgroup');gGroup.label='⭐ Alto potencial (PIB/Renda)';
+      goldStates.forEach(s=>{
+        const o=document.createElement('option');o.value=s.state;
+        o.textContent='🥇 '+s.state;o.style.fontWeight='700';o.style.color='#f5b833';
+        gGroup.appendChild(o);
+      });
+      dd.appendChild(gGroup);
+      const sGroup=document.createElement('optgroup');sGroup.label='Médio potencial';
+      silverStates.forEach(s=>{
+        const o=document.createElement('option');o.value=s.state;
+        o.textContent='◈ '+s.state;o.style.fontWeight='600';
+        sGroup.appendChild(o);
+      });
+      dd.appendChild(sGroup);
+    } else {
+      // Para outros países — popula direto por estado/região
+      Object.keys(countryTiers).forEach(state=>{
+        const o=document.createElement('option');
+        o.value=state;
+        o.textContent=state;
+        dd.appendChild(o);
+      });
+    }
   }
   $('cityDD').innerHTML='<option value="">Selecione o estado</option>';
   const ft=$('cityFreeText');if(ft){ft.style.display='none';ft.value='';}
@@ -3354,7 +3487,16 @@ function loadCities(){
   if(currentMarket==='nacional'){
     tiers = STATES_BR_TIERS[state]||[];
   } else {
-    tiers = STATES_US_TIERS[state]||[];
+    const country = (document.getElementById('countryDD')?.value) || 'US';
+    const countryTiers = {
+      'US': STATES_US_TIERS,
+      'AU': STATES_AU_TIERS,
+      'PT': STATES_PT_TIERS,
+      'ES': STATES_ES_TIERS,
+      'UK': STATES_UK_TIERS,
+      'CA': STATES_CA_TIERS,
+    }[country] || STATES_US_TIERS;
+    tiers = countryTiers[state]||[];
   }
   window._cityChipsData = tiers;
   renderCityChips();
@@ -3666,7 +3808,7 @@ function openCampaign(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   $('pageCampaign').classList.add('active');
   const nb = c.neighborhood ? ` ➔ ${c.neighborhood}` : '';
-  $('campaignInfoBar').innerHTML=`Campanha: <strong>${c.name}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+c.country}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${c.nicho}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
+  $('campaignInfoBar').innerHTML=`Campanha: <strong>${escHtml(c.name)}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+escHtml(c.country)}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${escHtml(c.nicho)}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
   renderAll();renderCampaignsList();
 }
 function saveCampaigns(){
@@ -6591,9 +6733,21 @@ function loadNeighborhoods(){
   // Agregar bairros de TODAS as cidades selecionadas
   const chips = [];
   allCities.forEach(city => {
-    const data = currentMarket === 'internacional'
-      ? NEIGHBORHOODS_US[city]
-      : NEIGHBORHOODS[city];
+    let data;
+    if(currentMarket === 'internacional'){
+      const country = (document.getElementById('countryDD')?.value) || 'US';
+      const nbByCountry = {
+        'US': NEIGHBORHOODS_US,
+        'AU': NEIGHBORHOODS_AU,
+        'PT': NEIGHBORHOODS_PT,
+        'ES': NEIGHBORHOODS_ES,
+        'UK': NEIGHBORHOODS_UK,
+        'CA': NEIGHBORHOODS_CA,
+      };
+      data = (nbByCountry[country]||NEIGHBORHOODS_US)[city];
+    } else {
+      data = NEIGHBORHOODS[city];
+    }
     if(!data) return;
     const label = allCities.length > 1 ? city : null; // label de cidade só quando multi-cidade
     (data.gold||[]).forEach(n   => chips.push({name:n, tier:'gold',   city: label}));
@@ -6784,7 +6938,7 @@ function showPage(id){
         banner.style.background='var(--green-bg)';
         banner.style.borderColor='var(--green-b)';
         banner.style.color='var(--green)';
-        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${c.name}</strong> — os leads serão adicionados aqui</span>`;
+        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${escHtml(c.name)}</strong> — os leads serão adicionados aqui</span>`;
       } else if(campaigns.length===1){
         // Auto-seleciona se só tem uma
         activeCampaignId=campaigns[0].id;
@@ -6793,7 +6947,7 @@ function showPage(id){
         banner.style.background='var(--green-bg)';
         banner.style.borderColor='var(--green-b)';
         banner.style.color='var(--green)';
-        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${campaigns[0].name}</strong> — os leads serão adicionados aqui</span>`;
+        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${escHtml(campaigns[0].name)}</strong> — os leads serão adicionados aqui</span>`;
       } else {
         banner.style.display='flex';
         banner.style.background='var(--volcano-bg)';
@@ -9483,20 +9637,24 @@ function updateUserHeader(){
   if(!el || !currentUser) return;
   const meta = currentUser.user_metadata || {};
   const name = meta.name || currentUser.email.split('@')[0];
-  // Leads = créditos restantes (carregados do Supabase via loadLeadsProfile)
+  const initial = name.charAt(0).toUpperCase();
   const restantes = leadsRestantes();
+  // Get saved avatar from localStorage cache (set when photo is uploaded)
+  const avatarUrl = localStorage.getItem('capturo-avatar-'+currentUser.id) || '';
+  const avatarStyle = avatarUrl
+    ? `background-image:url(${avatarUrl});background-size:cover;background-position:center;`
+    : `background:linear-gradient(135deg,var(--accent),#0056cc);`;
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
-      <!-- Leads badge -->
       <div id="leadsBadge" title="${restantes} leads restantes de ${_leadsProfile.sinais_limit}" onclick="abrirModalRecarga()" style="display:flex;align-items:center;gap:5px;background:var(--accent-bg);border:1px solid rgba(0,122,255,.2);border-radius:20px;padding:3px 10px 3px 7px;cursor:pointer">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><circle cx="12" cy="12" r="3" fill="var(--accent)"/><circle cx="12" cy="12" r="7" stroke="var(--accent)" stroke-width="1.5" opacity=".4" fill="none"/><circle cx="12" cy="12" r="11" stroke="var(--accent)" stroke-width="1" opacity=".2" fill="none"/></svg>
         <span class="sb-num" style="font-size:11px;font-weight:700;color:var(--accent);font-family:'IBM Plex Mono',monospace">${restantes}</span>
         <span class="sb-lbl" style="font-size:10px;color:var(--muted2)">Leads</span>
       </div>
-      <!-- Avatar + nome -->
-      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0056cc);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">${name.charAt(0).toUpperCase()}</div>
-      <span style="font-size:11px;color:var(--muted2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
-      <button onclick="doSignOut()" title="Sair" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 4px;border-radius:4px;line-height:1" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">✕</button>
+      <!-- Avatar circular clicável -->
+      <div id="topnavAvatar" onclick="openUserProfile()" title="${name} — Ver Perfil" style="width:30px;height:30px;border-radius:50%;${avatarStyle}display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;border:2px solid rgba(255,255,255,.15);transition:border-color .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)'">${avatarUrl?'':initial}</div>
+      <button onclick="openUserProfile()" style="background:none;border:1px solid var(--border2);border-radius:20px;padding:4px 12px;color:var(--muted2);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">Perfil</button>
+      <button onclick="doSignOut()" title="Sair" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;line-height:1" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">✕</button>
     </div>`;
 }
 
@@ -10502,11 +10660,26 @@ window._postAuthInit = function(){
 async function carregarAvatarTopnav(){
   const sb=getSupabase();
   if(!sb||!currentUser)return;
-  const{data}=await sb.from('profiles').select('avatar_url').eq('id',currentUser.id).single();
-  if(data?.avatar_url){
-    const av=document.getElementById('upAvatar');
-    if(av){av.style.backgroundImage=`url(${data.avatar_url})`;av.style.backgroundSize='cover';av.style.backgroundPosition='center';av.textContent='';}
-  }
+  // Primeiro tenta o cache local (instantâneo)
+  const cached=localStorage.getItem('capturo-avatar-'+currentUser.id);
+  if(cached) _aplicarAvatarEmTudo(cached);
+  // Depois busca do banco para sincronizar
+  try{
+    const{data}=await sb.from('profiles').select('avatar_url').eq('id',currentUser.id).single();
+    if(data?.avatar_url){
+      localStorage.setItem('capturo-avatar-'+currentUser.id, data.avatar_url);
+      _aplicarAvatarEmTudo(data.avatar_url);
+    }
+  }catch(e){}
+}
+
+function _aplicarAvatarEmTudo(base64){
+  // Topnav avatar
+  const topAv=document.getElementById('topnavAvatar');
+  if(topAv){topAv.style.backgroundImage=`url(${base64})`;topAv.style.backgroundSize='cover';topAv.style.backgroundPosition='center';topAv.textContent='';}
+  // Modal perfil avatar
+  const av=document.getElementById('upAvatar');
+  if(av){av.style.backgroundImage=`url(${base64})`;av.style.backgroundSize='cover';av.style.backgroundPosition='center';av.textContent='';}
 }
 
 // ── SELEÇÃO MÚLTIPLA DE CAMPANHAS ────────────────────────────
@@ -10715,8 +10888,7 @@ async function uploadProfilePhoto(input){
   const reader=new FileReader();
   reader.onload=async(e)=>{
     const base64=e.target.result;
-    // Salva no Supabase profiles como avatar_url (base64 pequeno)
-    const sb=getSupabase();
+    // Atualiza avatar no modal de perfil
     const av=document.getElementById('upAvatar');
     if(av){
       av.style.backgroundImage=`url(${base64})`;
@@ -10724,12 +10896,21 @@ async function uploadProfilePhoto(input){
       av.style.backgroundPosition='center';
       av.textContent='';
     }
+    // Atualiza avatar no topnav imediatamente
+    const topAv=document.getElementById('topnavAvatar');
+    if(topAv){
+      topAv.style.backgroundImage=`url(${base64})`;
+      topAv.style.backgroundSize='cover';
+      topAv.style.backgroundPosition='center';
+      topAv.textContent='';
+    }
     try{
+      const sb=getSupabase();
       if(sb&&currentUser){
+        // Cache no localStorage para persistir entre reloads sem bater no banco
+        localStorage.setItem('capturo-avatar-'+currentUser.id, base64);
+        // Salva também no Supabase
         await sb.from('profiles').update({avatar_url:base64,updated_at:new Date().toISOString()}).eq('id',currentUser.id);
-        // Atualiza também o topnav
-        const topAvatar=document.getElementById('topnavAvatar');
-        if(topAvatar){topAvatar.style.backgroundImage=`url(${base64})`;topAvatar.style.backgroundSize='cover';topAvatar.textContent='';}
         toast('✅ Foto atualizada!','ok',2000);
       }
     }catch(err){toast('Erro ao salvar foto: '+err.message,'error');}
@@ -10819,16 +11000,15 @@ function toggleMobileSidebar(){
     <div class="recarga-title">⚡ Recarregar Leads</div>
     <div class="recarga-sub" id="recargaSub">Escolha um pack para continuar prospectando</div>
 
-    <!-- Packs avulsos -->
+    <!-- Seção 1: Créditos avulsos -->
+    <div style="font-size:10px;font-weight:700;color:var(--muted2,#888);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left">🔋 Créditos Avulsos</div>
     <div class="recarga-cards">
-      <!-- Pack 50 -->
       <div class="recarga-card" onclick="abrirHotmart('PACK_50')">
         <div class="recarga-qtd">50</div>
         <div class="recarga-label">Leads</div>
         <div class="recarga-preco">R$&nbsp;97</div>
         <div class="recarga-custo">R$&nbsp;1,94/lead</div>
       </div>
-      <!-- Pack 150 -->
       <div class="recarga-card destaque" onclick="abrirHotmart('PACK_150')">
         <div class="recarga-qtd">150</div>
         <div class="recarga-label">Leads</div>
@@ -10836,7 +11016,6 @@ function toggleMobileSidebar(){
         <div class="recarga-custo">R$&nbsp;1,31/lead</div>
         <div class="recarga-badge">Mais popular</div>
       </div>
-      <!-- Pack 400 -->
       <div class="recarga-card" onclick="abrirHotmart('PACK_400')">
         <div class="recarga-qtd">400</div>
         <div class="recarga-label">Leads</div>
@@ -10846,14 +11025,27 @@ function toggleMobileSidebar(){
       </div>
     </div>
 
-    <!-- Plano mensal -->
-    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_MENSAL')">
-      <div class="recarga-mensal-info">
-        <div class="recarga-mensal-titulo">📅 Plano Mensal — R$ 97/mês</div>
-        <div class="recarga-mensal-desc">40 Leads/mês renovados automaticamente + acesso completo</div>
-      </div>
-      <button class="recarga-mensal-btn">Assinar</button>
+    <!-- Divisor -->
+    <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
+      <span style="font-size:10px;color:var(--muted2,#888);font-weight:600;white-space:nowrap">OU ASSINE UM PLANO</span>
+      <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
     </div>
+
+    <!-- Seção 2: Assinatura mensal -->
+    <div style="font-size:10px;font-weight:700;color:var(--muted2,#888);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left">📅 Assinatura Mensal</div>
+    <div onclick="abrirHotmart('PLANO_MENSAL')" style="border:1.5px solid rgba(0,122,255,.3);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:rgba(0,122,255,.06);transition:border-color .2s,background .2s;margin-bottom:8px" onmouseover="this.style.borderColor='rgba(0,122,255,.6)';this.style.background='rgba(0,122,255,.12)'" onmouseout="this.style.borderColor='rgba(0,122,255,.3)';this.style.background='rgba(0,122,255,.06)'">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:var(--fg,#f0f0f0)">40 Leads <span style="font-size:11px;font-weight:500;color:var(--muted2,#888)">/mês</span></div>
+        <div style="font-size:11px;color:var(--muted2,#888);margin-top:3px">Renovação automática · acesso completo · cancele quando quiser</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:16px">
+        <div style="font-size:18px;font-weight:800;color:var(--accent,#007aff)">R$ 97</div>
+        <div style="font-size:10px;color:var(--muted2,#888)">/mês</div>
+        <button style="margin-top:6px;font-size:11px;font-weight:700;background:var(--accent,#007aff);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;white-space:nowrap">Assinar</button>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--muted2,#888);text-align:center">Já assina? Os créditos avulsos somam ao seu plano mensal.</div>
   </div>
 </div>
 
