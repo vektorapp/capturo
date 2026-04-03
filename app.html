@@ -1070,6 +1070,9 @@ function openProfile(id){
   // Lovable URL
   const lovableHtml=l.lovableUrl?`<a href="${l.lovableUrl}" target="_blank" style="color:#7c6aff;font-family:monospace;font-size:11px;text-decoration:none">✦ ${l.lovableUrl}</a>`:'<span style="color:var(--muted2);font-size:11px">Sem site Lovable</span>';
 
+  // CNPJ section
+  const cnpjHtml = _buildCnpjHtml(l);
+
   body.innerHTML=`
     <div class="profile-section">
       <div class="profile-section-title">🎨 Paleta de Cores do Lead</div>
@@ -1085,6 +1088,7 @@ function openProfile(id){
       <div class="profile-stat"><span>Status</span><span>${{new:'🆕 Novo',contacted:'✉ Contatado',closed:'✅ Fechado'}[l.status]||l.status}</span></div>
       <div class="profile-stat"><span>Fonte</span><span style="font-family:monospace">${l.source||'maps'}</span></div>
     </div>
+    ${cnpjHtml}
     <div class="profile-section">
       <div class="profile-section-title">✉ E-mail</div>
       ${emailHtml}
@@ -1113,10 +1117,273 @@ function openProfile(id){
   `;
 
   overlay.classList.add('open');
+
+  // Busca CNPJ automaticamente se for mercado nacional e não tiver dados ainda
+  const c = campaigns.find(x=>x.id===activeCampaignId);
+  if(!l.cnpjData && (c?.market==='nacional' || !c?.market)){
+    setTimeout(()=>buscarCnpjLead(l.id), 800);
+  }
 }
 
 function closeProfile(){
   $('profileOverlay').classList.remove('open');
+}
+
+// ── ENRIQUECIMENTO CNPJ via BrasilAPI ────────────────────────────
+function _buildCnpjHtml(l){
+  if(l.cnpjData === null){
+    return `<div class="profile-section">
+      <div class="profile-section-title" style="display:flex;align-items:center;justify-content:space-between">
+        🏢 Receita Federal
+        <button onclick="buscarCnpjLead('${l.id}')" style="font-size:10px;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer">↺ Buscar</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted2)">CNPJ não encontrado.</div>
+    </div>`;
+  }
+  if(!l.cnpjData){
+    return `<div class="profile-section" id="cnpjSection">
+      <div class="profile-section-title">🏢 Receita Federal</div>
+      <div style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:8px">
+        <span class="spinner" style="width:12px;height:12px;border-width:2px"></span> Buscando...
+      </div>
+    </div>`;
+  }
+  const d = l.cnpjData;
+  const dataAb = d.data_inicio_atividade||d.abertura||'';
+  const anoAb  = dataAb ? new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1')).getFullYear() : null;
+  const idade  = anoAb ? new Date().getFullYear()-anoAb : null;
+  const isNova = idade!==null && idade<=1;
+  const capital = d.capital_social ? 'R$ '+parseFloat(d.capital_social).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
+  const situacao = d.situacao_cadastral||d.situacao||'—';
+  const cnae = d.cnae_fiscal_descricao||(d.atividade_principal&&d.atividade_principal[0]?.text)||'—';
+  const socios = d.qsa||[];
+  return `<div class="profile-section">
+    <div class="profile-section-title" style="display:flex;align-items:center;justify-content:space-between">
+      🏢 Receita Federal
+      ${isNova?'<span style="font-size:10px;background:rgba(255,149,0,.18);color:#f5a623;padding:2px 8px;border-radius:20px;font-weight:700">⚡ Empresa nova!</span>':''}
+    </div>
+    <div class="profile-stat"><span>Razão Social</span><span style="font-size:11px">${escHtml(d.razao_social||d.nome||'—')}</span></div>
+    <div class="profile-stat"><span>CNPJ</span><span style="font-family:monospace;font-size:11px">${escHtml(d.cnpj||'—')}</span></div>
+    <div class="profile-stat"><span>Situação</span><span style="color:${situacao==='ATIVA'?'var(--green)':'var(--muted2)'};font-weight:600;font-size:11px">${escHtml(situacao)}</span></div>
+    <div class="profile-stat"><span>Abertura</span><span style="font-size:11px">${escHtml(dataAb)} ${idade!==null?'<span style="color:var(--muted2)">('+idade+' ano'+(idade!==1?'s':'')+')</span>':''}</span></div>
+    <div class="profile-stat"><span>CNAE</span><span style="font-size:11px">${escHtml(cnae)}</span></div>
+    <div class="profile-stat"><span>Capital</span><span style="font-size:11px">${capital}</span></div>
+    ${socios.length?`<div style="margin-top:8px"><div style="font-size:10px;color:var(--muted2);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Sócios</div>
+      ${socios.map(s=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:0.5px solid var(--border)">
+        <span>${escHtml(s.nome_socio||s.nome||'—')}</span>
+        <span style="color:var(--muted2)">${escHtml(s.qualificacao_socio||s.qualificacao||'—')}</span>
+      </div>`).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+async function buscarCnpjLead(leadId){
+  const l = leads.find(x=>x.id===leadId);
+  if(!l) return;
+  // Atualiza seção se estiver aberta
+  const sec = document.getElementById('cnpjSection');
+  if(sec) sec.innerHTML = `<div class="profile-section-title">🏢 Receita Federal</div>
+    <div style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:8px">
+      <span class="spinner" style="width:12px;height:12px;border-width:2px"></span> Buscando CNPJ...
+    </div>`;
+  try{
+    const nome = (l.name||'').trim().split(/\s+/).slice(0,4).join('+');
+    const cidade = encodeURIComponent(l.city||'');
+    const resp = await fetch(`https://receitaws.com.br/v1/cnpj/search?company=${encodeURIComponent(l.name||'')}&city=${cidade}`,
+      {headers:{Accept:'application/json'}}).catch(()=>null);
+    let cnpjNum = null;
+    if(resp&&resp.ok){
+      const data = await resp.json().catch(()=>null);
+      cnpjNum = data?.results?.[0]?.cnpj || data?.cnpj || null;
+    }
+    if(cnpjNum){
+      const cnpjClean = cnpjNum.replace(/\D/g,'');
+      const r2 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjClean}`,
+        {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}});
+      if(r2.ok){
+        const d = await r2.json();
+        l.cnpjData = d;
+        saveCampaigns();
+        const sec2 = document.getElementById('cnpjSection');
+        if(sec2) sec2.outerHTML = _buildCnpjHtml(l);
+        if(d.data_inicio_atividade){
+          const ano = new Date(d.data_inicio_atividade).getFullYear();
+          if(new Date().getFullYear()-ano<=1 && l.score<10){
+            l.score = Math.min(10, l.score+2);
+          }
+        }
+        return;
+      }
+    }
+    const r3 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/search?text=${encodeURIComponent(l.name||'')}`,
+      {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}}).catch(()=>null);
+    if(r3&&r3.ok){
+      const list = await r3.json().catch(()=>[]);
+      const match = Array.isArray(list) && list[0];
+      if(match?.cnpj){
+        const cnpjClean2 = match.cnpj.replace(/\D/g,'');
+        const r4 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjClean2}`,
+          {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}});
+        if(r4.ok){
+          const d2 = await r4.json();
+          l.cnpjData = d2;
+          saveCampaigns();
+          const sec3 = document.getElementById('cnpjSection');
+          if(sec3) sec3.outerHTML = _buildCnpjHtml(l);
+          return;
+        }
+      }
+    }
+    l.cnpjData = null;
+    saveCampaigns();
+    const sec4 = document.getElementById('cnpjSection');
+    if(sec4) sec4.outerHTML = _buildCnpjHtml(l);
+  }catch(e){
+    console.warn('[CNPJ]',e);
+    l.cnpjData = null;
+    saveCampaigns();
+    const sec5 = document.getElementById('cnpjSection');
+    if(sec5) sec5.innerHTML = `<div class="profile-section-title">🏢 Receita Federal</div>
+      <div style="font-size:11px;color:var(--muted2)">Erro ao buscar CNPJ.</div>`;
+  }
+}
+
+// ── CNPJ EM LOTE ─────────────────────────────────────────────────
+let _cnpjLoteAtivo = false;
+
+async function buscarCnpjEmLote(){
+  if(!activeCampaignId){ toast('Abra uma campanha primeiro.','warn'); return; }
+  if(_cnpjLoteAtivo){ toast('Busca em andamento. Aguarde.','warn'); return; }
+
+  // Só busca leads sem CNPJ ainda (cnpjData === undefined)
+  const pendentes = leads.filter(l => l.cnpjData === undefined);
+  if(!pendentes.length){
+    toast('Todos os leads já foram verificados na Receita Federal.','ok',3000);
+    return;
+  }
+
+  _cnpjLoteAtivo = true;
+  const btn = document.getElementById('btnCnpjLote');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Buscando...'; }
+
+  let encontrados = 0;
+  let novos = 0; // empresas abertas ≤ 1 ano
+
+  toast(`🏢 Iniciando busca de CNPJ para ${pendentes.length} leads...`,'info',4000);
+  setStat(`<span class="spinner"></span>🏢 Buscando CNPJ 1/${pendentes.length}...`);
+
+  for(let i=0; i<pendentes.length; i++){
+    if(!_cnpjLoteAtivo) break; // respeita cancelamento
+    const l = pendentes[i];
+    setStat(`<span class="spinner"></span>🏢 Receita Federal: ${i+1}/${pendentes.length} — ${l.name}`);
+
+    try{
+      // Tenta ReceitaWS por nome + cidade
+      const resp = await fetch(
+        `https://receitaws.com.br/v1/cnpj/search?company=${encodeURIComponent(l.name||'')}&city=${encodeURIComponent(l.city||'')}`,
+        {headers:{Accept:'application/json'}}
+      ).catch(()=>null);
+
+      let cnpjNum = null;
+      if(resp&&resp.ok){
+        const data = await resp.json().catch(()=>null);
+        cnpjNum = data?.results?.[0]?.cnpj || data?.cnpj || null;
+      }
+
+      // Se achou, busca dados completos na BrasilAPI
+      if(cnpjNum){
+        const cnpjClean = cnpjNum.replace(/\D/g,'');
+        const r2 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjClean}`,
+          {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}}
+        ).catch(()=>null);
+        if(r2&&r2.ok){
+          const d = await r2.json().catch(()=>null);
+          if(d){
+            l.cnpjData = d;
+            encontrados++;
+            // Bônus score empresa nova
+            if(d.data_inicio_atividade){
+              const ano = new Date(d.data_inicio_atividade).getFullYear();
+              if(new Date().getFullYear()-ano<=1){
+                l.score = Math.min(10, l.score+2);
+                novos++;
+              }
+            }
+            // Salva a cada 5 leads para não perder dados
+            if(encontrados % 5 === 0){
+              const c = campaigns.find(x=>x.id===activeCampaignId);
+              if(c) c.leads = leads;
+              saveCampaigns();
+            }
+            await new Promise(r=>setTimeout(r,800)); // respeita rate limit BrasilAPI
+            continue;
+          }
+        }
+      }
+
+      // Tentativa alternativa: BrasilAPI busca textual
+      const r3 = await fetch(
+        `https://brasilapi.com.br/api/cnpj/v1/search?text=${encodeURIComponent(l.name||'')}`,
+        {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}}
+      ).catch(()=>null);
+      if(r3&&r3.ok){
+        const list = await r3.json().catch(()=>[]);
+        const match = Array.isArray(list) && list.find(x=>
+          x.municipio?.toLowerCase()===l.city?.toLowerCase() ||
+          x.razao_social?.toLowerCase().includes((l.name||'').split(' ')[0]?.toLowerCase())
+        ) || (Array.isArray(list)&&list[0]);
+        if(match?.cnpj){
+          const cnpjClean2 = match.cnpj.replace(/\D/g,'');
+          const r4 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjClean2}`,
+            {headers:{Accept:'application/json','User-Agent':'Mozilla/5.0'}}
+          ).catch(()=>null);
+          if(r4&&r4.ok){
+            const d2 = await r4.json().catch(()=>null);
+            if(d2){
+              l.cnpjData = d2;
+              encontrados++;
+              if(d2.data_inicio_atividade){
+                const ano2 = new Date(d2.data_inicio_atividade).getFullYear();
+                if(new Date().getFullYear()-ano2<=1){ l.score=Math.min(10,l.score+2); novos++; }
+              }
+              await new Promise(r=>setTimeout(r,800));
+              continue;
+            }
+          }
+        }
+      }
+
+      // Não encontrou
+      l.cnpjData = null;
+
+    }catch(e){
+      console.warn('[CNPJ lote]',l.name,e);
+      l.cnpjData = null;
+    }
+
+    // Pausa entre requests para não bater rate limit
+    await new Promise(r=>setTimeout(r,1200));
+  }
+
+  // Salva tudo
+  const c = campaigns.find(x=>x.id===activeCampaignId);
+  if(c) c.leads = leads;
+  saveCampaigns();
+  renderAll();
+
+  _cnpjLoteAtivo = false;
+  if(btn){ btn.disabled=false; btn.textContent='🏢 CNPJ em Lote'; }
+
+  const msg = `✅ CNPJ em lote concluído: ${encontrados}/${pendentes.length} encontrados${novos>0?' · '+novos+' empresa(s) nova(s) detectada(s)!':''}.`;
+  setStat(msg);
+  toast(msg,'ok',6000);
+}
+
+function cancelarCnpjLote(){
+  _cnpjLoteAtivo = false;
+  const btn = document.getElementById('btnCnpjLote');
+  if(btn){ btn.disabled=false; btn.textContent='🏢 CNPJ em Lote'; }
+  toast('Busca CNPJ em lote cancelada.','warn',2500);
 }
 
 function promptLovableUrl(id){
@@ -1208,6 +1475,13 @@ function toast(msg, type='info', duration=3500){
   </div>
   <div class="sb-item" id="sb-relatorio" onclick="showPage('pageRelatorio');setSbActive('sb-relatorio')">
     <span class="sb-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span><span class="sb-label">Relatórios</span>
+  </div>
+  <div class="sb-item" id="sb-alertas" onclick="showPage('pageAlertas');setSbActive('sb-alertas')">
+    <span class="sb-icon" style="position:relative">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="12" y1="2" x2="12" y2="4"/></svg>
+      <span id="alertasBadge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--volcano);border-radius:20px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--s1)"></span>
+    </span>
+    <span class="sb-label">Novos Negócios</span>
   </div>
   <div class="sb-item" id="sb-favoritos" onclick="showPage('pageFavoritos');setSbActive('sb-favoritos')">
     <span class="sb-icon" style="position:relative">
@@ -1386,6 +1660,61 @@ function toast(msg, type='info', duration=3500){
 
       <!-- EP1 MAPS -->
       <div class="engine-panel active" id="ep1">
+        <!-- Filtros avançados -->
+        <div id="filtrosAvancados" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:10px;align-items:center">
+          <span style="font-size:10px;font-weight:700;color:var(--muted2);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0">Filtros:</span>
+          <!-- Nota mínima -->
+          <label style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px;flex-shrink:0">
+            ⭐ Nota mín.
+            <select id="filterRatingMin" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);height:26px">
+              <option value="0">Qualquer</option>
+              <option value="3.5">3.5+</option>
+              <option value="4.0" selected>4.0+</option>
+              <option value="4.5">4.5+</option>
+            </select>
+          </label>
+          <!-- Mín. avaliações -->
+          <label style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px;flex-shrink:0">
+            💬 Avaliações
+            <select id="filterReviewsMin" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);height:26px">
+              <option value="0">Qualquer</option>
+              <option value="5">5+</option>
+              <option value="10" selected>10+</option>
+              <option value="25">25+</option>
+              <option value="50">50+</option>
+            </select>
+          </label>
+          <!-- Tem site -->
+          <label style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px;flex-shrink:0">
+            🌐 Site
+            <select id="filterSite" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);height:26px">
+              <option value="any">Qualquer</option>
+              <option value="no">Sem site 🔥</option>
+              <option value="yes">Com site</option>
+            </select>
+          </label>
+          <!-- Tem telefone -->
+          <label style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px;flex-shrink:0">
+            📞 Telefone
+            <select id="filterPhone" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);height:26px">
+              <option value="any">Qualquer</option>
+              <option value="yes" selected>Com tel.</option>
+              <option value="no">Sem tel.</option>
+            </select>
+          </label>
+          <!-- Limite de resultados -->
+          <label style="font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px;flex-shrink:0">
+            🎯 Máx. leads
+            <select id="filterMaxLeads" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--s1);color:var(--text);height:26px">
+              <option value="0">Sem limite</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+            </select>
+          </label>
+          <button onclick="resetFiltros()" style="font-size:10px;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted2);cursor:pointer;height:26px;flex-shrink:0">↺ Limpar</button>
+        </div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:6px;cursor:pointer">
             <input type="checkbox" id="enableAI" style="width:auto">
@@ -1467,6 +1796,8 @@ function toast(msg, type='info', duration=3500){
       <button class="btn btn-ghost" onclick="exportCSV()" style="font-size:11px">⬇ CSV</button>
       <button class="btn btn-ghost" onclick="exportOpps()" style="font-size:11px">🎯 Oportunidades</button>
       <button class="btn btn-ghost" onclick="openCsvImportModal()" style="font-size:11px;color:var(--accent2);border-color:var(--accent);background:var(--accent-bg)" title="Importar leads de arquivo CSV">📥 Importar CSV</button>
+      <button class="btn btn-ghost" onclick="recalcularScoresCampanha()" style="font-size:11px;color:var(--warm);border-color:rgba(245,168,35,.3);background:rgba(245,168,35,.07)" title="Recalcular score de todos os leads com os novos sinais">⚡ Recalcular Scores</button>
+      <button id="btnCnpjLote" class="btn btn-ghost" onclick="buscarCnpjEmLote()" style="font-size:11px;color:#34a853;border-color:rgba(52,168,83,.3);background:rgba(52,168,83,.07)" title="Buscar CNPJ de todos os leads na Receita Federal">🏢 CNPJ em Lote</button>
       <div style="display:flex;gap:4px;margin-left:auto">
         <button id="btnViewKanban" onclick="setKanbanView('kanban')" title="Kanban por Temperatura" style="padding:5px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent);font-size:11px;cursor:pointer;font-weight:600">⊞ Temperatura</button>
         <button id="btnViewPipeline" onclick="setKanbanView('pipeline')" title="Pipeline de Vendas" style="padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--muted2);font-size:11px;cursor:pointer;font-weight:600">🎯 Pipeline</button>
@@ -2127,7 +2458,73 @@ function toast(msg, type='info', duration=3500){
   </div>
 
   <!-- ══ RELATÓRIOS ══ -->
-  <div class="page" id="pageRelatorio">
+  <!-- ═══ PAGE: NOVOS NEGÓCIOS ═══ -->
+  <div class="page" id="pageAlertas">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px">⚡ Novos Negócios</div>
+        <div style="font-size:13px;color:var(--muted2)">Empresas abertas recentemente na Receita Federal — máxima receptividade</div>
+      </div>
+    </div>
+
+    <!-- Config da busca -->
+    <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-bottom:16px">🔍 CONFIGURAR BUSCA</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:16px">
+        <div>
+          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Cidade</label>
+          <input type="text" id="alertaCidade" placeholder="Ex: Uberlândia" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Estado (UF)</label>
+          <input type="text" id="alertaUF" placeholder="Ex: MG" maxlength="2" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text);text-transform:uppercase">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Nicho / Atividade</label>
+          <input type="text" id="alertaNicho" placeholder="Ex: restaurante, dentista, academia" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Abertos nos últimos</label>
+          <select id="alertaDias" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
+            <option value="30">30 dias</option>
+            <option value="60" selected>60 dias</option>
+            <option value="90">90 dias</option>
+            <option value="180">6 meses</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button onclick="buscarNovosNegocios()" id="btnBuscarAlertas" class="btn btn-primary" style="font-size:12px">⚡ Buscar Novos Negócios</button>
+        <button onclick="cancelarBuscaAlertas()" id="btnCancelarAlertas" class="btn btn-ghost" style="font-size:12px;display:none;color:var(--red)">⏹ Cancelar</button>
+        <span id="alertasStatus" style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace"></span>
+      </div>
+    </div>
+
+    <!-- Aviso explicativo -->
+    <div style="background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.2);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--text);line-height:1.7">
+      💡 <strong>Por que novos negócios?</strong> Uma empresa aberta há menos de 60 dias não tem site, não tem Instagram organizado, não tem gestão de tráfego, não tem nada. O dono está ansioso para resolver tudo. É o lead mais fácil do mundo de fechar — e nenhum concorrente te entrega isso.
+    </div>
+
+    <!-- Resultados -->
+    <div id="alertasResultados" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace" id="alertasContador">0 negócios encontrados</div>
+        <div style="display:flex;gap:8px">
+          <button onclick="importarAlertasParaCampanha()" class="btn btn-primary" style="font-size:11px">📥 Importar para Campanha</button>
+          <button onclick="exportarAlertasCSV()" class="btn btn-ghost" style="font-size:11px">⬇ CSV</button>
+        </div>
+      </div>
+      <div id="alertasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"></div>
+    </div>
+
+    <div id="alertasVazio" style="text-align:center;padding:60px 20px;color:var(--muted2)">
+      <div style="font-size:48px;margin-bottom:12px">🔔</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px">Configure e busque acima</div>
+      <div style="font-size:13px">Preencha cidade, estado e nicho para encontrar<br>empresas abertas recentemente na Receita Federal.</div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: RELATÓRIOS ═══ -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
       <div>
         <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px">Relatórios</div>
@@ -3898,15 +4295,65 @@ function classifyBasic(d){
   if(/facebook\.com|instagram\.com|wa\.me|whatsapp/i.test(d.website))return 'warm';
   return 'frozen';
 }
-function calcScore(d,t){
-  let s=5;
-  if(t==='volcano')s=10;
-  else if(t==='hot'){s=9;}
-  else if(t==='warm'){s=7;}
-  else if(t==='cold'){s=5;}
-  else{s=3;}
-  if((d.user_ratings_total||0)<10)s=Math.min(10,s+1);
-  return Math.max(1,Math.min(10,s));
+
+function calcScore(d, t){
+  let s = 5;
+
+  // ── Sinal 1: Temperatura base ─────────────────────────────────
+  if(t==='volcano') s = 10;
+  else if(t==='hot') s = 9;
+  else if(t==='warm') s = 7;
+  else if(t==='cold') s = 5;
+  else s = 3; // frozen
+
+  const rating  = parseFloat(d.rating||0);
+  const reviews = parseInt(d.user_ratings_total||0);
+  const hasSite = !!(d.website && !/facebook|instagram|wa\.me|whatsapp|linktr|lnk\.bio|beacons|taplink/i.test(d.website));
+  const hasIG   = !!(d.website && /instagram\.com/i.test(d.website)) || !!(d.instagram);
+  const hasPhone= !!(d.formatted_phone_number);
+
+  // ── Sinal 2: Sem site + tem Instagram = oportunidade de agência
+  // Perfil perfeito para vender site + gestão de tráfego
+  if(!hasSite && hasIG) s = Math.min(10, s + 1);
+
+  // ── Sinal 3: Nota baixa com muitas avaliações = oportunidade de
+  // gestão de reputação (muita gente viu o negócio, nota está ruim)
+  if(rating > 0 && rating < 3.5 && reviews >= 20) s = Math.min(10, s + 2);
+  else if(rating > 0 && rating < 4.0 && reviews >= 50) s = Math.min(10, s + 1);
+
+  // ── Sinal 4: Poucas avaliações = negócio pequeno/novo, mais receptivo
+  if(reviews > 0 && reviews < 10) s = Math.min(10, s + 1);
+
+  // ── Sinal 5: Tem telefone = mais fácil de contatar
+  if(hasPhone) s = Math.min(10, s + 0.5);
+
+  // ── Sinal 6: Nota muito alta com muitas avaliações = negócio
+  // estabelecido, mais difícil de converter (já tem tudo)
+  if(rating >= 4.8 && reviews >= 100) s = Math.max(1, s - 1);
+
+  // ── Sinal 7: Empresa nova via CNPJ (bônus aplicado em buscarCnpjLead)
+  // Aqui só respeita o valor já incrementado se cnpjData estiver presente
+  if(d.cnpjData?.data_inicio_atividade){
+    const ano = new Date(d.cnpjData.data_inicio_atividade).getFullYear();
+    if(new Date().getFullYear() - ano <= 1) s = Math.min(10, s + 2);
+  }
+
+  return Math.max(1, Math.min(10, Math.round(s)));
+}
+
+// Recalcula score de todos os leads da campanha ativa com os novos sinais
+function recalcularScoresCampanha(){
+  if(!activeCampaignId){ toast('Abra uma campanha primeiro.','warn'); return; }
+  let count = 0;
+  leads.forEach(l=>{
+    const novoScore = calcScore(l, l.t);
+    if(l.score !== novoScore){ l.score = novoScore; count++; }
+  });
+  const c = campaigns.find(x=>x.id===activeCampaignId);
+  if(c) c.leads = leads;
+  saveCampaigns();
+  renderAll();
+  toast(`✅ Score atualizado em ${count} lead(s) com os novos sinais.`, 'ok', 3000);
 }
 
 // ══════════════════════════════════════════
@@ -4074,9 +4521,13 @@ async function startMapsSearch(){
   try{
     const query=c.market==='nacional'?c.nicho:c.nichoEn;
     const seenPlaceIds=new Set();
+    const _filters = getSearchFilters();
+    let _filteredCount = 0;
 
     for(let nbIdx=0; nbIdx<searchList.length; nbIdx++){
       if(!isSearching&&nbIdx>0)break; // respect cancel
+      // Verifica limite de leads
+      if(_filters.maxLeads > 0 && leads.length >= _filters.maxLeads){ setStat(`✅ Limite de ${_filters.maxLeads} leads atingido.`); break; }
       const {nb, city:searchCity} = searchList[nbIdx];
       const searchAddr=(nb?nb+', ':'')+searchCity+', '+c.state;
       setStat(`<span class="spinner"></span>📍 Localizando${nb?' bairro '+nb:' '+searchCity}... (${nbIdx+1}/${searchList.length})`);
@@ -4099,6 +4550,7 @@ async function startMapsSearch(){
       setStat(`${places.length} encontrados em ${nb||searchCity}. Verificando detalhes...`);
       for(let i=0;i<places.length;i++){
         if(!isSearching&&i>0)break;
+        if(_filters.maxLeads > 0 && leads.length >= _filters.maxLeads){ setStat(`✅ Limite de ${_filters.maxLeads} leads atingido.`); break; }
         if(seenPlaceIds.has(places[i].place_id))continue; // deduplicate across neighborhoods
         seenPlaceIds.add(places[i].place_id);
         let det={};
@@ -4106,6 +4558,8 @@ async function startMapsSearch(){
         catch(e){det={name:places[i].name,formatted_address:places[i].vicinity};}
         const t=classifyBasic(det);
         const lead={...det,id:'m'+Date.now()+nbIdx+'_'+i,name:det.name||places[i].name,formatted_address:(det.formatted_address||places[i].vicinity||'').replace(', USA',''),t,score:calcScore(det,t),status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'maps',mapsUrl:det.url||'',neighborhood:nb||'',city:searchCity};
+        // Aplica filtros avançados ANTES de consumir sinal
+        if(!passaFiltros(lead, _filters)){ _filteredCount++; continue; }
         // ── Consome 1 Lead; para se sem saldo ───────────────────
         const ok = await consumirSinal('maps_search', {lead_name:lead.name, campaign_id:activeCampaignId});
         if(!ok){ setStat('⚡ Leads esgotados! Recarregue para continuar.'); if(!_leadsEsgotadosAlertado){_leadsEsgotadosAlertado=true; toast('⚡ Leads esgotados! Recarregue seus Leads para continuar.','warn',5000); setTimeout(()=>abrirModalRecarga('Seus Leads acabaram durante a busca. Escolha um pack para continuar.'),600);} break; }
@@ -4127,6 +4581,7 @@ async function startMapsSearch(){
       await new Promise(r=>setTimeout(r,300)); // small pause between neighborhoods/cities
     }
 
+    if(_filteredCount > 0) toast(`Filtros removeram ${_filteredCount} lead(s) fora dos critérios — economizando seus créditos.`, 'ok', 4000);
     setProg(35);setStat(`<span class="spinner"></span>✓ ${leads.length} leads encontrados em ${searchList.length} área(s). Processando...`);
 
     // AI phase
@@ -4328,6 +4783,8 @@ async function startMapsSearchInternal(gKey){
     searchListI.push({nb:c.neighborhood,city:c.city});
   }
   const seenPlaceIds=new Set();
+  const _filters = getSearchFilters();
+  let _filteredCount = 0;
   try{
     for(let nbIdx=0;nbIdx<searchListI.length;nbIdx++){
       const {nb,city:searchCity}=searchListI[nbIdx];
@@ -4342,6 +4799,9 @@ async function startMapsSearchInternal(gKey){
       const pl=await gmNearbySearch(`${lat},${lng}`, c.radius, query);
       const places=pl.results||[];
     for(let i=0;i<places.length;i++){
+      if(searchAborted)break;
+      // Verifica limite de leads
+      if(_filters.maxLeads > 0 && leads.length >= _filters.maxLeads){ setStat(`✅ Limite de ${_filters.maxLeads} leads atingido.`); searchAborted=true; break; }
       if(seenPlaceIds.has(places[i].place_id))continue;
       seenPlaceIds.add(places[i].place_id);
       let det={};
@@ -4349,11 +4809,15 @@ async function startMapsSearchInternal(gKey){
       catch(e){det={name:places[i].name,formatted_address:places[i].vicinity};}
       const t=classifyBasic(det);
       const lead={...det,id:'m'+Date.now()+nbIdx+'_'+i,name:det.name||places[i].name,formatted_address:(det.formatted_address||places[i].vicinity||'').replace(', USA',''),t,score:calcScore(det,t),status:'new',notes:'',siteScore:null,siteIssues:[],sitePitch:'',email:'',emailVerified:false,emailConfidence:0,source:'maps',mapsUrl:det.url||'',neighborhood:nb||'',city:searchCity};
+      // Aplica filtros avançados
+      if(!passaFiltros(lead, _filters)){ _filteredCount++; continue; }
       leads.push(lead);setProg(10+Math.round(((nbIdx*places.length+i+1)/(searchListI.length*places.length))*30));renderAll();
       await new Promise(r=>setTimeout(r,60));
     }
+    if(searchAborted) break;
     await new Promise(r=>setTimeout(r,300));
     } // end searchList loop
+    if(_filteredCount > 0) toast(`Filtros removeram ${_filteredCount} lead(s) fora dos critérios.`, 'ok', 3000);
     if(useAI){
       const withSite=leads.filter(l=>l.source==='maps'&&l.website&&!isBioLink(l.website)&&!/facebook|instagram|wa\.me/i.test(l.website));
       for(let i=0;i<withSite.length;i++){
@@ -5567,6 +6031,282 @@ function deleteFollowup(id){
 // ══════════════════════════════════════════
 // v4.5 — RELATÓRIOS + WA BLAST
 // ══════════════════════════════════════════
+// ══════════════════════════════════════════
+// NOVOS NEGÓCIOS — busca via ReceitaWS + BrasilAPI
+// ══════════════════════════════════════════
+let _alertasData = []; // resultados da última busca
+let _alertasBuscando = false;
+
+async function buscarNovosNegocios(){
+  const cidade = ($('alertaCidade')?.value||'').trim();
+  const uf     = ($('alertaUF')?.value||'').trim().toUpperCase();
+  const nicho  = ($('alertaNicho')?.value||'').trim();
+  const dias   = parseInt($('alertaDias')?.value||'60');
+
+  if(!cidade){ toast('Preencha a cidade.','warn'); return; }
+  if(!uf){ toast('Preencha o estado (UF).','warn'); return; }
+  if(!nicho){ toast('Preencha o nicho ou atividade.','warn'); return; }
+  if(_alertasBuscando){ toast('Busca em andamento.','warn'); return; }
+
+  _alertasBuscando = true;
+  _alertasData = [];
+
+  const btnBuscar  = $('btnBuscarAlertas');
+  const btnCancel  = $('btnCancelarAlertas');
+  const status     = $('alertasStatus');
+  const vazio      = $('alertasVazio');
+  const resultados = $('alertasResultados');
+
+  if(btnBuscar){ btnBuscar.disabled=true; btnBuscar.textContent='⏳ Buscando...'; }
+  if(btnCancel){ btnCancel.style.display='inline-flex'; }
+  if(vazio)    { vazio.style.display='none'; }
+  if(resultados){ resultados.style.display='none'; }
+
+  const dataLimite = new Date();
+  dataLimite.setDate(dataLimite.getDate() - dias);
+  const dataLimiteStr = dataLimite.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  try{
+    if(status) status.textContent = '🔍 Consultando Receita Federal...';
+
+    // Busca via ReceitaWS token (o usuário já tem o token capturo-api)
+    const receitaToken = localStorage.getItem('capturo-receitaws-token') ||
+                         await getDecryptedKey('capturo-receitaws-token') || '';
+
+    // Estratégia 1: ReceitaWS com token (mais dados)
+    let empresas = [];
+    if(receitaToken){
+      try{
+        const url = `https://www.receitaws.com.br/v1/cnpj/search?company=${encodeURIComponent(nicho)}&city=${encodeURIComponent(cidade)}&uf=${uf}&opened_after=${dataLimiteStr}`;
+        const r = await fetch(url, {
+          headers:{ Authorization: `Bearer ${receitaToken}`, Accept:'application/json' }
+        }).catch(()=>null);
+        if(r&&r.ok){
+          const d = await r.json().catch(()=>null);
+          empresas = d?.results || d || [];
+        }
+      }catch(e){ console.warn('[Alertas] ReceitaWS erro:',e); }
+    }
+
+    // Estratégia 2: BrasilAPI busca por município + texto (gratuita, sem token)
+    if(!empresas.length){
+      if(status) status.textContent = '🔍 Buscando via BrasilAPI...';
+      try{
+        const r2 = await fetch(
+          `https://brasilapi.com.br/api/cnpj/v1/search?text=${encodeURIComponent(nicho)}&municipio=${encodeURIComponent(cidade)}&uf=${uf}`,
+          { headers:{ Accept:'application/json','User-Agent':'Mozilla/5.0' } }
+        ).catch(()=>null);
+        if(r2&&r2.ok){
+          const list = await r2.json().catch(()=>[]);
+          if(Array.isArray(list)) empresas = list;
+        }
+      }catch(e){ console.warn('[Alertas] BrasilAPI erro:',e); }
+    }
+
+    // Filtra apenas as abertas dentro do período
+    if(status) status.textContent = `🔎 Filtrando por data de abertura (últimos ${dias} dias)...`;
+
+    let novas = [];
+    for(let i=0; i<empresas.length; i++){
+      if(!_alertasBuscando) break;
+      const emp = empresas[i];
+
+      // Verifica data de abertura
+      const dataAb = emp.data_inicio_atividade || emp.abertura || emp.opened || '';
+      if(dataAb){
+        const dtEmp = new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1'));
+        if(dtEmp >= dataLimite) novas.push(emp);
+      } else {
+        // Se não temos data ainda, busca detalhes completos via BrasilAPI
+        if(emp.cnpj){
+          if(status) status.textContent = `🔎 Verificando ${i+1}/${empresas.length}: ${emp.razao_social||emp.nome||''}`;
+          try{
+            const cnpjClean = emp.cnpj.replace(/\D/g,'');
+            const r3 = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpjClean}`,
+              { headers:{ Accept:'application/json','User-Agent':'Mozilla/5.0' } }
+            ).catch(()=>null);
+            if(r3&&r3.ok){
+              const det = await r3.json().catch(()=>null);
+              if(det?.data_inicio_atividade){
+                const dtDet = new Date(det.data_inicio_atividade);
+                if(dtDet >= dataLimite) novas.push({...emp,...det});
+              }
+            }
+            await new Promise(r=>setTimeout(r,600)); // rate limit
+          }catch(e){}
+        }
+      }
+    }
+
+    _alertasData = novas;
+    _renderAlertasResultados(novas, cidade, nicho, dias);
+
+    // Atualiza badge na sidebar
+    const badge = $('alertasBadge');
+    if(badge){
+      if(novas.length>0){badge.style.display='flex';badge.textContent=novas.length>99?'99+':novas.length;}
+      else badge.style.display='none';
+    }
+
+    if(status) status.textContent = `✅ ${novas.length} negócio(s) aberto(s) nos últimos ${dias} dias.`;
+    if(!novas.length) toast(`Nenhum negócio novo encontrado para "${nicho}" em ${cidade} nos últimos ${dias} dias.`,'warn',5000);
+
+  }catch(e){
+    console.error('[Alertas]',e);
+    if(status) status.textContent = '❌ Erro na busca. Tente novamente.';
+    toast('Erro ao buscar novos negócios: '+e.message,'error');
+  }finally{
+    _alertasBuscando = false;
+    if(btnBuscar){ btnBuscar.disabled=false; btnBuscar.textContent='⚡ Buscar Novos Negócios'; }
+    if(btnCancel){ btnCancel.style.display='none'; }
+  }
+}
+
+function cancelarBuscaAlertas(){
+  _alertasBuscando = false;
+  const s=$('alertasStatus');
+  if(s) s.textContent='Busca cancelada.';
+  const btnBuscar=$('btnBuscarAlertas');
+  const btnCancel=$('btnCancelarAlertas');
+  if(btnBuscar){ btnBuscar.disabled=false; btnBuscar.textContent='⚡ Buscar Novos Negócios'; }
+  if(btnCancel){ btnCancel.style.display='none'; }
+}
+
+function _renderAlertasResultados(lista, cidade, nicho, dias){
+  const el = $('alertasResultados');
+  const vazio = $('alertasVazio');
+  const contador = $('alertasContador');
+  const grid = $('alertasGrid');
+  if(!el||!grid) return;
+
+  if(!lista.length){
+    if(vazio){ vazio.style.display='block'; }
+    el.style.display='none';
+    return;
+  }
+
+  if(vazio) vazio.style.display='none';
+  el.style.display='block';
+  if(contador) contador.textContent=`${lista.length} negócio(s) aberto(s) nos últimos ${dias} dias — ${nicho} em ${cidade}`;
+
+  grid.innerHTML = lista.map((emp,idx)=>{
+    const nome = escHtml(emp.razao_social||emp.nome_fantasia||emp.nome||'Sem nome');
+    const cnpj = emp.cnpj||'';
+    const dataAb = emp.data_inicio_atividade||emp.abertura||'';
+    const dtFmt  = dataAb ? new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1'))
+                              .toLocaleDateString('pt-BR') : '—';
+    const cnae   = escHtml(emp.cnae_fiscal_descricao||(emp.atividade_principal&&emp.atividade_principal[0]?.text)||'—');
+    const tel    = escHtml(emp.telefone||emp.ddd_telefone_1||'—');
+    const email  = escHtml(emp.email||'');
+    const porte  = escHtml(emp.porte||emp.descricao_porte||'—');
+    const capital = emp.capital_social ? 'R$ '+parseFloat(emp.capital_social).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
+    const socios = (emp.qsa||[]).map(s=>escHtml(s.nome_socio||s.nome||'')).join(', ')||'—';
+    const diasAberto = dataAb ? Math.round((Date.now()-new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1')).getTime())/(1000*60*60*24)) : null;
+
+    return `<div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--volcano),var(--hot))"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:3px">${nome}</div>
+          <div style="font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">${cnpj}</div>
+        </div>
+        ${diasAberto!==null?`<span style="font-size:10px;background:rgba(255,69,0,.15);color:var(--volcano);padding:3px 8px;border-radius:20px;font-weight:700;white-space:nowrap;flex-shrink:0">${diasAberto}d atrás</span>`:''}
+      </div>
+      <div style="font-size:11px;color:var(--muted2);margin-bottom:8px;line-height:1.6">
+        <div>📅 Abertura: <strong style="color:var(--text)">${dtFmt}</strong></div>
+        <div>🏷 ${cnae}</div>
+        ${tel!=='—'?`<div>📞 <span style="font-family:monospace">${tel}</span></div>`:''}
+        ${email?`<div>✉ <span style="font-family:monospace">${email}</span></div>`:''}
+        <div>👤 Sócio: ${socios}</div>
+        <div style="display:flex;gap:12px"><span>Porte: ${porte}</span><span>Capital: ${capital}</span></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        <button onclick="_importarAlertaLeadUnico(${idx})" class="btn btn-primary" style="font-size:10px;padding:5px 10px">+ Importar Lead</button>
+        ${cnpj?`<a href="https://www.receitaws.com.br/v1/cnpj/${cnpj.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:5px 10px;text-decoration:none">📋 Receita</a>`:''}
+        ${tel!=='—'?`<a href="https://wa.me/55${tel.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:5px 10px;text-decoration:none;color:#25D366;border-color:#25D36633">💬 WA</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function _importarAlertaLeadUnico(idx){
+  const emp = _alertasData[idx];
+  if(!emp) return;
+  if(!activeCampaignId){ toast('Abra uma campanha antes de importar.','warn'); return; }
+  _importarEmpresaComoLead(emp);
+  toast(`✅ "${emp.razao_social||emp.nome||'Lead'}" importado para a campanha!`,'ok',3000);
+}
+
+function importarAlertasParaCampanha(){
+  if(!_alertasData.length){ toast('Nenhum resultado para importar.','warn'); return; }
+  if(!activeCampaignId){ toast('Abra uma campanha antes de importar.','warn'); return; }
+  let count = 0;
+  _alertasData.forEach(emp=>{ if(_importarEmpresaComoLead(emp)) count++; });
+  const c = campaigns.find(x=>x.id===activeCampaignId);
+  if(c) c.leads = leads;
+  saveCampaigns(); renderAll();
+  toast(`✅ ${count} lead(s) importado(s) para a campanha!`,'ok',4000);
+  showPage('pageCampaign'); setSbActive('sb-campaign');
+}
+
+function _importarEmpresaComoLead(emp){
+  // Evita duplicatas por CNPJ
+  const cnpj = (emp.cnpj||'').replace(/\D/g,'');
+  if(cnpj && leads.find(l=>l.cnpj===cnpj)) return false;
+  const tel   = emp.telefone||emp.ddd_telefone_1||'';
+  const email = emp.email||'';
+  const nome  = emp.razao_social||emp.nome_fantasia||emp.nome||'Sem nome';
+  const lead  = {
+    id: 'alerta'+Date.now()+Math.random().toString(36).slice(2,6),
+    name: nome,
+    formatted_address: [emp.logradouro,emp.numero,emp.municipio,emp.uf].filter(Boolean).join(', '),
+    city: emp.municipio||'',
+    state: emp.uf||'',
+    formatted_phone_number: tel,
+    email: email,
+    emailVerified: false,
+    emailConfidence: 0,
+    website: '',
+    t: 'volcano', // empresa nova sem presença digital = vulcão
+    score: 10,
+    status: 'new',
+    notes: `Empresa aberta em ${emp.data_inicio_atividade||emp.abertura||'—'}. Capital: R$ ${emp.capital_social||'—'}.`,
+    source: 'receita_federal',
+    cnpj: cnpj,
+    cnpjData: emp, // já temos os dados — sem necessidade de buscar novamente
+    siteScore: null, siteIssues: [], sitePitch: '',
+    mapsUrl: `https://www.google.com/maps/search/${encodeURIComponent(nome)}`,
+    neighborhood: '', bioUrl: '',
+  };
+  lead.score = calcScore(lead, lead.t);
+  leads.push(lead);
+  return true;
+}
+
+function exportarAlertasCSV(){
+  if(!_alertasData.length){ toast('Nenhum dado para exportar.','warn'); return; }
+  const headers = ['Razão Social','CNPJ','Abertura','CNAE','Telefone','Email','Sócio','Porte','Capital','Município','UF'];
+  const rows = _alertasData.map(emp=>[
+    emp.razao_social||emp.nome||'',
+    emp.cnpj||'',
+    emp.data_inicio_atividade||emp.abertura||'',
+    emp.cnae_fiscal_descricao||(emp.atividade_principal&&emp.atividade_principal[0]?.text)||'',
+    emp.telefone||emp.ddd_telefone_1||'',
+    emp.email||'',
+    (emp.qsa||[]).map(s=>s.nome_socio||s.nome||'').join(' / '),
+    emp.porte||emp.descricao_porte||'',
+    emp.capital_social||'',
+    emp.municipio||'',
+    emp.uf||''
+  ]);
+  const csv = [headers,...rows].map(r=>r.map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download = `novos-negocios-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`;
+  a.click();
+  toast(`✅ ${_alertasData.length} registros exportados.`,'ok',3000);
+}
+
 function renderRelatorio(){
   const allLeads=campaigns.flatMap(c=>c.leads||[]);
   const precoNum=parseInt((appSettings.precoAvista||'3000').replace(/\D/g,''))||3000;
@@ -7006,6 +7746,15 @@ function showPage(id){
   if(id==='pageFollowup')renderFollowups();
   if(id==='pageRelatorio')renderRelatorio();
   if(id==='pageFavoritos')renderFavoritos();
+  if(id==='pageAlertas'){
+    // Preenche cidade/UF automaticamente da campanha ativa
+    const c = campaigns.find(x=>x.id===activeCampaignId);
+    if(c){
+      if(c.city && !$('alertaCidade')?.value) { const el=$('alertaCidade'); if(el) el.value=c.city; }
+      if(c.state && !$('alertaUF')?.value)    { const el=$('alertaUF');    if(el) el.value=c.state.substring(0,2).toUpperCase(); }
+      if(c.nicho && !$('alertaNicho')?.value) { const el=$('alertaNicho'); if(el) el.value=c.nicho; }
+    }
+  }
   if(id==='pageFAQ')renderFAQ();
   if(id==='pageGuia'){
     // Scroll the guia page back to top when opened
@@ -10209,6 +10958,41 @@ function performGlobalSearch(q){
       <div class="gs-result-camp">${escHtml(c.name)}</div>
     </div>`;
   }).join('');
+}
+
+// ── FILTROS AVANÇADOS DE BUSCA ────────────────────────────────────
+function getSearchFilters(){
+  return {
+    ratingMin:   parseFloat($('filterRatingMin')?.value  || '0'),
+    reviewsMin:  parseInt($('filterReviewsMin')?.value   || '0'),
+    siteFilter:  $('filterSite')?.value   || 'any',
+    phoneFilter: $('filterPhone')?.value  || 'any',
+    maxLeads:    parseInt($('filterMaxLeads')?.value      || '0'),
+  };
+}
+
+function passaFiltros(lead, filters){
+  // Nota mínima
+  if(filters.ratingMin > 0 && (lead.rating||0) < filters.ratingMin) return false;
+  // Avaliações mínimas
+  if(filters.reviewsMin > 0 && (lead.user_ratings_total||0) < filters.reviewsMin) return false;
+  // Filtro de site
+  if(filters.siteFilter === 'no'  && lead.website && !/linktr|bio\.link|instagram|facebook|wa\.me|linkin\.bio/i.test(lead.website)) return false;
+  if(filters.siteFilter === 'yes' && !lead.website) return false;
+  // Filtro de telefone
+  if(filters.phoneFilter === 'yes' && !lead.formatted_phone_number) return false;
+  if(filters.phoneFilter === 'no'  &&  lead.formatted_phone_number) return false;
+  return true;
+}
+
+function resetFiltros(){
+  const sel = (id, val) => { if($(id)) $(id).value = val; };
+  sel('filterRatingMin', '4.0');
+  sel('filterReviewsMin', '10');
+  sel('filterSite', 'any');
+  sel('filterPhone', 'yes');
+  sel('filterMaxLeads', '0');
+  toast('Filtros restaurados para o padrão.', 'ok', 2000);
 }
 
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
