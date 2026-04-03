@@ -11,11 +11,20 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="author" content="Felipe Uchoa">
 <meta name="copyright" content="© 2024-2025 Felipe Uchoa. Todos os direitos reservados.">
-<meta name="application-name" content="CAPTURO by Felipe Uchoa">
+<meta name="application-name" content="CAPTURO">
 <meta name="generator" content="CAP-7B3E92A1F0C84D56">
+<!-- PWA -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CAPTURO">
+<meta name="theme-color" content="#0f1117">
+<link rel="manifest" href="manifest.json">
+<!-- iOS splash / icon -->
+<link rel="apple-touch-icon" href="icon-192.png">
 <!-- CAPTURO:Q0FQVFJPLS1GZWxpcGUtVWNob2EtMjAyNC1Qcm9zcGVjY2FvLUludGVsaWdlbnRlLWRlLUxlYWRz -->
 <title>CAPTURO v5.0</title>
 <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -163,9 +172,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .logo{font-size:17px;font-weight:700;letter-spacing:-.03em;color:var(--text);white-space:nowrap}
 .logo span{color:var(--accent)}
 .nav-tabs{display:flex;gap:2px;flex-wrap:wrap;align-items:center;width:100%;}
-.nav-tabs{display:flex;gap:2px;align-items:center;flex:1;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;min-width:0;padding-bottom:2px}
-.nav-tabs::-webkit-scrollbar{display:none}
-.nav-tab{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--muted);border:none;background:transparent;transition:all .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;flex-shrink:0}
+.nav-tab{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--muted);border:none;background:transparent;transition:all .15s;display:flex;align-items:center;gap:5px;font-family:'Inter',sans-serif}
 .nav-tab:hover{background:var(--s2);color:var(--text)}
 .nav-tab.active{background:var(--accent-bg);color:var(--accent);font-weight:600}
 .tab-badge{background:var(--accent);color:#fff;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:600}
@@ -577,13 +584,6 @@ select option{background:#8a9099}
 /* Campaign card delete btn */
 .cc-del{background:transparent;border:1px solid transparent;color:var(--muted);border-radius:5px;padding:3px 6px;font-size:11px;cursor:pointer;transition:all .15s;line-height:1}
 .cc-del:hover{background:#2e0a0a;border-color:#5c1414;color:#ff6b6b}
-/* ── SELEÇÃO MÚLTIPLA DE CAMPANHAS ── */
-.camp-select-cb{position:absolute;top:10px;left:10px;width:18px;height:18px;cursor:pointer;z-index:10;accent-color:var(--accent);display:none}
-.camp-select-mode .camp-select-cb{display:block}
-.camp-select-mode .campaign-card{padding-left:36px!important}
-.camp-select-mode .campaign-card.selected-camp{border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.2)!important}
-#campBulkBar{display:none;position:sticky;top:52px;z-index:90;background:var(--s1);border:1px solid var(--accent-border);border-radius:12px;padding:10px 16px;margin-bottom:14px;align-items:center;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,.1)}
-#campBulkBar.open{display:flex}
 /* Seen lead card */
 .lead-card.seen-card{opacity:.38}
 .lead-card.seen-card:hover{opacity:.75}
@@ -829,46 +829,87 @@ select option{background:#8a9099}
 
 /* ── MOBILE RESPONSIVE ── */
 @media(max-width:640px){
-  .sidebar{width:0!important;left:-60px!important;transition:left .25s ease!important}
-  .sidebar.mobile-open{left:0!important;width:200px!important}
+  /* ── SIDEBAR: escondida por padrão, desliza ao abrir ── */
+  .sidebar{width:0!important;left:-220px!important;transition:left .28s cubic-bezier(.4,0,.2,1)!important;z-index:200!important;overflow:hidden!important}
+  .sidebar.mobile-open{left:0!important;width:220px!important;box-shadow:6px 0 30px rgba(0,0,0,.5)!important}
+  .sidebar:hover:not(.mobile-open){width:0!important} /* desativa hover no mobile */
+  .sb-label{opacity:1!important;pointer-events:auto!important}
+
+  /* ── MAIN WRAP ── */
   .main-wrap{margin-left:0!important;width:100%!important}
-  .topnav-row1{padding:0 12px!important;flex-wrap:nowrap!important;overflow-x:auto}
+  .main{padding:16px 14px!important}
+
+  /* ── TOPNAV ── */
+  .topnav-row1{padding:0 10px!important;flex-wrap:nowrap!important;overflow:hidden!important;gap:6px!important;min-height:52px}
   .topnav-swatches{display:none!important}
   .nav-tabs{display:none!important}
+  .btn-new{font-size:11px!important;padding:6px 12px!important;white-space:nowrap}
+  .logo span:last-child{display:none!important}
+  .gs-btn{display:none!important}
+
+  /* ── HAMBURGER ── */
   #btnMobileMenu{display:flex!important}
+
+  /* ── MODAIS: bottom sheet no iPhone ── */
+  .modal-overlay{padding:0!important;align-items:flex-end!important}
+  .modal-box{border-radius:20px 20px 0 0!important;max-height:90vh!important;overflow-y:auto!important;max-width:100%!important;width:100%!important}
+  .cmodal-overlay{padding:0!important;align-items:flex-end!important}
+  .cmodal-box{border-radius:20px 20px 0 0!important;max-width:100%!important;width:100%!important;max-height:92vh!important;overflow-y:auto!important}
+
+  /* ── MODAL RECARGA: bottom sheet + cards em coluna ── */
+  #modalRecarga{align-items:flex-end!important;padding:0!important}
+  .recarga-box{border-radius:20px 20px 0 0!important;max-width:100%!important;width:100%!important;max-height:92vh!important;overflow-y:auto!important;padding:24px 20px 40px!important}
+  .recarga-cards{grid-template-columns:1fr!important;gap:8px!important}
+  .recarga-card{padding:14px 12px!important}
+
+  /* ── MODAL PERFIL ── */
+  #userProfileModal{align-items:flex-end!important;padding:0!important}
+  .up-box{max-width:100%!important;border-radius:20px 20px 0 0!important;max-height:92vh!important;overflow-y:auto!important}
+
+  /* ── GRIDS ── */
   .keys-grid{grid-template-columns:1fr!important}
   .state-city-row{grid-template-columns:1fr!important}
   .cmodal-grid{grid-template-columns:1fr!important}
-  .engine-tabs{flex-direction:column!important}
-  .engine-tab{flex:none!important}
   .stats-row{grid-template-columns:repeat(2,1fr)!important}
   .campaigns-grid{grid-template-columns:1fr!important}
   .kanban{grid-template-columns:1fr!important;overflow-x:visible!important}
-  .modal-overlay{padding:0!important;align-items:flex-end!important}
-  .modal-box{border-radius:20px 20px 0 0!important;max-height:92vh!important;overflow-y:auto!important;max-width:100%!important}
-  .cmodal-overlay{padding:0!important;align-items:flex-end!important}
-  .cmodal-box{border-radius:20px 20px 0 0!important;max-width:100%!important;width:100%!important}
-  .pipeline-grid{grid-template-columns:repeat(3,minmax(180px,1fr))!important}
+  .pipeline-grid{grid-template-columns:repeat(2,minmax(160px,1fr))!important;overflow-x:auto!important}
   .mrr-widget{grid-template-columns:repeat(2,1fr)!important}
-  .gs-box{width:95vw!important;max-height:80vh!important}
-  .gs-btn{display:none!important}
-  .btn-new{display:none!important}
-  .logo span:last-child{display:none!important}
-  .up-box{max-width:100%;border-radius:20px 20px 0 0}
-  #userProfileModal{align-items:flex-end;padding:0}
-  .recarga-cards{grid-template-columns:1fr!important}
   .manual-grid{grid-template-columns:1fr!important}
   .clients-grid{grid-template-columns:1fr!important}
   .report-kpis{grid-template-columns:repeat(2,1fr)!important}
+
+  /* ── ENGINE TABS ── */
+  .engine-tabs{flex-direction:column!important}
+  .engine-tab{flex:none!important}
+
+  /* ── GLOBAL SEARCH ── */
+  .gs-box{width:100vw!important;max-width:100%!important;max-height:85vh!important;border-radius:0!important;border-left:none!important;border-right:none!important}
+
+  /* ── FAB bússola: não sobrepõe conteúdo ── */
+  #tourFloatBtn{bottom:80px!important;right:16px!important}
+
+  /* ── TOPNAV user header: compacto ── */
+  #userHeaderInfo .sb-lbl{display:none!important}
 }
+
 @media(max-width:480px){
-  .kanban,.pipeline-grid{grid-template-columns:repeat(2,minmax(180px,1fr))!important;overflow-x:auto!important;padding-bottom:12px!important;width:100%!important}
   .topnav-row1{min-height:48px!important}
   .kpi-card{padding:14px 16px!important}
+  .btn-new{display:flex!important;font-size:10px!important;padding:5px 10px!important}
 }
-#mobileSidebarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:94;backdrop-filter:blur(2px)}
+
+/* ── iOS Safari: safe area para notch e home bar ── */
+@supports(padding-bottom: env(safe-area-inset-bottom)){
+  .modal-box,.cmodal-box,.recarga-box,.up-box{
+    padding-bottom: calc(20px + env(safe-area-inset-bottom))!important
+  }
+}
+
+#mobileSidebarOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199;backdrop-filter:blur(3px)}
 #mobileSidebarOverlay.open{display:block}
-#btnMobileMenu{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:6px;flex-shrink:0;align-items:center;justify-content:center}
+#btnMobileMenu{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:8px;flex-shrink:0;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
+#btnMobileMenu:active{background:var(--s2)}
 
 /* ── ONBOARDING TOUR ── */
 .tour-overlay{position:fixed;inset:0;z-index:99000;pointer-events:none}
@@ -1138,7 +1179,7 @@ function toast(msg, type='info', duration=3500){
 
 <!-- SIDEBAR -->
 <!-- Mobile sidebar overlay -->
-<div id="mobileSidebarOverlay" onclick="toggleMobileSidebar()"></div>
+<!-- mobile sidebar overlay renderizado abaixo -->
 
 <div class="sidebar" id="mainSidebar">
   <div class="sb-item active" id="sb-home" onclick="showPage('pageHome');setSbActive('sb-home')">
@@ -1238,7 +1279,6 @@ function toast(msg, type='info', duration=3500){
     </div>
     <!-- User info + logout -->
     <div id="userHeaderInfo" style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-left:8px;border-left:1px solid var(--border)"></div>
-    <button onclick="openUserProfile()" title="Meu Perfil" style="background:none;border:1px solid var(--border2);border-radius:20px;padding:5px 12px;color:var(--muted2);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;flex-shrink:0" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">👤 Perfil</button>
     <button class="btn-new" onclick="openCampaignModal()" style="flex-shrink:0">+ Campanha</button>
   </div>
 </div>
@@ -1254,17 +1294,7 @@ function toast(msg, type='info', duration=3500){
       <div style="display:flex;align-items:center;gap:12px">
         <div style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace" id="dashGreeting">Carregando...</div>
         <button onclick="localStorage.removeItem('capturo-tour-done');startOnboardingTour()" style="background:none;border:none;cursor:pointer;font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;padding:0 4px" title="Reiniciar tour de onboarding">🧭 Tour</button>
-        <button onclick="toggleCampSelectMode()" id="btnCampSelect" class="btn btn-ghost" style="font-size:11px;padding:6px 14px">☑ Selecionar</button>
         <button class="btn btn-primary" onclick="openCampaignModal()" style="font-size:11px;padding:6px 14px">+ Nova Campanha</button>
-      </div>
-
-      <!-- Barra de seleção múltipla -->
-      <div id="campBulkBar">
-        <span id="campBulkCount" style="font-size:13px;font-weight:700;color:var(--accent);min-width:100px">0 selecionadas</span>
-        <button onclick="deletarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,59,48,.2);color:var(--red);font-size:12px;font-weight:700;cursor:pointer">🗑 Deletar</button>
-        <button onclick="pausarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,149,0,.15);color:var(--orange);font-size:12px;font-weight:700;cursor:pointer">⏸ Pausar</button>
-        <button onclick="ativarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(52,199,89,.15);color:var(--green);font-size:12px;font-weight:700;cursor:pointer">▶ Ativar</button>
-        <button onclick="cancelarSelecaoCampanhas()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;margin-left:auto">✕ Cancelar</button>
       </div>
     </div>
 
@@ -2688,14 +2718,14 @@ function toast(msg, type='info', duration=3500){
   <div class="cmodal-box">
     <div class="cmodal-title">Nova Campanha <span class="cmodal-close" onclick="closeCampaignModal()">✕</span></div>
     <div class="cfield">
-      <label><strong>Mercado</strong></label>
+      <label>Mercado</label>
       <div class="market-toggle">
         <button class="market-btn active" id="btnNacional" onclick="setMarket('nacional')">🇧🇷 Nacional</button>
         <button class="market-btn" id="btnInternacional" onclick="setMarket('internacional')">🌐 Internacional</button>
       </div>
     </div>
     <div class="cfield country-select" id="countrySelect">
-      <label><strong>País</strong></label>
+      <label>País</label>
       <select id="countryDD" onchange="updateCountryUI()">
         <option value="US">🇺🇸 United States ($)</option>
         <option value="UK">🇬🇧 United Kingdom</option>
@@ -2707,13 +2737,13 @@ function toast(msg, type='info', duration=3500){
       <div class="country-note">Leads internacionais — fature em $</div>
     </div>
     <div class="cfield">
-      <label><strong>Nicho</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px">— ordenado por conversão</span></label>
+      <label>Nicho <span style="color:var(--muted2);font-weight:400;font-size:10px">— ordenado por conversão</span></label>
       <select id="nichoDD" onchange="autoFillName()"></select>
     </div>
     <div class="state-city-row">
       <!-- ESTADO -->
       <div class="cfield" style="margin:0">
-        <label><strong>Estado</strong></label>
+        <label>Estado</label>
         <!-- Tier quick buttons -->
         <div class="state-tier-row" id="stateTierRow" style="display:none">
           <button type="button" id="stateBtnGold"   onclick="selectStateTier('gold')"   class="tier-quick-btn">⭐ Alto Pot.</button>
@@ -2724,7 +2754,7 @@ function toast(msg, type='info', duration=3500){
       </div>
       <!-- CIDADE — multi-chip selector -->
       <div class="cfield" style="margin:0">
-        <label><strong>Cidade</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px" id="cityCountLabel"></span></label>
+        <label>Cidade <span style="color:var(--muted2);font-weight:400;font-size:10px" id="cityCountLabel"></span></label>
         <!-- Chip container (replaces <select>) -->
         <div id="cityChipContainer" style="display:none">
           <!-- Quick action buttons -->
@@ -2741,7 +2771,7 @@ function toast(msg, type='info', duration=3500){
       </div>
     </div>
     <div class="cfield" id="neighborhoodRow" style="display:none">
-      <label><strong>Bairros</strong> <span style="color:var(--muted2);font-weight:400;font-size:10px">— escolha bairros de qualquer cidade selecionada</span></label>
+      <label>Bairros <span style="color:var(--muted2);font-weight:400;font-size:10px">— escolha bairros de qualquer cidade selecionada</span></label>
       <!-- Cidade inteira toggle -->
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 10px;background:var(--s2);border-radius:8px;border:1px solid var(--border)">
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:500">
@@ -2766,7 +2796,7 @@ function toast(msg, type='info', duration=3500){
     </div>
     <!-- MODO DE CRIAÇÃO — só aparece quando 2+ cidades selecionadas -->
     <div class="cfield" id="campModeRow" style="display:none">
-      <label><strong>Como criar as campanhas?</strong></label>
+      <label>Como criar as campanhas?</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:12px;background:var(--s2);flex:1;transition:border-color .2s" id="campOptSingle">
           <input type="radio" name="campMode" value="single" checked onchange="updateCampModeUI()">
@@ -2779,7 +2809,7 @@ function toast(msg, type='info', duration=3500){
       </div>
     </div>
     <div class="cfield">
-      <label><strong>Raio de busca</strong></label>
+      <label>Raio de busca</label>
       <select id="radiusDD">
         <option value="2000">2 km / 1.2 mi</option>
         <option value="5000" selected>5 km / 3 mi</option>
@@ -2788,7 +2818,7 @@ function toast(msg, type='info', duration=3500){
       </select>
     </div>
     <div class="cfield">
-      <label><strong>Nome da Campanha</strong></label>
+      <label>Nome da Campanha</label>
       <input type="text" id="campaignNameInput" placeholder="Preenchido automaticamente">
     </div>
     <div class="cmodal-footer">
@@ -3076,116 +3106,6 @@ Object.keys(STATES_US_TIERS).forEach(state => {
   STATES_US[state] = STATES_US_TIERS[state].map(c => c.n);
 });
 
-// ══════════════════════════════════════════
-// INTERNATIONAL COUNTRY DATA
-// ══════════════════════════════════════════
-
-// ── 🇦🇺 AUSTRALIA ──────────────────────────────────────────────
-const STATES_AU_TIERS = {
-  'New South Wales':   [{n:'Sydney',t:'gold'},{n:'Newcastle',t:'gold'},{n:'Wollongong',t:'gold'},{n:'Central Coast',t:'gold'},{n:'Maitland',t:'silver'},{n:'Coffs Harbour',t:'silver'},{n:'Wagga Wagga',t:'silver'},{n:'Albury',t:'silver'},{n:'Tamworth',t:'bronze'},{n:'Orange',t:'bronze'}],
-  'Victoria':          [{n:'Melbourne',t:'gold'},{n:'Geelong',t:'gold'},{n:'Ballarat',t:'gold'},{n:'Bendigo',t:'gold'},{n:'Shepparton',t:'silver'},{n:'Melton',t:'silver'},{n:'Mildura',t:'silver'},{n:'Wodonga',t:'bronze'},{n:'Warrnambool',t:'bronze'}],
-  'Queensland':        [{n:'Brisbane',t:'gold'},{n:'Gold Coast',t:'gold'},{n:'Sunshine Coast',t:'gold'},{n:'Townsville',t:'gold'},{n:'Cairns',t:'silver'},{n:'Toowoomba',t:'silver'},{n:'Mackay',t:'silver'},{n:'Rockhampton',t:'bronze'},{n:'Bundaberg',t:'bronze'}],
-  'Western Australia': [{n:'Perth',t:'gold'},{n:'Mandurah',t:'gold'},{n:'Bunbury',t:'silver'},{n:'Geraldton',t:'silver'},{n:'Kalgoorlie',t:'bronze'},{n:'Albany',t:'bronze'}],
-  'South Australia':   [{n:'Adelaide',t:'gold'},{n:'Mount Gambier',t:'silver'},{n:'Whyalla',t:'silver'},{n:'Murray Bridge',t:'bronze'}],
-  'Tasmania':          [{n:'Hobart',t:'gold'},{n:'Launceston',t:'gold'},{n:'Devonport',t:'silver'},{n:'Burnie',t:'silver'}],
-  'ACT':               [{n:'Canberra',t:'gold'},{n:'Belconnen',t:'gold'},{n:'Tuggeranong',t:'silver'}],
-  'Northern Territory':[{n:'Darwin',t:'gold'},{n:'Alice Springs',t:'silver'}],
-};
-
-// ── 🇵🇹 PORTUGAL ────────────────────────────────────────────────
-const STATES_PT_TIERS = {
-  'Lisboa':          [{n:'Lisboa',t:'gold'},{n:'Sintra',t:'gold'},{n:'Cascais',t:'gold'},{n:'Loures',t:'gold'},{n:'Almada',t:'gold'},{n:'Amadora',t:'silver'},{n:'Oeiras',t:'silver'},{n:'Setúbal',t:'silver'},{n:'Barreiro',t:'bronze'},{n:'Montijo',t:'bronze'}],
-  'Porto':           [{n:'Porto',t:'gold'},{n:'Vila Nova de Gaia',t:'gold'},{n:'Matosinhos',t:'gold'},{n:'Braga',t:'gold'},{n:'Guimarães',t:'silver'},{n:'Barcelos',t:'silver'},{n:'Santo Tirso',t:'bronze'},{n:'Trofa',t:'bronze'}],
-  'Braga':           [{n:'Braga',t:'gold'},{n:'Guimarães',t:'gold'},{n:'Barcelos',t:'silver'},{n:'Famalicão',t:'silver'},{n:'Esposende',t:'bronze'}],
-  'Faro (Algarve)':  [{n:'Faro',t:'gold'},{n:'Portimão',t:'gold'},{n:'Loulé',t:'gold'},{n:'Albufeira',t:'gold'},{n:'Tavira',t:'silver'},{n:'Lagos',t:'silver'},{n:'Olhão',t:'bronze'}],
-  'Aveiro':          [{n:'Aveiro',t:'gold'},{n:'Viseu',t:'silver'},{n:'Ovar',t:'silver'},{n:'Águeda',t:'bronze'}],
-  'Coimbra':         [{n:'Coimbra',t:'gold'},{n:'Figueira da Foz',t:'silver'},{n:'Cantanhede',t:'bronze'}],
-  'Madeira':         [{n:'Funchal',t:'gold'},{n:'Santa Cruz',t:'silver'},{n:'Câmara de Lobos',t:'bronze'}],
-  'Açores':          [{n:'Ponta Delgada',t:'gold'},{n:'Angra do Heroísmo',t:'silver'}],
-};
-
-// ── 🇪🇸 ESPAÑA ──────────────────────────────────────────────────
-const STATES_ES_TIERS = {
-  'Madrid':          [{n:'Madrid',t:'gold'},{n:'Móstoles',t:'gold'},{n:'Alcalá de Henares',t:'gold'},{n:'Fuenlabrada',t:'silver'},{n:'Leganés',t:'silver'},{n:'Getafe',t:'silver'},{n:'Alcorcón',t:'silver'},{n:'Torrejón de Ardoz',t:'bronze'},{n:'Parla',t:'bronze'}],
-  'Cataluña':        [{n:'Barcelona',t:'gold'},{n:'L\'Hospitalet',t:'gold'},{n:'Badalona',t:'gold'},{n:'Terrassa',t:'gold'},{n:'Sabadell',t:'silver'},{n:'Lleida',t:'silver'},{n:'Tarragona',t:'silver'},{n:'Girona',t:'silver'},{n:'Mataró',t:'bronze'}],
-  'Andalucía':       [{n:'Sevilla',t:'gold'},{n:'Málaga',t:'gold'},{n:'Córdoba',t:'gold'},{n:'Granada',t:'gold'},{n:'Almería',t:'silver'},{n:'Jerez de la Frontera',t:'silver'},{n:'Cádiz',t:'silver'},{n:'Huelva',t:'bronze'},{n:'Jaén',t:'bronze'}],
-  'Valencia':        [{n:'Valencia',t:'gold'},{n:'Alicante',t:'gold'},{n:'Elche',t:'gold'},{n:'Castellón',t:'silver'},{n:'Torrent',t:'silver'},{n:'Orihuela',t:'bronze'}],
-  'País Vasco':      [{n:'Bilbao',t:'gold'},{n:'Vitoria-Gasteiz',t:'gold'},{n:'San Sebastián',t:'gold'},{n:'Barakaldo',t:'silver'},{n:'Getxo',t:'silver'}],
-  'Galicia':         [{n:'Vigo',t:'gold'},{n:'A Coruña',t:'gold'},{n:'Ourense',t:'silver'},{n:'Pontevedra',t:'silver'},{n:'Santiago de Compostela',t:'silver'}],
-  'Aragón':          [{n:'Zaragoza',t:'gold'},{n:'Huesca',t:'silver'},{n:'Teruel',t:'bronze'}],
-  'Canarias':        [{n:'Las Palmas',t:'gold'},{n:'Santa Cruz de Tenerife',t:'gold'},{n:'La Laguna',t:'silver'},{n:'Telde',t:'silver'}],
-  'Islas Baleares':  [{n:'Palma',t:'gold'},{n:'Ibiza',t:'gold'},{n:'Manacor',t:'silver'}],
-  'Murcia':          [{n:'Murcia',t:'gold'},{n:'Cartagena',t:'gold'},{n:'Lorca',t:'silver'}],
-};
-
-// ── 🇬🇧 UNITED KINGDOM ──────────────────────────────────────────
-const STATES_UK_TIERS = {
-  'England - London':      [{n:'London',t:'gold'},{n:'Croydon',t:'gold'},{n:'Bromley',t:'gold'},{n:'Ealing',t:'gold'},{n:'Enfield',t:'silver'},{n:'Barnet',t:'silver'},{n:'Brent',t:'silver'},{n:'Lewisham',t:'bronze'},{n:'Southwark',t:'bronze'}],
-  'England - South East':  [{n:'Brighton',t:'gold'},{n:'Southampton',t:'gold'},{n:'Oxford',t:'gold'},{n:'Reading',t:'gold'},{n:'Milton Keynes',t:'silver'},{n:'Portsmouth',t:'silver'},{n:'Guildford',t:'silver'},{n:'Slough',t:'bronze'}],
-  'England - North West':  [{n:'Manchester',t:'gold'},{n:'Liverpool',t:'gold'},{n:'Salford',t:'gold'},{n:'Stockport',t:'silver'},{n:'Bolton',t:'silver'},{n:'Wigan',t:'silver'},{n:'Blackpool',t:'bronze'},{n:'Preston',t:'bronze'}],
-  'England - West Midlands':[{n:'Birmingham',t:'gold'},{n:'Coventry',t:'gold'},{n:'Wolverhampton',t:'gold'},{n:'Solihull',t:'silver'},{n:'Dudley',t:'silver'},{n:'Walsall',t:'bronze'}],
-  'England - Yorkshire':   [{n:'Leeds',t:'gold'},{n:'Sheffield',t:'gold'},{n:'Bradford',t:'gold'},{n:'Hull',t:'silver'},{n:'York',t:'silver'},{n:'Huddersfield',t:'bronze'}],
-  'Scotland':              [{n:'Glasgow',t:'gold'},{n:'Edinburgh',t:'gold'},{n:'Aberdeen',t:'gold'},{n:'Dundee',t:'silver'},{n:'Inverness',t:'silver'},{n:'Perth',t:'bronze'}],
-  'Wales':                 [{n:'Cardiff',t:'gold'},{n:'Swansea',t:'gold'},{n:'Newport',t:'silver'},{n:'Wrexham',t:'silver'},{n:'Barry',t:'bronze'}],
-  'Northern Ireland':      [{n:'Belfast',t:'gold'},{n:'Derry',t:'gold'},{n:'Lisburn',t:'silver'},{n:'Newtownabbey',t:'bronze'}],
-  'England - East':        [{n:'Norwich',t:'gold'},{n:'Ipswich',t:'silver'},{n:'Cambridge',t:'silver'},{n:'Peterborough',t:'silver'},{n:'Luton',t:'bronze'}],
-  'England - South West':  [{n:'Bristol',t:'gold'},{n:'Plymouth',t:'gold'},{n:'Exeter',t:'silver'},{n:'Gloucester',t:'silver'},{n:'Bath',t:'silver'}],
-};
-
-// ── 🇨🇦 CANADA ──────────────────────────────────────────────────
-const STATES_CA_TIERS = {
-  'Ontario':           [{n:'Toronto',t:'gold'},{n:'Ottawa',t:'gold'},{n:'Mississauga',t:'gold'},{n:'Brampton',t:'gold'},{n:'Hamilton',t:'silver'},{n:'London',t:'silver'},{n:'Markham',t:'silver'},{n:'Vaughan',t:'silver'},{n:'Kitchener',t:'bronze'},{n:'Windsor',t:'bronze'}],
-  'British Columbia':  [{n:'Vancouver',t:'gold'},{n:'Surrey',t:'gold'},{n:'Burnaby',t:'gold'},{n:'Richmond',t:'gold'},{n:'Kelowna',t:'silver'},{n:'Abbotsford',t:'silver'},{n:'Coquitlam',t:'silver'},{n:'Victoria',t:'silver'},{n:'Nanaimo',t:'bronze'}],
-  'Alberta':           [{n:'Calgary',t:'gold'},{n:'Edmonton',t:'gold'},{n:'Red Deer',t:'silver'},{n:'Lethbridge',t:'silver'},{n:'St. Albert',t:'silver'},{n:'Medicine Hat',t:'bronze'}],
-  'Quebec':            [{n:'Montreal',t:'gold'},{n:'Quebec City',t:'gold'},{n:'Laval',t:'gold'},{n:'Gatineau',t:'gold'},{n:'Longueuil',t:'silver'},{n:'Sherbrooke',t:'silver'},{n:'Saguenay',t:'bronze'},{n:'Lévis',t:'bronze'}],
-  'Manitoba':          [{n:'Winnipeg',t:'gold'},{n:'Brandon',t:'silver'},{n:'Steinbach',t:'bronze'}],
-  'Saskatchewan':      [{n:'Saskatoon',t:'gold'},{n:'Regina',t:'gold'},{n:'Prince Albert',t:'bronze'}],
-  'Nova Scotia':       [{n:'Halifax',t:'gold'},{n:'Sydney',t:'silver'},{n:'Truro',t:'bronze'}],
-  'New Brunswick':     [{n:'Moncton',t:'gold'},{n:'Fredericton',t:'silver'},{n:'Saint John',t:'silver'}],
-};
-
-// ── NEIGHBORHOODS INTERNACIONAIS ─────────────────────────────────
-const NEIGHBORHOODS_AU = {
-  'Sydney':     {gold:['CBD','Bondi','Surry Hills','Newtown','Mosman','Paddington','Glebe'],silver:['Parramatta','Chatswood','Manly','Ultimo','Redfern'],bronze:['Blacktown','Penrith','Liverpool']},
-  'Melbourne':  {gold:['CBD','Fitzroy','Richmond','St Kilda','South Yarra','Toorak','Carlton'],silver:['Northcote','Brunswick','Prahran','Hawthorn'],bronze:['Footscray','Sunshine','Dandenong']},
-  'Brisbane':   {gold:['CBD','South Bank','New Farm','Fortitude Valley','Paddington','West End'],silver:['Spring Hill','Milton','Woolloongabba'],bronze:['Ipswich','Logan','Caboolture']},
-  'Perth':      {gold:['CBD','Fremantle','Subiaco','Cottesloe','Leederville','Northbridge'],silver:['Victoria Park','Mount Lawley','Scarborough'],bronze:['Midland','Armadale','Rockingham']},
-  'Adelaide':   {gold:['CBD','Glenelg','North Adelaide','Unley','Norwood'],silver:['Port Adelaide','Campbelltown'],bronze:['Elizabeth','Salisbury']},
-  'Canberra':   {gold:['City','Braddon','Kingston','Manuka','Barton'],silver:['Woden','Belconnen'],bronze:['Tuggeranong','Gungahlin']},
-};
-
-const NEIGHBORHOODS_PT = {
-  'Lisboa':     {gold:['Chiado','Bairro Alto','Príncipe Real','Alfama','Baixa','Avenidas Novas','Campo de Ourique'],silver:['Mouraria','Intendente','Arroios','Alvalade'],bronze:['Olivais','Marvila','Chelas']},
-  'Porto':      {gold:['Foz','Boavista','Bonfim','Cedofeita','Baixa','Miragaia','Massarelos'],silver:['Lordelo','Campanhã','Paranhos'],bronze:['Ramalde','Aldoar','Nevogilde']},
-  'Funchal':    {gold:['Sé','Santo António','Santa Luzia'],silver:['Monte','São Martinho'],bronze:['Câmara de Lobos']},
-  'Faro':       {gold:['Centro Histórico','Baixa de Faro'],silver:['Montenegro','Gambelas'],bronze:['São Pedro','Santa Bárbara de Nexe']},
-};
-
-const NEIGHBORHOODS_ES = {
-  'Madrid':     {gold:['Salamanca','Chamberí','Retiro','Centro','Chamartín','Moncloa'],silver:['Hortaleza','Barajas','Fuencarral','Moratalaz'],bronze:['Vallecas','Carabanchel','Villaverde']},
-  'Barcelona':  {gold:['Eixample','Gràcia','Sarrià-Sant Gervasi','Les Corts','Sant Martí'],silver:['Horta-Guinardó','Nou Barris','Sants-Montjuïc'],bronze:['Nou Barris','Sant Andreu']},
-  'Sevilla':    {gold:['Triana','Santa Cruz','Centro','Los Remedios'],silver:['Nervión','San Pablo'],bronze:['Bellavista','Torreblanca']},
-  'Valencia':   {gold:['L\'Eixample','Russafa','El Carmen','Pla del Real'],silver:['Benimaclet','Patraix'],bronze:['Quatre Carreres','Poblats Marítims']},
-  'Málaga':     {gold:['Centro','El Limonar','Pedregalejo','La Malagueta'],silver:['Cruz de Humilladero','Campanillas'],bronze:['Palma-Palmilla','Churriana']},
-};
-
-const NEIGHBORHOODS_UK = {
-  'London':     {gold:['Mayfair','Chelsea','Kensington','Notting Hill','Shoreditch','Soho','Covent Garden','Knightsbridge'],silver:['Islington','Hackney','Brixton','Peckham','Clapham'],bronze:['Croydon','Ilford','Romford','Wembley']},
-  'Manchester': {gold:['Northern Quarter','Ancoats','Spinningfields','Castlefield','Didsbury'],silver:['Fallowfield','Withington','Chorlton'],bronze:['Wythenshawe','Moss Side','Gorton']},
-  'Birmingham': {gold:['Jewellery Quarter','Digbeth','Moseley','Edgbaston','Harborne'],silver:['Erdington','Selly Oak','Kings Heath'],bronze:['Handsworth','Sparkbrook','Tyseley']},
-  'Edinburgh':  {gold:['New Town','Old Town','Marchmont','Stockbridge','Bruntsfield'],silver:['Leith','Morningside','Portobello'],bronze:['Craigmillar','Gilmerton','Wester Hailes']},
-  'Glasgow':    {gold:['West End','Merchant City','Finnieston','Shawlands'],silver:['Dennistoun','Partick','Mount Florida'],bronze:['Parkhead','Govan','Pollok']},
-};
-
-const NEIGHBORHOODS_CA = {
-  'Toronto':    {gold:['Downtown','Yorkville','King West','Distillery District','Leslieville','The Annex','Rosedale'],silver:['Danforth','Junction','Little Italy','Kensington Market'],bronze:['Scarborough','Etobicoke','North York']},
-  'Vancouver':  {gold:['Downtown','Yaletown','Gastown','Kitsilano','West End','Coal Harbour'],silver:['Commercial Drive','Main Street','Mount Pleasant'],bronze:['Surrey','Burnaby','Richmond']},
-  'Montreal':   {gold:['Plateau-Mont-Royal','Westmount','Mile End','Old Montreal','NDG'],silver:['Rosemont','Verdun','Côte-des-Neiges'],bronze:['Montréal-Nord','Saint-Laurent','LaSalle']},
-  'Calgary':    {gold:['Beltline','Kensington','Inglewood','Mission','Bridgeland'],silver:['Marda Loop','Sunalta','Capitol Hill'],bronze:['Forest Lawn','Martindale','Falconridge']},
-  'Ottawa':     {gold:['Centretown','Glebe','Westboro','ByWard Market'],silver:['Alta Vista','Hintonburg','Vanier'],bronze:['Orléans','Barrhaven','Kanata']},
-  'Edmonton':   {gold:['Downtown','Whyte Avenue','Glenora','Oliver'],silver:['Strathcona','Garneau','Queen Alexandra'],bronze:['Millwoods','Castledowns','Beverly']},
-};
-
 const BIOLINKS=[
   // ── PRINCIPAIS (alto volume) ──
   {domain:'linktr.ee',       label:'Linktree',    icon:'🌳', on:true,  cat:'principal'},
@@ -3412,44 +3332,23 @@ function populateStates(){
     });
     dd.appendChild(bGroup);
   } else {
-    // Internacional — usa dados do país selecionado
-    const country = (document.getElementById('countryDD')?.value) || 'US';
-    const countryTiers = {
-      'US': STATES_US_TIERS,
-      'AU': STATES_AU_TIERS,
-      'PT': STATES_PT_TIERS,
-      'ES': STATES_ES_TIERS,
-      'UK': STATES_UK_TIERS,
-      'CA': STATES_CA_TIERS,
-    }[country] || STATES_US_TIERS;
-
-    // Para US mantém a lógica de tiers separados
-    if(country === 'US'){
-      const goldStates = STATES_US_ORDER.filter(s=>s.tier==='gold');
-      const silverStates = STATES_US_ORDER.filter(s=>s.tier==='silver');
-      const gGroup=document.createElement('optgroup');gGroup.label='⭐ Alto potencial (PIB/Renda)';
-      goldStates.forEach(s=>{
-        const o=document.createElement('option');o.value=s.state;
-        o.textContent='🥇 '+s.state;o.style.fontWeight='700';o.style.color='#f5b833';
-        gGroup.appendChild(o);
-      });
-      dd.appendChild(gGroup);
-      const sGroup=document.createElement('optgroup');sGroup.label='Médio potencial';
-      silverStates.forEach(s=>{
-        const o=document.createElement('option');o.value=s.state;
-        o.textContent='◈ '+s.state;o.style.fontWeight='600';
-        sGroup.appendChild(o);
-      });
-      dd.appendChild(sGroup);
-    } else {
-      // Para outros países — popula direto por estado/região
-      Object.keys(countryTiers).forEach(state=>{
-        const o=document.createElement('option');
-        o.value=state;
-        o.textContent=state;
-        dd.appendChild(o);
-      });
-    }
+    // US states — ordered by wealth tier
+    const goldStates = STATES_US_ORDER.filter(s=>s.tier==='gold');
+    const silverStates = STATES_US_ORDER.filter(s=>s.tier==='silver');
+    const gGroup=document.createElement('optgroup');gGroup.label='⭐ Alto potencial (PIB/Renda)';
+    goldStates.forEach(s=>{
+      const o=document.createElement('option');o.value=s.state;
+      o.textContent='🥇 '+s.state;o.style.fontWeight='700';o.style.color='#f5b833';
+      gGroup.appendChild(o);
+    });
+    dd.appendChild(gGroup);
+    const sGroup=document.createElement('optgroup');sGroup.label='Médio potencial';
+    silverStates.forEach(s=>{
+      const o=document.createElement('option');o.value=s.state;
+      o.textContent='◈ '+s.state;o.style.fontWeight='600';
+      sGroup.appendChild(o);
+    });
+    dd.appendChild(sGroup);
   }
   $('cityDD').innerHTML='<option value="">Selecione o estado</option>';
   const ft=$('cityFreeText');if(ft){ft.style.display='none';ft.value='';}
@@ -3487,16 +3386,7 @@ function loadCities(){
   if(currentMarket==='nacional'){
     tiers = STATES_BR_TIERS[state]||[];
   } else {
-    const country = (document.getElementById('countryDD')?.value) || 'US';
-    const countryTiers = {
-      'US': STATES_US_TIERS,
-      'AU': STATES_AU_TIERS,
-      'PT': STATES_PT_TIERS,
-      'ES': STATES_ES_TIERS,
-      'UK': STATES_UK_TIERS,
-      'CA': STATES_CA_TIERS,
-    }[country] || STATES_US_TIERS;
-    tiers = countryTiers[state]||[];
+    tiers = STATES_US_TIERS[state]||[];
   }
   window._cityChipsData = tiers;
   renderCityChips();
@@ -3726,8 +3616,7 @@ function renderCampaignsList(){
     const statusText=isDisabled?'Pausada':'● Ativa';
     const disabledClass=isDisabled?'camp-disabled':'';
     const clickAction=isDisabled?'':'openCampaign(\'' + c.id + '\')';
-    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" data-camp-id="${c.id}" onclick="${_campSelectMode?'':'openCampaign(\''+c.id+'\')'}">
-      <input type="checkbox" class="camp-select-cb" onclick="event.stopPropagation();toggleCampSelection('${c.id}',this)" ${_campSelected&&_campSelected.has(c.id)?'checked':''}>
+    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" onclick="${clickAction}">
       <div class="cc-header">
         <div><div class="cc-name">${c.name}</div><div class="cc-market">${flag} ${c.city}${c.state?', '+c.state:''}</div></div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
@@ -3808,7 +3697,7 @@ function openCampaign(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   $('pageCampaign').classList.add('active');
   const nb = c.neighborhood ? ` ➔ ${c.neighborhood}` : '';
-  $('campaignInfoBar').innerHTML=`Campanha: <strong>${escHtml(c.name)}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+escHtml(c.country)}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${escHtml(c.nicho)}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
+  $('campaignInfoBar').innerHTML=`Campanha: <strong>${c.name}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+c.country}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${c.nicho}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
   renderAll();renderCampaignsList();
 }
 function saveCampaigns(){
@@ -6465,39 +6354,27 @@ function deduplicateLeads(newLeads){
 // ══════════════════════════════════════════
 // GOOGLE SHEETS
 // ══════════════════════════════════════════
-const SHEETS_CONFIG={
-  spreadsheetId:'1l8iLal7PL5PzCDQrh22ccMIgvO565AgldEh4tQwggDY',
-  clientEmail:'id-prospect-radar@prospeccao-leads-490403.iam.gserviceaccount.com',
-  privateKey:`-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC6RVB8m3aSDO/E\n2TOeLY3WTPo8iD6w8OM20PRKFV20BhvhGLtLhFhgMBb6tRwSjLoXzFEYZ/YuxB8f\nSNUOBSEQw6u0X4kLIGfw/CR0dV56cAXBrLf0O5NaKgCkY5VtszqqkrE27rDe/QWQ\n43Rz4HoOGBXCXjRfKR6SBQoXLByl8oZgSxcjDaahV94UaHW8EjXwXtNylE4t2aRd\nGDWrPHKKvWIeSssJs94GL7Rj/XAezfboU+/a5/3bbfLMGUyzYyYkWJrsDO0zT1MX\nc6g/86VB2tRt+9h6/N3vCEx5NoXd/q6LikDS/N5yKq5pqacF/fRWiMKFPLdENYiZ\n5fRy27bpAgMBAAECggEABGZQht5GYLlaO81s5Mt3ytF2ceuC2fdmFflGHoxgtpac\nngimrb2WJohF2q1gYUVAiTRdeu5UocXzY/h6mBNZI5+p8n1sY0bbxi6ADyIis2I/\nhVw2uZN0ZVAriC3z+k2VjMoPwS0sl9ptXw/mKo9x5Lllgvnhycvj8TG8JPrW2oW/\nWA5Uzmgu+3iMTf576WwqKia56proActAqnQ0PuXd2b58vbiay+jXdC8FzZvTdyTp\nxsBggfwWUmpTYmaWXlrqhFXOe8179CrGPgECgZVLu7uQF5z486NemrjXo/nAw2Th\n6xAYnFBhP0uBR64Vp/kxBL9W2ilqL5EMVQJtXl2KEwKBgQDgg5mOas3O0vshjO0M\nnwEEEGU9WIQtvti+Mu1/pW5Lmn54v6PiOg5RebeyTgJ3ahm47vNe1JTvtqu4vfu/\ntHY5M1b76jbggNod1RCNyJ8fdvWaAlAdyC8nkY5gIcSiWRnK2cZK7+OLJoc+MRuz\nJ5TngCHmqBl8xfKYu+ZR6L6RewKBgQDUZLifvr1KJ/nHNKgxrXweltL7Ox5ML+hJ\nUw2mC/ueGkz6Cdl32Csaf+ujJH1/cF4oyLP9co9P/cQB5NHUQuMwfAT207ZClHK0\nKy0LigXo/LrjI06gjOafUBQSrFy2wo5bIlM1wpCpyAs5DZ9mSM6Ms5dUzgQ3vAZN\n1MFRidkR6wKBgCO5TOm4XN8X+xWvkth7RHIdGb7VItMUlvBMsjWpYQ9umckk1TLe\nAgE82NnqR8Iwg79FZjwknz41VsWilTg/wr//R0v2TJ0UY6Bzkpq83XToPNQwogbb\nH4WwR3NMbDlY7B224TJzUUWG7+YZckrjdXIQlVRaUxPje2KKI2/NFOWZAoGAZn58\ngco/+ms0JCeLCv4XKYPLKKWsx0NPKyNDMOATeoZioz7hjO3qTw1wHvha/4awSaoh\nAauo8Qca8XcEsxPcIueWVa5xA8wzVjKHuEvQ8lATt8ywAtY77KFuLlyzGRbmL6Bu\n20CbIvOARvYF+AwmcMuxuaD5dBPuTtzetYR6FiUCgYA0KsjjAYCQQzea+LGS8KXT\nrSNvaDtubCKDSGnHqPVXa1VrAPOHjIZA4GciGAel144p9Rr2mq1TaQc/6cpZd/Vl\ni4zkbY/izmVqaGT7U2UwltXFy8yXG2bOQ5LfLqWvXEMmJly/nV+sz7+v3TIiL5x7\n/zPzVPurUNOiHQkbL9nrRQ==\n-----END PRIVATE KEY-----\n`
-};
-async function getAccessToken(){
-  const now=Math.floor(Date.now()/1000);
-  const header=btoa(JSON.stringify({alg:'RS256',typ:'JWT'})).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const payload=btoa(JSON.stringify({iss:SHEETS_CONFIG.clientEmail,scope:'https://www.googleapis.com/auth/spreadsheets',aud:'https://oauth2.googleapis.com/token',exp:now+3600,iat:now})).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const signingInput=header+'.'+payload;
-  const pemBody=SHEETS_CONFIG.privateKey.replace(/-----BEGIN PRIVATE KEY-----/g,'').replace(/-----END PRIVATE KEY-----/g,'').replace(/\n/g,'');
-  const binaryDer=Uint8Array.from(atob(pemBody),c=>c.charCodeAt(0));
-  const cryptoKey=await crypto.subtle.importKey('pkcs8',binaryDer.buffer,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);
-  const sig=await crypto.subtle.sign('RSASSA-PKCS1-v1_5',cryptoKey,new TextEncoder().encode(signingInput));
-  const sigB64=btoa(String.fromCharCode(...new Uint8Array(sig))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const jwt=signingInput+'.'+sigB64;
-  const resp=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`});
-  const data=resp;
-  if(!data.access_token)throw new Error('Token error: '+JSON.stringify(data));
-  return data.access_token;
+// ── Google Sheets — via Edge Function segura ──────────────────────
+// A chave privada foi movida para o servidor (Supabase Edge Function).
+// O app.html não contém mais nenhuma credencial do Google.
+const SHEETS_SPREADSHEET_ID = '1l8iLal7PL5PzCDQrh22ccMIgvO565AgldEh4tQwggDY';
+
+async function _sheetsCall(action, sheetName, rows){
+  const body = { action, spreadsheetId: SHEETS_SPREADSHEET_ID };
+  if(sheetName) body.sheetName = sheetName;
+  if(rows)      body.rows = rows;
+  const r = await fetch(`${SUPABASE_URL}/functions/v1/google-sheets`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if(!r.ok){
+    const err = await r.text();
+    throw new Error(`google-sheets EF ${r.status}: ${err}`);
+  }
+  return r.json();
 }
-// ── Google Sheets helpers ─────────────────────────────────────
-async function _ensureSheet(token,sid,name){
-  const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}`,{headers:{Authorization:`Bearer ${token}`}});
-  const d=await r.json();
-  if(!d.sheets?.find(s=>s.properties.title===name))
-    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}:batchUpdate`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({requests:[{addSheet:{properties:{title:name}}}]})});
-}
-async function _writeSheet(token,sid,name,rows){
-  const range=`'${name}'!A1`;
-  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}/values/${encodeURIComponent(range)}:clear`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'}});
-  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sid}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({values:rows})});
-}
+
 const _HEADERS=['Campanha','Nome','Endereço','Temperatura','Score','Website','Bio Link','Telefone','Email','Email OK','Avaliação','Reviews','Score Site','Problemas','Fonte','Status','Notas','Atualizado'];
 function _row(l,camp){return[camp||'',l.name||'',l.formatted_address||'',l.t||'',l.score||'',l.website||'',l.bioUrl||'',l.formatted_phone_number||'',l.email||'',l.emailVerified?'Sim':'Não',l.rating||'',l.user_ratings_total||'',l.siteScore||'',(l.siteIssues||[]).join(' | '),l.source||'',l.status||'new',(l.notes||'').replace(/\n/g,' '),new Date().toLocaleString('pt-BR')];}
 
@@ -6508,11 +6385,9 @@ async function syncToSheets(silent=false){
   const statusEl=$('sheetsStatus');
   if(!silent){statusEl.className='status-pill pill-idle';statusEl.textContent='⏳ Sincronizando...';setStat('<span class="spinner"></span>Salvando no Sheets...');}
   try{
-    const token=await getAccessToken();
     const name=c.name.replace(/['"\\]/g,'').substring(0,90);
-    await _ensureSheet(token,SHEETS_CONFIG.spreadsheetId,name);
-    await _writeSheet(token,SHEETS_CONFIG.spreadsheetId,name,[_HEADERS.slice(1),...leads.map(l=>_row(l,c.name).slice(1))]);
-    syncAllToSheets(token,true);
+    await _sheetsCall('write', name, [_HEADERS.slice(1),...leads.map(l=>_row(l,c.name).slice(1))]);
+    syncAllToSheets(null,true);
     if(!silent){statusEl.className='status-pill pill-ok';statusEl.textContent=`✓ ${leads.length} salvos`;setStat(`✓ ${leads.length} leads no Google Sheets!`);}
     else{if(statusEl)statusEl.className='status-pill pill-ok',statusEl.textContent='✓ auto-salvo';}
   }catch(e){
@@ -6521,12 +6396,7 @@ async function syncToSheets(silent=false){
       statusEl.className='status-pill pill-err';
       statusEl.textContent='✗ Erro Sheets';
       setStat('✗ Sheets: '+e.message);
-      // Mensagem de erro mais clara para o usuário
-      if(e.message&&e.message.includes('Token error')){
-        toast('❌ Erro de autenticação com o Google Sheets. Verifique se a Service Account ainda é válida.','error',8000);
-      } else {
-        toast('❌ Erro ao salvar no Sheets: '+e.message,'error',6000);
-      }
+      toast('❌ Erro ao salvar no Sheets: '+e.message,'error',6000);
     }
   }
 }
@@ -6535,14 +6405,10 @@ async function syncAllToSheets(tokenOrNull=null,silent=false){
   const allLeads=campaigns.flatMap(c=>(c.leads||[]).map(l=>_row(l,c.name)));
   if(!allLeads.length)return;
   try{
-    const token=tokenOrNull||await getAccessToken();
-    await _ensureSheet(token,SHEETS_CONFIG.spreadsheetId,'_BACKUP');
-    await _writeSheet(token,SHEETS_CONFIG.spreadsheetId,'_BACKUP',[_HEADERS,...allLeads]);
+    await _sheetsCall('writeBackup', null, [_HEADERS,...allLeads]);
     if(!silent)toast(`✓ Backup: ${allLeads.length} leads de ${campaigns.length} campanhas!`,'success');
   }catch(e){if(!silent)toast('Erro backup: '+e.message,'error');}
 }
-
-
 
 async function loadFromSheets(){
   if(!activeCampaignId){toast('Abra uma campanha primeiro!','warn');return;}
@@ -6550,15 +6416,10 @@ async function loadFromSheets(){
   if(!c){return;}
   toast('Carregando dados do Sheets...','info');
   try{
-    const token=await getAccessToken();
     const sheetName=c.name.replace(/['"\\]/g,'').substring(0,90);
-    const range=encodeURIComponent(`'${sheetName}'!A1:Z1000`);
-    const resp=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEETS_CONFIG.spreadsheetId}/values/${range}`,{
-      headers:{Authorization:`Bearer ${token}`}
-    });
-    if(!resp.ok){toast('Aba não encontrada no Sheets. Sincronize primeiro.','warn');return;}
-    const data=resp;
-    const rows=data.values||[];
+    const result = await _sheetsCall('read', sheetName, null);
+    const data = result.data;
+    const rows = data?.values || [];
     if(rows.length<2){toast('Sem dados no Sheets para esta campanha.','info');return;}
     const headers=rows[0];
     const idx={};
@@ -6733,21 +6594,9 @@ function loadNeighborhoods(){
   // Agregar bairros de TODAS as cidades selecionadas
   const chips = [];
   allCities.forEach(city => {
-    let data;
-    if(currentMarket === 'internacional'){
-      const country = (document.getElementById('countryDD')?.value) || 'US';
-      const nbByCountry = {
-        'US': NEIGHBORHOODS_US,
-        'AU': NEIGHBORHOODS_AU,
-        'PT': NEIGHBORHOODS_PT,
-        'ES': NEIGHBORHOODS_ES,
-        'UK': NEIGHBORHOODS_UK,
-        'CA': NEIGHBORHOODS_CA,
-      };
-      data = (nbByCountry[country]||NEIGHBORHOODS_US)[city];
-    } else {
-      data = NEIGHBORHOODS[city];
-    }
+    const data = currentMarket === 'internacional'
+      ? NEIGHBORHOODS_US[city]
+      : NEIGHBORHOODS[city];
     if(!data) return;
     const label = allCities.length > 1 ? city : null; // label de cidade só quando multi-cidade
     (data.gold||[]).forEach(n   => chips.push({name:n, tier:'gold',   city: label}));
@@ -6938,7 +6787,7 @@ function showPage(id){
         banner.style.background='var(--green-bg)';
         banner.style.borderColor='var(--green-b)';
         banner.style.color='var(--green)';
-        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${escHtml(c.name)}</strong> — os leads serão adicionados aqui</span>`;
+        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${c.name}</strong> — os leads serão adicionados aqui</span>`;
       } else if(campaigns.length===1){
         // Auto-seleciona se só tem uma
         activeCampaignId=campaigns[0].id;
@@ -6947,7 +6796,7 @@ function showPage(id){
         banner.style.background='var(--green-bg)';
         banner.style.borderColor='var(--green-b)';
         banner.style.color='var(--green)';
-        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${escHtml(campaigns[0].name)}</strong> — os leads serão adicionados aqui</span>`;
+        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${campaigns[0].name}</strong> — os leads serão adicionados aqui</span>`;
       } else {
         banner.style.display='flex';
         banner.style.background='var(--volcano-bg)';
@@ -9252,18 +9101,6 @@ function guiaScroll(sectionId){
       syncAllToSheets(null,true);
   },5*60*1000);
 
-  // ── Auto-save Supabase a cada 2 minutos ──
-  setInterval(async ()=>{
-    if(typeof currentUser==='undefined'||!currentUser)return;
-    const totalLeads=campaigns.reduce((s,c)=>s+(c.leads||[]).length,0);
-    if(totalLeads>0){
-      try{
-        await saveToSupabase();
-        console.log('[CAPTURO] Auto-save nuvem OK —',totalLeads,'leads');
-      }catch(e){ console.warn('[CAPTURO] Auto-save erro:',e.message); }
-    }
-  },2*60*1000);
-
   // ── Backup ao fechar a aba ──
   window.addEventListener('beforeunload',()=>{
     try{localStorage.setItem('pr6',JSON.stringify(campaigns));}catch(e){}
@@ -9637,24 +9474,20 @@ function updateUserHeader(){
   if(!el || !currentUser) return;
   const meta = currentUser.user_metadata || {};
   const name = meta.name || currentUser.email.split('@')[0];
-  const initial = name.charAt(0).toUpperCase();
+  // Leads = créditos restantes (carregados do Supabase via loadLeadsProfile)
   const restantes = leadsRestantes();
-  // Get saved avatar from localStorage cache (set when photo is uploaded)
-  const avatarUrl = localStorage.getItem('capturo-avatar-'+currentUser.id) || '';
-  const avatarStyle = avatarUrl
-    ? `background-image:url(${avatarUrl});background-size:cover;background-position:center;`
-    : `background:linear-gradient(135deg,var(--accent),#0056cc);`;
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
+      <!-- Leads badge -->
       <div id="leadsBadge" title="${restantes} leads restantes de ${_leadsProfile.sinais_limit}" onclick="abrirModalRecarga()" style="display:flex;align-items:center;gap:5px;background:var(--accent-bg);border:1px solid rgba(0,122,255,.2);border-radius:20px;padding:3px 10px 3px 7px;cursor:pointer">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><circle cx="12" cy="12" r="3" fill="var(--accent)"/><circle cx="12" cy="12" r="7" stroke="var(--accent)" stroke-width="1.5" opacity=".4" fill="none"/><circle cx="12" cy="12" r="11" stroke="var(--accent)" stroke-width="1" opacity=".2" fill="none"/></svg>
         <span class="sb-num" style="font-size:11px;font-weight:700;color:var(--accent);font-family:'IBM Plex Mono',monospace">${restantes}</span>
         <span class="sb-lbl" style="font-size:10px;color:var(--muted2)">Leads</span>
       </div>
-      <!-- Avatar circular clicável -->
-      <div id="topnavAvatar" onclick="openUserProfile()" title="${name} — Ver Perfil" style="width:30px;height:30px;border-radius:50%;${avatarStyle}display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;cursor:pointer;border:2px solid rgba(255,255,255,.15);transition:border-color .2s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='rgba(255,255,255,.15)'">${avatarUrl?'':initial}</div>
-      <button onclick="openUserProfile()" style="background:none;border:1px solid var(--border2);border-radius:20px;padding:4px 12px;color:var(--muted2);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">Perfil</button>
-      <button onclick="doSignOut()" title="Sair" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:13px;padding:2px 4px;border-radius:4px;line-height:1" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">✕</button>
+      <!-- Avatar + nome -->
+      <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#0056cc);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">${name.charAt(0).toUpperCase()}</div>
+      <span style="font-size:11px;color:var(--muted2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      <button onclick="doSignOut()" title="Sair" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:12px;padding:2px 4px;border-radius:4px;line-height:1" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted2)'">✕</button>
     </div>`;
 }
 
@@ -10653,103 +10486,7 @@ window._postAuthInit = function(){
   try{ if(typeof renderDashboard==='function') renderDashboard(); }catch(e){}
   try{ if(typeof maybeStartTour==='function') maybeStartTour(); }catch(e){}
   try{ if(typeof updateCreditsBadge==='function') updateCreditsBadge(); }catch(e){}
-  try{ carregarAvatarTopnav(); }catch(e){}
 };
-
-// ── CARREGAR AVATAR NO TOPNAV ─────────────────────────────────
-async function carregarAvatarTopnav(){
-  const sb=getSupabase();
-  if(!sb||!currentUser)return;
-  // Primeiro tenta o cache local (instantâneo)
-  const cached=localStorage.getItem('capturo-avatar-'+currentUser.id);
-  if(cached) _aplicarAvatarEmTudo(cached);
-  // Depois busca do banco para sincronizar
-  try{
-    const{data}=await sb.from('profiles').select('avatar_url').eq('id',currentUser.id).single();
-    if(data?.avatar_url){
-      localStorage.setItem('capturo-avatar-'+currentUser.id, data.avatar_url);
-      _aplicarAvatarEmTudo(data.avatar_url);
-    }
-  }catch(e){}
-}
-
-function _aplicarAvatarEmTudo(base64){
-  // Topnav avatar
-  const topAv=document.getElementById('topnavAvatar');
-  if(topAv){topAv.style.backgroundImage=`url(${base64})`;topAv.style.backgroundSize='cover';topAv.style.backgroundPosition='center';topAv.textContent='';}
-  // Modal perfil avatar
-  const av=document.getElementById('upAvatar');
-  if(av){av.style.backgroundImage=`url(${base64})`;av.style.backgroundSize='cover';av.style.backgroundPosition='center';av.textContent='';}
-}
-
-// ── SELEÇÃO MÚLTIPLA DE CAMPANHAS ────────────────────────────
-let _campSelectMode=false;
-let _campSelected=new Set();
-
-function toggleCampSelectMode(){
-  _campSelectMode=!_campSelectMode;
-  _campSelected.clear();
-  const grid=document.getElementById('campaignsGrid');
-  const btn=document.getElementById('btnCampSelect');
-  const bar=document.getElementById('campBulkBar');
-  if(grid) grid.classList.toggle('camp-select-mode',_campSelectMode);
-  if(btn){ btn.textContent=_campSelectMode?'✕ Cancelar Seleção':'☑ Selecionar'; btn.style.background=_campSelectMode?'rgba(255,59,48,.15)':''; btn.style.color=_campSelectMode?'var(--red)':''; }
-  if(bar) bar.classList.toggle('open',_campSelectMode);
-  atualizarBulkCamp();
-}
-
-function cancelarSelecaoCampanhas(){
-  _campSelectMode=false;
-  _campSelected.clear();
-  const grid=document.getElementById('campaignsGrid');
-  const btn=document.getElementById('btnCampSelect');
-  const bar=document.getElementById('campBulkBar');
-  if(grid) grid.classList.remove('camp-select-mode');
-  if(btn){ btn.textContent='☑ Selecionar'; btn.style.background=''; btn.style.color=''; }
-  if(bar) bar.classList.remove('open');
-}
-
-function toggleCampSelection(id,cb){
-  if(_campSelected.has(id)){_campSelected.delete(id);}else{_campSelected.add(id);}
-  // Atualiza visual do card
-  const card=document.querySelector(`.campaign-card[data-camp-id="${id}"]`);
-  if(card) card.classList.toggle('selected-camp',_campSelected.has(id));
-  atualizarBulkCamp();
-}
-
-function atualizarBulkCamp(){
-  const el=document.getElementById('campBulkCount');
-  if(el) el.textContent=`${_campSelected.size} selecionada${_campSelected.size!==1?'s':''}`;
-}
-
-function deletarCampanhasSelecionadas(){
-  if(!_campSelected.size){toast('Selecione pelo menos uma campanha.','warn');return;}
-  if(!confirm(`Deletar ${_campSelected.size} campanha(s) e todos os seus leads? Essa ação não pode ser desfeita.`))return;
-  _campSelected.forEach(id=>{
-    campaigns=campaigns.filter(c=>c.id!==id);
-    if(activeCampaignId===id) activeCampaignId=null;
-  });
-  saveCampaigns();
-  cancelarSelecaoCampanhas();
-  renderCampaignsList();
-  toast(`🗑 ${_campSelected.size} campanha(s) deletada(s).`,'ok');
-}
-
-function pausarCampanhasSelecionadas(){
-  if(!_campSelected.size){toast('Selecione pelo menos uma campanha.','warn');return;}
-  _campSelected.forEach(id=>{const c=campaigns.find(x=>x.id===id);if(c)c.disabled=true;});
-  saveCampaigns();renderCampaignsList();
-  toast(`⏸ ${_campSelected.size} campanha(s) pausada(s).`,'ok');
-  cancelarSelecaoCampanhas();
-}
-
-function ativarCampanhasSelecionadas(){
-  if(!_campSelected.size){toast('Selecione pelo menos uma campanha.','warn');return;}
-  _campSelected.forEach(id=>{const c=campaigns.find(x=>x.id===id);if(c)c.disabled=false;});
-  saveCampaigns();renderCampaignsList();
-  toast(`▶ ${_campSelected.size} campanha(s) ativada(s).`,'ok');
-  cancelarSelecaoCampanhas();
-}
 </script>
 
 <!-- ══ MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
@@ -10757,12 +10494,7 @@ function ativarCampanhasSelecionadas(){
   <div class="up-box">
     <div class="up-hero">
       <button class="up-close" onclick="closeUserProfile()">✕</button>
-      <!-- Avatar com upload de foto -->
-      <div style="position:relative;display:inline-block;margin-bottom:10px">
-        <div class="up-avatar" id="upAvatar" style="cursor:pointer" onclick="document.getElementById('upPhotoInput').click()" title="Clique para trocar foto">?</div>
-        <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;background:rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer" onclick="document.getElementById('upPhotoInput').click()">📷</div>
-        <input type="file" id="upPhotoInput" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)">
-      </div>
+      <div class="up-avatar" id="upAvatar">?</div>
       <div class="up-name" id="upName">—</div>
       <div class="up-email" id="upEmail">—</div>
     </div>
@@ -10871,52 +10603,6 @@ function closeUserProfile(){
   if(m)m.classList.remove('open');
 }
 function fecharUserProfile_e_recarga(){closeUserProfile();setTimeout(()=>abrirModalRecarga(),150);}
-// Aliases para compatibilidade
-function fecharUserProfile_abrirRecarga(){fecharUserProfile_e_recarga();}
-function logoutUser(){
-  if(!confirm('Deseja sair da conta?'))return;
-  const sb=getSupabase();if(sb)sb.auth.signOut();closeUserProfile();
-}
-function signOutUser(){ logoutUser(); }
-function changeUserPassword(){ trocarSenha(); }
-
-// ── UPLOAD DE FOTO DE PERFIL ──────────────────────────────────
-async function uploadProfilePhoto(input){
-  const file=input.files[0];
-  if(!file)return;
-  if(file.size>500000){toast('Foto muito grande. Use imagens até 500KB.','warn');return;}
-  const reader=new FileReader();
-  reader.onload=async(e)=>{
-    const base64=e.target.result;
-    // Atualiza avatar no modal de perfil
-    const av=document.getElementById('upAvatar');
-    if(av){
-      av.style.backgroundImage=`url(${base64})`;
-      av.style.backgroundSize='cover';
-      av.style.backgroundPosition='center';
-      av.textContent='';
-    }
-    // Atualiza avatar no topnav imediatamente
-    const topAv=document.getElementById('topnavAvatar');
-    if(topAv){
-      topAv.style.backgroundImage=`url(${base64})`;
-      topAv.style.backgroundSize='cover';
-      topAv.style.backgroundPosition='center';
-      topAv.textContent='';
-    }
-    try{
-      const sb=getSupabase();
-      if(sb&&currentUser){
-        // Cache no localStorage para persistir entre reloads sem bater no banco
-        localStorage.setItem('capturo-avatar-'+currentUser.id, base64);
-        // Salva também no Supabase
-        await sb.from('profiles').update({avatar_url:base64,updated_at:new Date().toISOString()}).eq('id',currentUser.id);
-        toast('✅ Foto atualizada!','ok',2000);
-      }
-    }catch(err){toast('Erro ao salvar foto: '+err.message,'error');}
-  };
-  reader.readAsDataURL(file);
-}
 
 async function trocarSenha(){
   const pwd=document.getElementById('upNewPwd').value.trim();
@@ -10938,33 +10624,7 @@ async function logoutUser(){
 }
 
 // ── MOBILE SIDEBAR ──────────────────────────────────────────────
-function toggleMobileSidebar(){
-  const sidebar=document.getElementById('mainSidebar');
-  const overlay=document.getElementById('mobileSidebarOverlay');
-  if(!sidebar)return;
-  const isOpen=sidebar.classList.contains('mobile-open');
-  if(isOpen){sidebar.classList.remove('mobile-open');if(overlay)overlay.classList.remove('open');}
-  else{sidebar.classList.add('mobile-open');if(overlay)overlay.classList.add('open');}
-}
-
-// Fecha sidebar mobile ao clicar em item
-(function(){
-  const run=()=>{
-    const sidebar=document.getElementById('mainSidebar');
-    if(!sidebar)return;
-    sidebar.querySelectorAll('.sb-item').forEach(item=>{
-      item.addEventListener('click',()=>{
-        if(window.innerWidth<=640){
-          sidebar.classList.remove('mobile-open');
-          const ov=document.getElementById('mobileSidebarOverlay');
-          if(ov)ov.classList.remove('open');
-        }
-      });
-    });
-  };
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);
-  else run();
-})();
+// (função definida depois no bloco principal)
 </script>
 
 <style>
@@ -10972,8 +10632,8 @@ function toggleMobileSidebar(){
 #modalRecarga{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center}
 #modalRecarga.open{display:flex}
 .recarga-box{background:var(--card-bg,#1a1d23);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:32px 28px;max-width:480px;width:90%;text-align:center;position:relative}
-.recarga-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted2,#666);cursor:pointer;font-size:20px;line-height:1}
-.recarga-close:hover{color:var(--red,#ff453a)}
+.recarga-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:var(--muted2,#aaa);cursor:pointer;font-size:18px;line-height:1;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.recarga-close:hover,.recarga-close:active{background:rgba(255,59,48,.2);color:var(--red,#ff453a)}
 .recarga-title{font-size:20px;font-weight:700;color:var(--fg,#f0f0f0);margin-bottom:4px}
 .recarga-sub{font-size:13px;color:var(--muted2,#888);margin-bottom:24px}
 .recarga-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
@@ -11000,15 +10660,16 @@ function toggleMobileSidebar(){
     <div class="recarga-title">⚡ Recarregar Leads</div>
     <div class="recarga-sub" id="recargaSub">Escolha um pack para continuar prospectando</div>
 
-    <!-- Seção 1: Créditos avulsos -->
-    <div style="font-size:10px;font-weight:700;color:var(--muted2,#888);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left">🔋 Créditos Avulsos</div>
+    <!-- Packs avulsos -->
     <div class="recarga-cards">
+      <!-- Pack 50 -->
       <div class="recarga-card" onclick="abrirHotmart('PACK_50')">
         <div class="recarga-qtd">50</div>
         <div class="recarga-label">Leads</div>
         <div class="recarga-preco">R$&nbsp;97</div>
         <div class="recarga-custo">R$&nbsp;1,94/lead</div>
       </div>
+      <!-- Pack 150 -->
       <div class="recarga-card destaque" onclick="abrirHotmart('PACK_150')">
         <div class="recarga-qtd">150</div>
         <div class="recarga-label">Leads</div>
@@ -11016,6 +10677,7 @@ function toggleMobileSidebar(){
         <div class="recarga-custo">R$&nbsp;1,31/lead</div>
         <div class="recarga-badge">Mais popular</div>
       </div>
+      <!-- Pack 400 -->
       <div class="recarga-card" onclick="abrirHotmart('PACK_400')">
         <div class="recarga-qtd">400</div>
         <div class="recarga-label">Leads</div>
@@ -11025,32 +10687,93 @@ function toggleMobileSidebar(){
       </div>
     </div>
 
-    <!-- Divisor -->
-    <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px">
-      <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
-      <span style="font-size:10px;color:var(--muted2,#888);font-weight:600;white-space:nowrap">OU ASSINE UM PLANO</span>
-      <div style="flex:1;height:1px;background:rgba(255,255,255,.08)"></div>
-    </div>
-
-    <!-- Seção 2: Assinatura mensal -->
-    <div style="font-size:10px;font-weight:700;color:var(--muted2,#888);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left">📅 Assinatura Mensal</div>
-    <div onclick="abrirHotmart('PLANO_MENSAL')" style="border:1.5px solid rgba(0,122,255,.3);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;background:rgba(0,122,255,.06);transition:border-color .2s,background .2s;margin-bottom:8px" onmouseover="this.style.borderColor='rgba(0,122,255,.6)';this.style.background='rgba(0,122,255,.12)'" onmouseout="this.style.borderColor='rgba(0,122,255,.3)';this.style.background='rgba(0,122,255,.06)'">
-      <div>
-        <div style="font-size:15px;font-weight:800;color:var(--fg,#f0f0f0)">40 Leads <span style="font-size:11px;font-weight:500;color:var(--muted2,#888)">/mês</span></div>
-        <div style="font-size:11px;color:var(--muted2,#888);margin-top:3px">Renovação automática · acesso completo · cancele quando quiser</div>
+    <!-- Plano mensal -->
+    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_MENSAL')">
+      <div class="recarga-mensal-info">
+        <div class="recarga-mensal-titulo">📅 Plano Mensal — R$ 97/mês</div>
+        <div class="recarga-mensal-desc">40 Leads/mês renovados automaticamente + acesso completo</div>
       </div>
-      <div style="text-align:right;flex-shrink:0;margin-left:16px">
-        <div style="font-size:18px;font-weight:800;color:var(--accent,#007aff)">R$ 97</div>
-        <div style="font-size:10px;color:var(--muted2,#888)">/mês</div>
-        <button style="margin-top:6px;font-size:11px;font-weight:700;background:var(--accent,#007aff);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;white-space:nowrap">Assinar</button>
-      </div>
+      <button class="recarga-mensal-btn">Assinar</button>
     </div>
-    <div style="font-size:10px;color:var(--muted2,#888);text-align:center">Já assina? Os créditos avulsos somam ao seu plano mensal.</div>
   </div>
 </div>
 
 <!-- ── MOBILE SIDEBAR OVERLAY ── -->
 <div id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ══ MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
+<div id="userProfileModal" role="dialog" aria-modal="true" aria-label="Meu Perfil" onclick="if(event.target===this)closeUserProfile()">
+  <div class="up-box">
+    <!-- Hero -->
+    <div class="up-hero">
+      <button class="up-close" onclick="closeUserProfile()">✕</button>
+      <div class="up-avatar" id="upAvatar">?</div>
+      <div class="up-name" id="upName">—</div>
+      <div class="up-email" id="upEmail">—</div>
+    </div>
+    <!-- Body -->
+    <div class="up-body">
+
+      <!-- Plano Atual -->
+      <div class="up-section">
+        <div class="up-section-title">📦 Plano Atual</div>
+        <div class="up-plan-card">
+          <div>
+            <div class="up-plan-name" id="upPlanName">Carregando...</div>
+            <div class="up-plan-sub" id="upPlanSub">—</div>
+          </div>
+          <button onclick="fecharUserProfile_abrirRecarga()" style="background:var(--accent);color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer">⚡ Recarregar</button>
+        </div>
+        <div class="up-leads-bar-wrap">
+          <div class="up-leads-bar">
+            <div class="up-leads-fill" id="upLeadsBar" style="width:0%;background:var(--accent)"></div>
+          </div>
+          <div class="up-leads-labels">
+            <span id="upLeadsUsed">0 usados</span>
+            <span id="upLeadsTotal">de 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="up-section">
+        <div class="up-section-title">📊 Suas Estatísticas</div>
+        <div class="up-stat-row"><span class="up-stat-label">Leads disponíveis</span><span class="up-stat-val" id="upStatDisp">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Leads usados</span><span class="up-stat-val" id="upStatUsed">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Campanhas ativas</span><span class="up-stat-val" id="upStatCamp">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Total de leads captados</span><span class="up-stat-val" id="upStatLeads">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Clientes convertidos</span><span class="up-stat-val" id="upStatClients">—</span></div>
+        <div class="up-stat-row"><span class="up-stat-label">Membro desde</span><span class="up-stat-val" id="upStatSince">—</span></div>
+      </div>
+
+      <!-- Histórico de Recargas -->
+      <div class="up-section">
+        <div class="up-section-title">🧾 Histórico de Recargas</div>
+        <div class="up-credits-log" id="upCreditsLog">
+          <div style="text-align:center;padding:20px;color:var(--muted2);font-size:11px">
+            <span class="spinner"></span> Carregando...
+          </div>
+        </div>
+      </div>
+
+      <!-- Trocar Senha -->
+      <div class="up-section">
+        <div class="up-section-title">🔒 Trocar Senha</div>
+        <div class="up-pwd-row">
+          <input type="password" id="upNewPwd" placeholder="Nova senha (mín. 8 caracteres)" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:13px;outline:none">
+          <button onclick="changeUserPassword()" class="up-btn up-btn-primary" style="white-space:nowrap">Salvar</button>
+        </div>
+        <div id="upPwdMsg" style="font-size:11px;margin-top:6px;min-height:16px;color:var(--green)"></div>
+      </div>
+
+      <!-- Ações -->
+      <div class="up-actions">
+        <button onclick="closeUserProfile()" class="up-btn up-btn-ghost">Fechar</button>
+        <button onclick="signOutUser()" class="up-btn up-btn-danger">🚪 Sair da conta</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // ── MOBILE SIDEBAR ────────────────────────────────────────────
@@ -11257,6 +10980,53 @@ function abrirHotmart(oferta){
 
 // Abrir modal automaticamente quando leads chegam a 0 durante uma busca
 // (o toast de "Leads esgotados" já existe nos loops de busca — basta chamar abrirModalRecarga lá se quiser)
+</script>
+
+<script>
+// ── PWA + DETECÇÃO DE DISPOSITIVO ──────────────────────────────
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(r=>console.log('[CAPTURO] SW ok:',r.scope))
+      .catch(e=>console.warn('[CAPTURO] SW erro:',e));
+  });
+}
+const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isAndroid=/Android/i.test(navigator.userAgent);
+const isPWA=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+if(isMobile)document.body.classList.add('is-mobile');
+if(isIOS)document.body.classList.add('is-ios');
+if(isAndroid)document.body.classList.add('is-android');
+if(isPWA)document.body.classList.add('is-pwa');
+
+// Instalar PWA
+let _pwaPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_pwaPrompt=e;
+  setTimeout(()=>{if(!isPWA&&_pwaPrompt&&!localStorage.getItem('pwa-dismissed'))showPwaBanner();},30000);
+});
+function showPwaBanner(){
+  if(document.getElementById('pwaBanner'))return;
+  const b=document.createElement('div');
+  b.id='pwaBanner';
+  b.style.cssText='position:fixed;bottom:80px;left:12px;right:12px;background:var(--s1);border:1px solid var(--accent);border-radius:14px;padding:14px 16px;z-index:9998;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastIn .3s ease';
+  b.innerHTML='<div style="font-size:26px">📲</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--text)">Instalar CAPTURO</div><div style="font-size:11px;color:var(--muted2)">Adicione à tela inicial para acesso rápido</div></div><button onclick="installPwa()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">Instalar</button><button onclick="dismissPwaBanner()" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:20px;padding:4px;flex-shrink:0;line-height:1">✕</button>';
+  document.body.appendChild(b);
+}
+function installPwa(){if(_pwaPrompt){_pwaPrompt.prompt();_pwaPrompt.userChoice.then(()=>{_pwaPrompt=null;dismissPwaBanner();});}}
+function dismissPwaBanner(){const b=document.getElementById('pwaBanner');if(b)b.remove();localStorage.setItem('pwa-dismissed','1');}
+
+// iOS Safari: instrução manual
+if(isIOS&&!isPWA&&!localStorage.getItem('pwa-dismissed')){
+  setTimeout(()=>{
+    if(document.getElementById('pwaBanner'))return;
+    const b=document.createElement('div');b.id='pwaBanner';
+    b.style.cssText='position:fixed;bottom:80px;left:12px;right:12px;background:var(--s1);border:1px solid var(--accent);border-radius:14px;padding:16px;z-index:9998;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:toastIn .3s ease';
+    b.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div style="font-size:13px;font-weight:700;color:var(--text)">📲 Instalar CAPTURO no iPhone</div><button onclick="dismissPwaBanner()" style="background:none;border:none;color:var(--muted2);cursor:pointer;font-size:20px;line-height:1">✕</button></div><div style="font-size:12px;color:var(--muted2);line-height:1.7">Toque em <strong style="color:var(--text)">⎋ Compartilhar</strong> no Safari → <strong style="color:var(--accent)">Adicionar à Tela de Início</strong></div>';
+    document.body.appendChild(b);
+  },60000);
+}
 </script>
 </body>
 </html>
