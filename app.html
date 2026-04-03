@@ -1619,8 +1619,20 @@ function toast(msg, type='info', duration=3500){
     </div>
 
     <!-- Campaigns section -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace">🗂 CAMPANHAS</div>
+      <div style="display:flex;gap:8px">
+        <button id="btnCampSelect" onclick="toggleCampSelectMode()" class="btn btn-ghost" style="font-size:11px;padding:5px 12px">☑ Selecionar</button>
+        <button class="btn btn-primary" onclick="openCampaignModal()" style="font-size:11px;padding:5px 12px">+ Nova Campanha</button>
+      </div>
+    </div>
+    <!-- Barra de ações em lote -->
+    <div id="campBulkBar" style="display:none;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:10px 16px;margin-bottom:14px;flex-wrap:wrap">
+      <span id="campBulkCount" style="font-size:13px;font-weight:700;color:var(--accent);min-width:110px">0 selecionadas</span>
+      <button onclick="deletarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,59,48,.18);color:var(--red,#ff453a);font-size:12px;font-weight:700;cursor:pointer">🗑 Deletar</button>
+      <button onclick="pausarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,149,0,.15);color:#f5a623;font-size:12px;font-weight:700;cursor:pointer">⏸ Pausar</button>
+      <button onclick="ativarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(52,199,89,.15);color:var(--green,#34c759);font-size:12px;font-weight:700;cursor:pointer">▶ Ativar</button>
+      <button onclick="cancelarSelecaoCampanhas()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;margin-left:auto">✕ Cancelar</button>
     </div>
     <div class="campaigns-grid" id="campaignsGrid">
       <div class="empty-campaigns">
@@ -3994,6 +4006,64 @@ function createCampaign(){
 // ══════════════════════════════════════════
 // CAMPAIGNS LIST
 // ══════════════════════════════════════════
+// ── SELEÇÃO MÚLTIPLA DE CAMPANHAS ────────────────────────────────
+let _campSelectMode = false;
+let _campSelected   = new Set();
+
+function toggleCampSelectMode(){
+  _campSelectMode = !_campSelectMode;
+  _campSelected.clear();
+  const btn = document.getElementById('btnCampSelect');
+  const bar = document.getElementById('campBulkBar');
+  if(btn){ btn.textContent = _campSelectMode ? '✕ Cancelar' : '☑ Selecionar'; btn.style.color = _campSelectMode ? 'var(--red,#ff453a)' : ''; }
+  if(bar){ bar.style.display = _campSelectMode ? 'flex' : 'none'; }
+  renderCampaignsList();
+}
+
+function cancelarSelecaoCampanhas(){
+  _campSelectMode = false;
+  _campSelected.clear();
+  const btn = document.getElementById('btnCampSelect');
+  const bar = document.getElementById('campBulkBar');
+  if(btn){ btn.textContent = '☑ Selecionar'; btn.style.color = ''; }
+  if(bar){ bar.style.display = 'none'; }
+  renderCampaignsList();
+}
+
+function toggleCampSelection(id){
+  if(_campSelected.has(id)) _campSelected.delete(id);
+  else _campSelected.add(id);
+  const el = document.getElementById('campBulkCount');
+  if(el) el.textContent = `${_campSelected.size} selecionada${_campSelected.size!==1?'s':''}`;
+  renderCampaignsList();
+}
+
+function deletarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  if(!confirm(`Deletar ${_campSelected.size} campanha(s) e todos os seus leads? Não pode ser desfeito.`)) return;
+  campaigns = campaigns.filter(c => !_campSelected.has(c.id));
+  if(_campSelected.has(activeCampaignId)) activeCampaignId = null;
+  saveCampaigns();
+  toast(`🗑 ${_campSelected.size} campanha(s) deletada(s).`,'ok',3000);
+  cancelarSelecaoCampanhas();
+}
+
+function pausarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  _campSelected.forEach(id=>{ const c=campaigns.find(x=>x.id===id); if(c) c.disabled=true; });
+  saveCampaigns();
+  toast(`⏸ ${_campSelected.size} campanha(s) pausada(s).`,'ok',3000);
+  cancelarSelecaoCampanhas();
+}
+
+function ativarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  _campSelected.forEach(id=>{ const c=campaigns.find(x=>x.id===id); if(c) c.disabled=false; });
+  saveCampaigns();
+  toast(`▶ ${_campSelected.size} campanha(s) ativada(s).`,'ok',3000);
+  cancelarSelecaoCampanhas();
+}
+
 function renderCampaignsList(){
   const grid=$('campaignsGrid');
   if(!campaigns.length){
@@ -4001,11 +4071,12 @@ function renderCampaignsList(){
     $('navTabs').innerHTML='';
     renderDashboard();return;
   }
+  const selMode = _campSelectMode;
+  const selSet  = _campSelected;
   grid.innerHTML=campaigns.map(c=>{
     const vol=(c.leads||[]).filter(l=>l.t==='volcano').length;
     const hot=(c.leads||[]).filter(l=>l.t==='hot').length;
     const closed=(c.leads||[]).filter(l=>l.status==='closed').length;
-    const hot2=vol+hot; // priority leads
     const flag=c.market==='internacional'?'🌐':'🇧🇷';
     const isDisabled=c.disabled||false;
     const toggleBg=isDisabled?'var(--border2)':'#25D366';
@@ -4013,20 +4084,23 @@ function renderCampaignsList(){
     const statusColor=isDisabled?'var(--muted2)':'var(--green)';
     const statusText=isDisabled?'Pausada':'● Ativa';
     const disabledClass=isDisabled?'camp-disabled':'';
-    const clickAction=isDisabled?'':'openCampaign(\'' + c.id + '\')';
-    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" onclick="${clickAction}">
-      <div class="cc-header">
-        <div><div class="cc-name">${c.name}</div><div class="cc-market">${flag} ${c.city}${c.state?', '+c.state:''}</div></div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+    const isSel = selSet.has(c.id);
+    const clickAction = selMode ? `toggleCampSelection('${c.id}')` : (isDisabled?'':(`openCampaign('${c.id}')`));
+    const selBorder = isSel ? 'border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.2)!important;' : '';
+    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" style="${selBorder}position:relative" onclick="${clickAction}">
+      ${selMode?`<input type="checkbox" ${isSel?'checked':''} onclick="event.stopPropagation();toggleCampSelection('${c.id}')" style="position:absolute;top:12px;left:12px;width:18px;height:18px;cursor:pointer;accent-color:var(--accent);z-index:10">`:''}
+      <div class="cc-header" style="${selMode?'padding-left:30px':''}">
+        <div><div class="cc-name">${escHtml(c.name)}</div><div class="cc-market">${flag} ${escHtml(c.city||'')}${c.state?', '+escHtml(c.state):''}</div></div>
+        ${!selMode?`<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
           <div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:9px;color:${statusColor};font-family:monospace">${statusText}</span>
-            <div onclick="event.stopPropagation();toggleCampaignActive('${c.id}')" 
+            <div onclick="event.stopPropagation();toggleCampaignActive('${c.id}')"
               style="width:32px;height:18px;border-radius:9px;background:${toggleBg};cursor:pointer;position:relative;transition:background .2s">
               <div style="position:absolute;top:2px;${togglePos};width:14px;height:14px;border-radius:50%;background:#fff;transition:all .2s"></div>
             </div>
           </div>
           <button onclick="event.stopPropagation();deleteCampaign(this.dataset.id)" data-id="${c.id}" class="cc-del" title="Deletar campanha">🗑️</button>
-        </div>
+        </div>`:''}
       </div>
       <div class="cc-stats">
         <div class="cc-stat"><div class="n">${(c.leads||[]).length}</div><div class="l">Total</div></div>
@@ -4034,13 +4108,14 @@ function renderCampaignsList(){
         <div class="cc-stat"><div class="n" style="color:var(--hot)">${hot}</div><div class="l">🔥 Quente</div></div>
         <div class="cc-stat"><div class="n" style="color:var(--green)">${closed}</div><div class="l">✅ Fechado</div></div>
       </div>
-      <div style="display:flex;gap:6px;margin-top:10px">
+      ${!selMode?`<div style="display:flex;gap:6px;margin-top:10px">
         <div style="font-size:9px;color:var(--muted2);font-family:monospace;margin-bottom:6px">
           📅 Criada: ${c.createdAt?new Date(c.createdAt).toLocaleDateString('pt-BR'):'—'}
           ${c.lastSearchAt?' · Buscada: '+new Date(c.lastSearchAt).toLocaleDateString('pt-BR'):''}
         </div>
         <button onclick="event.stopPropagation();openCampaign('${c.id}')" class="btn btn-primary" style="flex:1;font-size:11px;padding:7px">🔍 Prospectar</button>
-      </div></div>`;
+      </div>`:''}
+    </div>`;
   }).join('');
 
   // Nav tabs — show pinned, with dual count (priority | total)
