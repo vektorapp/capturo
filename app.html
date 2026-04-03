@@ -1746,7 +1746,7 @@ function toast(msg, type='info', duration=3500){
   <div class="sb-item" id="sb-favoritos" onclick="showPage('pageFavoritos');setSbActive('sb-favoritos')">
     <span class="sb-icon" style="position:relative">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span id="favBadge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--orange);border-radius:20px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--s1)" id="favBadge"></span>
+      <span id="favBadge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;background:var(--orange);border-radius:20px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--s1)"></span>
     </span>
     <span class="sb-label">Favoritos</span>
   </div>
@@ -10889,8 +10889,8 @@ function showLoginScreen(){
 function hideLoginScreen(){
   const el = document.getElementById('loginScreen');
   if(el) el.style.display = 'none';
-  updateUserHeader();
-  loadLeadsProfile(); // carrega saldo real do Supabase
+  try{ updateUserHeader(); }catch(e){ console.warn('updateUserHeader error:',e); }
+  try{ loadLeadsProfile(); }catch(e){ console.warn('loadLeadsProfile error:',e); }
 }
 
 function updateUserHeader(){
@@ -11011,11 +11011,20 @@ async function doSignIn(){
   if(!email || !password){ setAuthMsg('Preencha e-mail e senha.'); return; }
   btn.disabled = true; btn.textContent = 'Entrando…';
   setAuthMsg('');
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if(error){
-    const msg = error.message.includes('Invalid login') ? 'E-mail ou senha incorretos.' : error.message;
-    setAuthMsg(msg);
+  try{
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){
+      const msg = error.message.includes('Invalid login') || error.message.includes('invalid_credentials')
+        ? 'E-mail ou senha incorretos.'
+        : error.message;
+      setAuthMsg(msg);
+      btn.disabled = false; btn.textContent = 'Entrar';
+    }
+    // Se OK, o onAuthStateChange cuida do resto
+  }catch(e){
+    setAuthMsg('Erro de conexão. Verifique sua internet.');
     btn.disabled = false; btn.textContent = 'Entrar';
+    console.error('doSignIn error:',e);
   }
 }
 
@@ -11149,8 +11158,13 @@ async function loadFromSupabase(){
       .from('campaigns').select('*')
       .eq('user_id', currentUser.id)
       .order('created_at',{ ascending:true });
-    if(campErr){ console.error('[CAPTURO] load campaigns:',campErr); return; }
-    if(!campData || campData.length === 0){ return; }
+    if(campErr){ console.error('[CAPTURO] load campaigns:',campErr); renderCampaignsList(); return; }
+    if(!campData || campData.length === 0){
+      // Nenhuma campanha na nuvem — mantém locais e renderiza
+      renderCampaignsList();
+      renderDashboard();
+      return;
+    }
 
     const { data:leadsData, error:leadsErr } = await sb
       .from('leads').select('*')
@@ -12015,144 +12029,6 @@ window._postAuthInit = function(){
 };
 </script>
 
-<!-- ══ MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
-<div id="userProfileModal" role="dialog" aria-modal="true" aria-label="Meu Perfil" onclick="if(event.target===this)closeUserProfile()">
-  <div class="up-box">
-    <div class="up-hero">
-      <button class="up-close" onclick="closeUserProfile()">✕</button>
-      <div class="up-avatar" id="upAvatar">?</div>
-      <div class="up-name" id="upName">—</div>
-      <div class="up-email" id="upEmail">—</div>
-    </div>
-    <div class="up-body">
-      <div class="up-section">
-        <div class="up-section-title">Plano Atual</div>
-        <div class="up-plan-card">
-          <div>
-            <div class="up-plan-name" id="upPlanName">Carregando...</div>
-            <div class="up-plan-sub" id="upPlanSub">—</div>
-          </div>
-          <button onclick="fecharUserProfile_e_recarga()" class="up-btn up-btn-primary" style="font-size:11px;padding:7px 14px">⚡ Recarregar</button>
-        </div>
-        <div class="up-leads-bar-wrap">
-          <div class="up-leads-bar"><div class="up-leads-fill" id="upLeadsBar" style="width:0%;background:var(--accent)"></div></div>
-          <div class="up-leads-labels"><span id="upLeadsUsed">0 usados</span><span id="upLeadsTotal">— disponíveis</span></div>
-        </div>
-      </div>
-      <div class="up-section">
-        <div class="up-section-title">Estatísticas da Conta</div>
-        <div class="up-stat-row"><span class="up-stat-label">Membro desde</span><span class="up-stat-val" id="upMemberSince">—</span></div>
-        <div class="up-stat-row"><span class="up-stat-label">Campanhas criadas</span><span class="up-stat-val" id="upCampaignsCount">—</span></div>
-        <div class="up-stat-row"><span class="up-stat-label">Total de leads capturados</span><span class="up-stat-val" id="upLeadsCount">—</span></div>
-        <div class="up-stat-row"><span class="up-stat-label">Clientes convertidos</span><span class="up-stat-val" id="upClientsCount">—</span></div>
-        <div class="up-stat-row"><span class="up-stat-label">Leads restantes agora</span><span class="up-stat-val" id="upLeadsRestantes" style="color:var(--accent)">—</span></div>
-      </div>
-      <div class="up-section">
-        <div class="up-section-title">Histórico de Recargas</div>
-        <div class="up-credits-log" id="upCreditsLog">
-          <div style="text-align:center;padding:20px;color:var(--muted2);font-size:11px;font-family:'IBM Plex Mono',monospace">Carregando...</div>
-        </div>
-      </div>
-      <div class="up-section">
-        <div class="up-section-title">Segurança — Alterar Senha</div>
-        <div class="up-pwd-row">
-          <input type="password" id="upNewPwd" placeholder="Nova senha (mín. 8 caracteres)" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--s2);color:var(--text);font-size:13px;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" onkeydown="if(event.key==='Enter')trocarSenha()">
-          <button onclick="trocarSenha()" class="up-btn up-btn-ghost" style="white-space:nowrap;flex-shrink:0">🔐 Alterar</button>
-        </div>
-        <div id="upPwdMsg" style="font-size:11px;margin-top:6px;min-height:16px"></div>
-      </div>
-      <div class="up-actions">
-        <button onclick="closeUserProfile()" class="up-btn up-btn-ghost">Fechar</button>
-        <button onclick="logoutUser()" class="up-btn up-btn-danger">↩ Sair da Conta</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ══ /MODAL PERFIL DO USUÁRIO ══════════════════════════════════ -->
-
-<script>
-// ── USER PROFILE MODAL ─────────────────────────────────────────
-async function openUserProfile(){
-  const modal=document.getElementById('userProfileModal');
-  if(!modal||!currentUser)return;
-  modal.classList.add('open');
-  const email=currentUser.email||'—';
-  const name=(currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||email.split('@')[0]||'?');
-  document.getElementById('upAvatar').textContent=name.charAt(0).toUpperCase();
-  document.getElementById('upName').textContent=name;
-  document.getElementById('upEmail').textContent=email;
-  const createdAt=currentUser.created_at?new Date(currentUser.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'}):'—';
-  document.getElementById('upMemberSince').textContent=createdAt;
-  const totalLeads=(campaigns||[]).reduce((s,c)=>s+(c.leads||[]).length,0);
-  const totalClients=typeof clients!=='undefined'?(clients||[]).length:0;
-  document.getElementById('upCampaignsCount').textContent=(campaigns||[]).length;
-  document.getElementById('upLeadsCount').textContent=totalLeads;
-  document.getElementById('upClientsCount').textContent=totalClients;
-  const restantes=leadsRestantes();
-  const limite=_leadsProfile.sinais_limit||0;
-  const usados=_leadsProfile.sinais_used||0;
-  const pct=limite>0?Math.min(100,Math.round((usados/limite)*100)):0;
-  const cor=restantes<=5?'var(--red)':restantes<=15?'var(--warm)':'var(--accent)';
-  document.getElementById('upLeadsBar').style.width=pct+'%';
-  document.getElementById('upLeadsBar').style.background=cor;
-  document.getElementById('upLeadsUsed').textContent=usados+' usados';
-  document.getElementById('upLeadsTotal').textContent=restantes+' restantes de '+limite;
-  document.getElementById('upLeadsRestantes').textContent=restantes;
-  document.getElementById('upLeadsRestantes').style.color=cor;
-  const planLabel=limite>=400?'🥇 Pack Grande (400 leads)':limite>=150?'🥈 Pack Médio (150 leads)':limite>=50?'🥉 Pack Inicial (50 leads)':limite>0?'📅 Plano Mensal':'🆓 Trial Gratuito';
-  document.getElementById('upPlanName').textContent=planLabel;
-  document.getElementById('upPlanSub').textContent=usados+' leads usados · '+restantes+' restantes';
-  await loadCreditsLog();
-}
-
-async function loadCreditsLog(){
-  const sb=getSupabase();
-  const log=document.getElementById('upCreditsLog');
-  if(!sb||!currentUser||!log)return;
-  try{
-    const{data,error}=await sb.from('credits_log').select('operation,amount,reason,created_at').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(20);
-    if(error||!data?.length){log.innerHTML='<div style="text-align:center;padding:16px;color:var(--muted2);font-size:11px">Nenhuma recarga registrada ainda.</div>';return;}
-    log.innerHTML=data.map(r=>{
-      const isAdd=r.operation==='add';
-      const cor=isAdd?'var(--green)':'var(--volcano)';
-      const sinal=isAdd?'+':'−';
-      const dt=new Date(r.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});
-      const hr=new Date(r.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-      const reason=(r.reason||'—').replace(/\[.*?\]/g,'').trim().substring(0,50)||'Recarga';
-      return`<div class="up-log-row"><div class="up-log-op"><div class="up-log-dot" style="background:${cor}"></div><span style="color:${cor};font-weight:700;font-family:'IBM Plex Mono',monospace;min-width:36px">${sinal}${r.amount}</span><span style="color:var(--muted2);font-size:10px">${reason}</span></div><span style="color:var(--muted2);font-size:10px;font-family:'IBM Plex Mono',monospace;white-space:nowrap;margin-left:8px">${dt} ${hr}</span></div>`;
-    }).join('');
-  }catch(e){log.innerHTML='<div style="color:var(--volcano);font-size:11px;padding:10px">Erro ao carregar histórico: '+e.message+'</div>';}
-}
-
-function closeUserProfile(){
-  const m=document.getElementById('userProfileModal');
-  if(m)m.classList.remove('open');
-}
-function fecharUserProfile_e_recarga(){closeUserProfile();setTimeout(()=>abrirModalRecarga(),150);}
-
-async function trocarSenha(){
-  const pwd=document.getElementById('upNewPwd').value.trim();
-  const msg=document.getElementById('upPwdMsg');
-  if(!pwd||pwd.length<8){msg.style.color='var(--volcano)';msg.textContent='A senha deve ter pelo menos 8 caracteres.';return;}
-  const sb=getSupabase();
-  if(!sb)return;
-  msg.style.color='var(--muted2)';msg.textContent='Alterando...';
-  const{error}=await sb.auth.updateUser({password:pwd});
-  if(error){msg.style.color='var(--volcano)';msg.textContent='Erro: '+error.message;}
-  else{msg.style.color='var(--green)';msg.textContent='✅ Senha alterada com sucesso!';document.getElementById('upNewPwd').value='';setTimeout(()=>{msg.textContent='';},4000);}
-}
-
-async function logoutUser(){
-  if(!confirm('Deseja sair da sua conta?'))return;
-  closeUserProfile();
-  const sb=getSupabase();
-  if(sb)await sb.auth.signOut();
-}
-
-// ── MOBILE SIDEBAR ──────────────────────────────────────────────
-// (função definida depois no bloco principal)
-</script>
-
 <style>
 /* ── Modal Recarga de Leads ── */
 #modalRecarga{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);align-items:center;justify-content:center}
@@ -12341,9 +12217,9 @@ function fecharUserProfile_abrirRecarga(){
 }
 function signOutUser(){
   if(!confirm('Deseja sair da conta?')) return;
+  closeUserProfile();
   const sb = typeof getSupabase==='function' ? getSupabase() : null;
   if(sb) sb.auth.signOut();
-  closeUserProfile();
 }
 
 async function populateUserProfile(){
