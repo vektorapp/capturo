@@ -1345,8 +1345,21 @@ function toast(msg, type='info', duration=3500){
     </div>
 
     <!-- Campaigns section -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace">🗂 CAMPANHAS</div>
+      <div style="display:flex;gap:8px">
+        <button id="btnCampSelect" onclick="toggleCampSelectMode()" class="btn btn-ghost" style="font-size:11px;padding:5px 12px">☑ Selecionar</button>
+        <button class="btn btn-primary" onclick="openCampaignModal()" style="font-size:11px;padding:5px 12px">+ Nova Campanha</button>
+      </div>
+    </div>
+
+    <!-- Barra de ações em lote -->
+    <div id="campBulkBar" style="display:none;align-items:center;gap:10px;background:var(--s1);border:1px solid var(--accent-border);border-radius:12px;padding:10px 16px;margin-bottom:14px;flex-wrap:wrap">
+      <span id="campBulkCount" style="font-size:13px;font-weight:700;color:var(--accent);min-width:110px">0 selecionadas</span>
+      <button onclick="deletarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,59,48,.18);color:var(--red);font-size:12px;font-weight:700;cursor:pointer">🗑 Deletar</button>
+      <button onclick="pausarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(255,149,0,.15);color:var(--orange);font-size:12px;font-weight:700;cursor:pointer">⏸ Pausar</button>
+      <button onclick="ativarCampanhasSelecionadas()" style="padding:6px 14px;border-radius:8px;border:none;background:rgba(52,199,89,.15);color:var(--green);font-size:12px;font-weight:700;cursor:pointer">▶ Ativar</button>
+      <button onclick="cancelarSelecaoCampanhas()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-size:12px;cursor:pointer;margin-left:auto">✕ Cancelar</button>
     </div>
     <div class="campaigns-grid" id="campaignsGrid">
       <div class="empty-campaigns">
@@ -3603,11 +3616,14 @@ function renderCampaignsList(){
     $('navTabs').innerHTML='';
     renderDashboard();return;
   }
+  // Modo seleção múltipla
+  const selMode = typeof _campSelectMode!=='undefined' && _campSelectMode;
+  const selSet  = typeof _campSelected!=='undefined' ? _campSelected : new Set();
+
   grid.innerHTML=campaigns.map(c=>{
     const vol=(c.leads||[]).filter(l=>l.t==='volcano').length;
     const hot=(c.leads||[]).filter(l=>l.t==='hot').length;
     const closed=(c.leads||[]).filter(l=>l.status==='closed').length;
-    const hot2=vol+hot; // priority leads
     const flag=c.market==='internacional'?'🌐':'🇧🇷';
     const isDisabled=c.disabled||false;
     const toggleBg=isDisabled?'var(--border2)':'#25D366';
@@ -3615,19 +3631,24 @@ function renderCampaignsList(){
     const statusColor=isDisabled?'var(--muted2)':'var(--green)';
     const statusText=isDisabled?'Pausada':'● Ativa';
     const disabledClass=isDisabled?'camp-disabled':'';
-    const clickAction=isDisabled?'':'openCampaign(\'' + c.id + '\')';
-    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" onclick="${clickAction}">
-      <div class="cc-header">
-        <div><div class="cc-name">${c.name}</div><div class="cc-market">${flag} ${c.city}${c.state?', '+c.state:''}</div></div>
+    const isSel = selSet.has(c.id);
+    const clickAction = selMode
+      ? `toggleCampSelection('${c.id}')`
+      : (isDisabled ? '' : `openCampaign('${c.id}')`);
+    const selBorder = isSel ? 'border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(0,122,255,.2)!important;' : '';
+    return `<div class="campaign-card ${activeCampaignId===c.id?'active-campaign':''} ${disabledClass}" style="${selBorder}" onclick="${clickAction}" data-camp-id="${c.id}">
+      ${selMode ? `<input type="checkbox" ${isSel?'checked':''} onclick="event.stopPropagation();toggleCampSelection('${c.id}')" style="position:absolute;top:12px;left:12px;width:18px;height:18px;cursor:pointer;accent-color:var(--accent);z-index:10">` : ''}
+      <div class="cc-header" style="${selMode?'padding-left:28px':''}">
+        <div><div class="cc-name">${escHtml(c.name)}</div><div class="cc-market">${flag} ${escHtml(c.city||'')}${c.state?', '+escHtml(c.state):''}</div></div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-          <div style="display:flex;align-items:center;gap:6px">
+          ${!selMode ? `<div style="display:flex;align-items:center;gap:6px">
             <span style="font-size:9px;color:${statusColor};font-family:monospace">${statusText}</span>
-            <div onclick="event.stopPropagation();toggleCampaignActive('${c.id}')" 
+            <div onclick="event.stopPropagation();toggleCampaignActive('${c.id}')"
               style="width:32px;height:18px;border-radius:9px;background:${toggleBg};cursor:pointer;position:relative;transition:background .2s">
               <div style="position:absolute;top:2px;${togglePos};width:14px;height:14px;border-radius:50%;background:#fff;transition:all .2s"></div>
             </div>
           </div>
-          <button onclick="event.stopPropagation();deleteCampaign(this.dataset.id)" data-id="${c.id}" class="cc-del" title="Deletar campanha">🗑️</button>
+          <button onclick="event.stopPropagation();deleteCampaign(this.dataset.id)" data-id="${c.id}" class="cc-del" title="Deletar campanha">🗑️</button>` : ''}
         </div>
       </div>
       <div class="cc-stats">
@@ -3636,13 +3657,14 @@ function renderCampaignsList(){
         <div class="cc-stat"><div class="n" style="color:var(--hot)">${hot}</div><div class="l">🔥 Quente</div></div>
         <div class="cc-stat"><div class="n" style="color:var(--green)">${closed}</div><div class="l">✅ Fechado</div></div>
       </div>
-      <div style="display:flex;gap:6px;margin-top:10px">
+      ${!selMode ? `<div style="display:flex;gap:6px;margin-top:10px">
         <div style="font-size:9px;color:var(--muted2);font-family:monospace;margin-bottom:6px">
           📅 Criada: ${c.createdAt?new Date(c.createdAt).toLocaleDateString('pt-BR'):'—'}
           ${c.lastSearchAt?' · Buscada: '+new Date(c.lastSearchAt).toLocaleDateString('pt-BR'):''}
         </div>
         <button onclick="event.stopPropagation();openCampaign('${c.id}')" class="btn btn-primary" style="flex:1;font-size:11px;padding:7px">🔍 Prospectar</button>
-      </div></div>`;
+      </div>` : ''}
+    </div>`;
   }).join('');
 
   // Nav tabs — show pinned, with dual count (priority | total)
@@ -3697,7 +3719,7 @@ function openCampaign(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   $('pageCampaign').classList.add('active');
   const nb = c.neighborhood ? ` ➔ ${c.neighborhood}` : '';
-  $('campaignInfoBar').innerHTML=`Campanha: <strong>${c.name}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+c.country}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${c.nicho}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
+  $('campaignInfoBar').innerHTML=`Campanha: <strong>${escHtml(c.name)}</strong>${nb} &nbsp;|&nbsp; Mercado: <strong style="color:var(--accent2)">${c.market==='nacional'?'🇧🇷 Brasil':'🌐 '+c.country}</strong> &nbsp;|&nbsp; Nicho: <strong style="color:var(--warm)">${c.nicho}</strong> &nbsp;|&nbsp; Raio: <strong>${parseInt(c.radius)/1000}km</strong>`;
   renderAll();renderCampaignsList();
 }
 function saveCampaigns(){
@@ -5607,7 +5629,7 @@ function renderRelatorio(){
   // Populate WA blast select
   const waSel=$('waBlastCampaign');
   if(waSel){
-    waSel.innerHTML='<option value="">Selecione a campanha</option>'+campaigns.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    waSel.innerHTML='<option value="">Selecione a campanha</option>'+campaigns.map(c=>`<option value="${c.id}">${escHtml(c.name)}</option>`).join('');
   }
 }
 
@@ -6787,7 +6809,7 @@ function showPage(id){
         banner.style.background='var(--green-bg)';
         banner.style.borderColor='var(--green-b)';
         banner.style.color='var(--green)';
-        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${c.name}</strong> — os leads serão adicionados aqui</span>`;
+        banner.innerHTML=`<span>✓ Campanha ativa: <strong>${escHtml(c.name)}</strong> — os leads serão adicionados aqui</span>`;
       } else if(campaigns.length===1){
         // Auto-seleciona se só tem uma
         activeCampaignId=campaigns[0].id;
@@ -6802,7 +6824,7 @@ function showPage(id){
         banner.style.background='var(--volcano-bg)';
         banner.style.borderColor='var(--volcano-b)';
         banner.style.color='var(--volcano)';
-        const btns=campaigns.map(c=>`<button onclick="activeCampaignId='${c.id}';leads=[...(campaigns.find(x=>x.id==='${c.id}').leads||[])];showPage('pageManual');" style="margin:4px 4px 0 0;padding:5px 10px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:11px">${c.name}</button>`).join('');
+        const btns=campaigns.map(c=>`<button onclick="activeCampaignId='${c.id}';leads=[...(campaigns.find(x=>x.id==='${c.id}').leads||[])];showPage('pageManual');" style="margin:4px 4px 0 0;padding:5px 10px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:11px`>${escHtml(c.name)}</button>`).join('');
         banner.innerHTML=`<div><strong>⚠️ Nenhuma campanha selecionada!</strong> Escolha uma para adicionar leads:<br><div style="margin-top:6px">${btns||'<button onclick="openCampaignModal()" style=\'padding:5px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:11px\'>+ Criar Campanha</button>'}</div></div>`;
       }
     }
@@ -6844,7 +6866,7 @@ function addManualLead(){
       if(listEl){
         listEl.innerHTML=`<div style="background:var(--volcano-bg);border:1px solid var(--volcano-b);border-radius:10px;padding:14px 18px;font-size:12px;color:var(--volcano);font-family:monospace;margin-bottom:12px">
           ⚠️ Selecione uma campanha antes de adicionar leads:<br><br>
-          ${campaigns.map(c=>`<button onclick="activeCampaignId='${c.id}';leads=[...(campaigns.find(x=>x.id==='${c.id}').leads||[])];this.parentElement.parentElement.innerHTML='';toast('✓ Campanha selecionada!','success');" style="margin:4px 4px 4px 0;padding:6px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:monospace;font-size:11px">${c.name}</button>`).join('')}
+          ${campaigns.map(c=>`<button onclick="activeCampaignId='${c.id}';leads=[...(campaigns.find(x=>x.id==='${c.id}').leads||[])];this.parentElement.parentElement.innerHTML='';toast('✓ Campanha selecionada!','success');" style="margin:4px 4px 4px 0;padding:6px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;font-family:monospace;font-size:11px`>${escHtml(c.name)}</button>`).join('')}
         </div>`;
       }
       return;
@@ -8225,7 +8247,7 @@ function populateLeadsFilters(){
   if(!sel)return;
   const cur=sel.value;
   sel.innerHTML='<option value="">Todas as campanhas</option>'+
-    campaigns.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    campaigns.map(c=>`<option value="${c.id}">${escHtml(c.name)}</option>`).join('');
   sel.value=cur;
 }
 
@@ -10480,6 +10502,64 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 /* ─────────── INIT — POST AUTH ──────────────────────────── */
 // Define _postAuthInit — called by initAuth after successful login
+// ── SELEÇÃO MÚLTIPLA DE CAMPANHAS ────────────────────────────────
+let _campSelectMode = false;
+let _campSelected   = new Set();
+
+function toggleCampSelectMode(){
+  _campSelectMode = !_campSelectMode;
+  _campSelected.clear();
+  const btn = document.getElementById('btnCampSelect');
+  const bar = document.getElementById('campBulkBar');
+  if(btn){ btn.textContent = _campSelectMode ? '✕ Cancelar' : '☑ Selecionar'; btn.style.color = _campSelectMode ? 'var(--red)' : ''; }
+  if(bar){ bar.style.display = _campSelectMode ? 'flex' : 'none'; }
+  renderCampaignsList();
+}
+
+function cancelarSelecaoCampanhas(){
+  _campSelectMode = false;
+  _campSelected.clear();
+  const btn = document.getElementById('btnCampSelect');
+  const bar = document.getElementById('campBulkBar');
+  if(btn){ btn.textContent = '☑ Selecionar'; btn.style.color = ''; }
+  if(bar){ bar.style.display = 'none'; }
+  renderCampaignsList();
+}
+
+function toggleCampSelection(id){
+  if(_campSelected.has(id)) _campSelected.delete(id);
+  else _campSelected.add(id);
+  const el = document.getElementById('campBulkCount');
+  if(el) el.textContent = `${_campSelected.size} selecionada${_campSelected.size!==1?'s':''}`;
+  renderCampaignsList();
+}
+
+function deletarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  if(!confirm(`Deletar ${_campSelected.size} campanha(s) e todos os seus leads? Não pode ser desfeito.`)) return;
+  campaigns = campaigns.filter(c => !_campSelected.has(c.id));
+  if(_campSelected.has(activeCampaignId)) activeCampaignId = null;
+  saveCampaigns();
+  toast(`🗑 ${_campSelected.size} campanha(s) deletada(s).`, 'ok');
+  cancelarSelecaoCampanhas();
+}
+
+function pausarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  _campSelected.forEach(id => { const c = campaigns.find(x=>x.id===id); if(c) c.disabled=true; });
+  saveCampaigns();
+  toast(`⏸ ${_campSelected.size} campanha(s) pausada(s).`, 'ok');
+  cancelarSelecaoCampanhas();
+}
+
+function ativarCampanhasSelecionadas(){
+  if(!_campSelected.size){ toast('Selecione pelo menos uma campanha.','warn'); return; }
+  _campSelected.forEach(id => { const c = campaigns.find(x=>x.id===id); if(c) c.disabled=false; });
+  saveCampaigns();
+  toast(`▶ ${_campSelected.size} campanha(s) ativada(s).`, 'ok');
+  cancelarSelecaoCampanhas();
+}
+
 window._postAuthInit = function(){
   try{ if(typeof initNotifications==='function') initNotifications(); }catch(e){}
   try{ if(typeof renderCampaignsList==='function') renderCampaignsList(); }catch(e){}
