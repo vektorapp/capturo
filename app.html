@@ -6902,7 +6902,7 @@ function cancelarBuscaAlertas(){
   if(s) s.textContent='Busca cancelada.';
   const btnBuscar=$('btnBuscarAlertas');
   const btnCancel=$('btnCancelarAlertas');
-  if(btnBuscar){ btnBuscar.disabled=false; btnBuscar.textContent='⚡ Buscar Novos Negócios'; }
+  if(btnBuscar){ btnBuscar.disabled=false; btnBuscar.textContent='Buscar Novos Negócios'; }
   if(btnCancel){ btnCancel.style.display='none'; }
 }
 
@@ -8487,12 +8487,36 @@ function showPage(id){
   if(id==='pageRelatorio')renderRelatorio();
   if(id==='pageFavoritos')renderFavoritos();
   if(id==='pageAlertas'){
-    // Preenche cidade/UF automaticamente da campanha ativa
-    const c = campaigns.find(x=>x.id===activeCampaignId);
-    if(c){
-      if(c.city && !$('alertaCidade')?.value) { const el=$('alertaCidade'); if(el) el.value=c.city; }
-      if(c.state && !$('alertaUF')?.value)    { const el=$('alertaUF');    if(el) el.value=c.state.substring(0,2).toUpperCase(); }
-      if(c.nicho && !$('alertaNicho')?.value) { const el=$('alertaNicho'); if(el) el.value=c.nicho; }
+    // Popular selects de estado/cidade
+    initAlertaSelects();
+    // Preenche automaticamente da campanha ativa
+    const campAtiva = campaigns.find(x=>x.id===activeCampaignId);
+    if(campAtiva){
+      const ufSel=$('alertaUF');
+      const cidSel=$('alertaCidade');
+      const nichoHidden=$('alertaNicho');
+      const nichoSearch=$('alertaNichoSearch');
+      // Selecionar estado
+      if(campAtiva.state && ufSel){
+        const uf2 = campAtiva.state.substring(0,2).toUpperCase();
+        for(let i=0;i<ufSel.options.length;i++){
+          if(ufSel.options[i].value===uf2){ ufSel.selectedIndex=i; break; }
+        }
+        popularCidadesAlerta();
+      }
+      // Selecionar cidade
+      if(campAtiva.city && cidSel){
+        setTimeout(()=>{
+          for(let i=0;i<cidSel.options.length;i++){
+            if(cidSel.options[i].value===campAtiva.city){ cidSel.selectedIndex=i; break; }
+          }
+        },50);
+      }
+      // Preencher nicho
+      if(campAtiva.nicho && nichoHidden && !nichoHidden.value){
+        nichoHidden.value=campAtiva.nicho;
+        if(nichoSearch) nichoSearch.value=campAtiva.nicho;
+      }
     }
   }
   if(id==='pageFAQ')renderFAQ();
