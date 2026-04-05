@@ -2734,43 +2734,64 @@ function toast(msg, type='info', duration=3500){
   <!-- ══ RELATÓRIOS ══ -->
   <!-- ═══ PAGE: NOVOS NEGÓCIOS ═══ -->
   <div class="page" id="pageAlertas">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+
+    <!-- ══ HEADER NOVOS NEGÓCIOS ══ -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px">
       <div>
-        <div style="font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px">⚡ Novos Negócios</div>
-        <div style="font-size:13px;color:var(--muted2)">Empresas abertas recentemente na Receita Federal — máxima receptividade</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#ff6b35,#ff4d4d);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 4px 14px rgba(255,77,77,.35)">⚡</div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.03em">Novos Negócios em CNPJ</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted2);padding-left:46px">Empresas abertas recentemente — receptividade máxima, concorrência zero</div>
+      </div>
+      <!-- Pill de dica rápida -->
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.22);border-radius:var(--r-pill);padding:6px 14px;font-size:11px;color:#ffb84d;white-space:nowrap;flex-shrink:0">
+        💡 <span>1ª empresa a chegar leva a venda</span>
       </div>
     </div>
 
-    <!-- Config da busca -->
-    <div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:20px">
-      <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-bottom:16px">🔍 CONFIGURAR BUSCA</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:16px">
+    <!-- ══ PAINEL DE BUSCA ══ -->
+    <div class="alertas-search-panel" style="background:var(--s1);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden">
+      <!-- decoração top glow -->
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,77,77,.5),rgba(255,149,0,.4),transparent)"></div>
+
+      <div style="font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:18px;display:flex;align-items:center;gap:6px">
+        <span style="width:5px;height:5px;background:var(--volcano);border-radius:50%;display:inline-block;animation:pulseDot 2s infinite"></span>
+        RADAR DE OPORTUNIDADE
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:18px">
+        <!-- Estado -->
         <div>
-          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Estado</label>
-          <select id="alertaUF" onchange="popularCidadesAlerta()" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
-            <option value="">Selecione o estado</option>
+          <label style="font-size:10px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Estado</label>
+          <select id="alertaUF" onchange="popularCidadesAlerta()" style="width:100%;font-size:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--s2);color:var(--text)">
+            <option value="">Selecione...</option>
           </select>
         </div>
+        <!-- Cidade -->
         <div>
-          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Cidade</label>
-          <select id="alertaCidade" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
+          <label style="font-size:10px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Cidade</label>
+          <select id="alertaCidade" style="width:100%;font-size:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--s2);color:var(--text)">
             <option value="">Selecione o estado primeiro</option>
           </select>
         </div>
+        <!-- Nicho -->
         <div style="position:relative">
-          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Nicho / Atividade</label>
+          <label style="font-size:10px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Nicho / Atividade</label>
           <input type="text" id="alertaNichoSearch" placeholder="Buscar nicho..." autocomplete="off"
             oninput="filterAlertaNichos(this.value)" onfocus="showAlertaNichoDropdown()"
-            style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)" readonly
+            style="width:100%;font-size:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--s2);color:var(--text)" readonly
             onclick="this.removeAttribute('readonly');showAlertaNichoDropdown()">
           <div id="alertaNichoDropdown" style="display:none;position:absolute;left:0;right:0;z-index:9999;max-height:220px;overflow-y:auto;border:1px solid var(--border2);border-radius:10px;background:var(--s1);box-shadow:0 8px 28px rgba(0,0,0,.5);margin-top:2px">
             <div id="alertaNichoList"></div>
           </div>
           <input type="hidden" id="alertaNicho" value="">
         </div>
+        <!-- Período -->
         <div>
-          <label style="font-size:11px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:600">Abertos nos últimos</label>
-          <select id="alertaDias" style="width:100%;font-size:12px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--s2);color:var(--text)">
+          <label style="font-size:10px;color:var(--muted2);display:block;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Abertos nos últimos</label>
+          <select id="alertaDias" style="width:100%;font-size:12px;padding:9px 12px;border-radius:10px;border:1px solid var(--border2);background:var(--s2);color:var(--text)">
+            <option value="7">🔥 7 dias — Ultra quente</option>
             <option value="30">30 dias</option>
             <option value="60" selected>60 dias</option>
             <option value="90">90 dias</option>
@@ -2778,34 +2799,114 @@ function toast(msg, type='info', duration=3500){
           </select>
         </div>
       </div>
+
+      <!-- Score IA toggle + botão buscar -->
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button onclick="buscarNovosNegocios()" id="btnBuscarAlertas" class="btn btn-primary" style="font-size:12px">⚡ Buscar Novos Negócios</button>
+        <button onclick="buscarNovosNegocios()" id="btnBuscarAlertas" class="btn btn-primary" style="font-size:12px;background:linear-gradient(135deg,#ff4d4d,#ff8c00);box-shadow:0 4px 18px rgba(255,77,77,.35);border:none;padding:10px 22px;border-radius:var(--r-pill);font-weight:700;display:flex;align-items:center;gap:6px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Buscar Empresas Novas
+        </button>
         <button onclick="cancelarBuscaAlertas()" id="btnCancelarAlertas" class="btn btn-ghost" style="font-size:12px;display:none;color:var(--red)">⏹ Cancelar</button>
-        <span id="alertasStatus" style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace"></span>
+        <!-- Toggle Pitch IA -->
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--muted2);margin-left:4px;user-select:none">
+          <div id="pitchToggleWrap" onclick="togglePitchIA()" style="width:34px;height:18px;background:var(--accent);border-radius:9px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0">
+            <div id="pitchToggleKnob" style="position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:left .2s;left:16px"></div>
+          </div>
+          <span>Pitch IA ativo</span>
+          <span style="background:var(--accent-bg);color:var(--accent);font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid rgba(79,142,255,.3)">GRÁTIS</span>
+        </label>
+        <span id="alertasStatus" style="font-size:11px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;margin-left:auto"></span>
       </div>
     </div>
 
-    <!-- Aviso explicativo -->
-    <div style="background:rgba(255,149,0,.08);border:1px solid rgba(255,149,0,.2);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--text);line-height:1.7">
-      💡 <strong>Por que novos negócios?</strong> Uma empresa aberta há menos de 60 dias não tem site, não tem Instagram organizado, não tem gestão de tráfego, não tem nada. O dono está ansioso para resolver tudo. É o lead mais fácil do mundo de fechar — e nenhum concorrente te entrega isso.
+    <!-- ══ SKELETON (loading state) ══ -->
+    <div id="alertasSkeleton" style="display:none;margin-bottom:20px">
+      <div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--muted2);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+        <span class="spinner"></span>
+        <span id="alertasSkeletonMsg">Localizando cidade...</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px">
+        ${[1,2,3].map(()=>`<div style="background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;height:180px;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.03) 50%,transparent 100%);animation:shimmerSkeleton 1.4s ease infinite"></div>
+          <div style="height:12px;width:60%;background:var(--s2);border-radius:6px;margin-bottom:10px"></div>
+          <div style="height:10px;width:40%;background:var(--s2);border-radius:6px;margin-bottom:18px;opacity:.6"></div>
+          <div style="height:8px;width:80%;background:var(--s2);border-radius:4px;margin-bottom:8px;opacity:.4"></div>
+          <div style="height:8px;width:55%;background:var(--s2);border-radius:4px;opacity:.3"></div>
+        </div>`).join('')}
+      </div>
     </div>
 
-    <!-- Resultados -->
+    <!-- ══ RESULTADOS ══ -->
     <div id="alertasResultados" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-        <div style="font-size:12px;font-weight:700;font-family:'IBM Plex Mono',monospace" id="alertasContador">0 negócios encontrados</div>
-        <div style="display:flex;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="font-size:13px;font-weight:800;letter-spacing:-.02em" id="alertasContador">0 encontrados</div>
+          <!-- Score filter -->
+          <div style="display:flex;gap:5px">
+            <button onclick="filtrarAlertaScore('todos')" id="fsAll" class="btn" style="font-size:10px;padding:4px 10px;border-radius:20px;background:var(--accent-bg);color:var(--accent);border:1px solid rgba(79,142,255,.3)">Todos</button>
+            <button onclick="filtrarAlertaScore('alta')" id="fsAlta" class="btn" style="font-size:10px;padding:4px 10px;border-radius:20px;background:var(--s2);color:var(--muted2);border:1px solid var(--border)">🔥 Score Alto</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button onclick="importarAlertasParaCampanha()" class="btn btn-primary" style="font-size:11px">📥 Importar para Campanha</button>
           <button onclick="exportarAlertasCSV()" class="btn btn-ghost" style="font-size:11px">⬇ CSV</button>
         </div>
       </div>
-      <div id="alertasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px"></div>
+      <div id="alertasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px"></div>
     </div>
 
-    <div id="alertasVazio" style="text-align:center;padding:60px 20px;color:var(--muted2)">
-      <div style="font-size:48px;margin-bottom:12px">🔔</div>
-      <div style="font-size:16px;font-weight:700;margin-bottom:8px">Configure e busque acima</div>
-      <div style="font-size:13px">Preencha cidade, estado e nicho para encontrar<br>empresas abertas recentemente na Receita Federal.</div>
+    <!-- ══ ESTADO VAZIO ══ -->
+    <div id="alertasVazio" style="text-align:center;padding:70px 20px;color:var(--muted2)">
+      <!-- Radar SVG animado -->
+      <svg width="80" height="80" viewBox="0 0 80 80" style="margin:0 auto 20px;display:block;opacity:.4">
+        <circle cx="40" cy="40" r="35" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"/>
+        <circle cx="40" cy="40" r="22" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
+        <circle cx="40" cy="40" r="9" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".7"/>
+        <line x1="40" y1="40" x2="40" y2="5" stroke="var(--volcano)" stroke-width="2" style="transform-origin:40px 40px;animation:radarSpin 3s linear infinite" opacity=".8"/>
+        <circle cx="55" cy="22" r="3" fill="var(--accent)" style="animation:radarBlip 3s 1s infinite"/>
+        <circle cx="28" cy="58" r="2" fill="var(--green)" style="animation:radarBlipGreen 3s 2s infinite"/>
+      </svg>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text2)">Radar aguardando configuração</div>
+      <div style="font-size:13px;line-height:1.6">Configure estado, cidade e nicho acima<br>para detectar empresas novas com oportunidade</div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: AI PITCH GENERATOR ══ -->
+  <div id="modalPitchIA" onclick="if(event.target===this)fecharPitchIA()" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+    <div style="background:var(--s1);border:1px solid var(--border2);border-radius:22px;padding:28px;max-width:500px;width:92%;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.6)">
+      <button onclick="fecharPitchIA()" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.07);border:none;color:var(--muted2);cursor:pointer;font-size:16px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
+        <div>
+          <div style="font-size:14px;font-weight:800">Pitch Personalizado</div>
+          <div id="pitchLeadNome" style="font-size:11px;color:var(--muted2)">Gerando para empresa...</div>
+        </div>
+      </div>
+
+      <!-- Score badge -->
+      <div id="pitchScoreBadge" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:12px;padding:12px 16px;margin-bottom:16px">
+        <div id="pitchScoreCircle" style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;background:rgba(255,77,77,.15);color:var(--volcano);border:2px solid rgba(255,77,77,.3)">92</div>
+        <div>
+          <div id="pitchScoreLabel" style="font-size:12px;font-weight:700;color:var(--volcano)">Lead Quente 🔥</div>
+          <div id="pitchScoreReason" style="font-size:10px;color:var(--muted2)">Empresa aberta há menos de 30 dias</div>
+        </div>
+      </div>
+
+      <!-- Pitches gerados -->
+      <div id="pitchContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div style="text-align:center;padding:30px;color:var(--muted2);font-size:12px">
+          <span class="spinner"></span> Gerando pitches personalizados...
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div style="display:flex;gap:8px">
+        <button onclick="regenerarPitch()" class="btn btn-ghost" style="font-size:12px;flex:1">🔄 Novo pitch</button>
+        <button onclick="abrirZapComPitch()" class="btn btn-primary" style="font-size:12px;flex:2;background:linear-gradient(135deg,#25D366,#128C7E);box-shadow:none;display:flex;align-items:center;justify-content:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+          Enviar no WhatsApp
+        </button>
+      </div>
     </div>
   </div>
 
@@ -6761,19 +6862,24 @@ async function buscarNovosNegocios(){
   const btnCancel  = document.getElementById('btnCancelarAlertas');
   const status     = document.getElementById('alertasStatus');
   const vazio      = document.getElementById('alertasVazio');
+  const skeleton   = document.getElementById('alertasSkeleton');
+  const skMsg      = document.getElementById('alertasSkeletonMsg');
   const resultados = document.getElementById('alertasResultados');
 
-  if(btnBuscar){ btnBuscar.disabled=true; btnBuscar.textContent='Buscando...'; }
+  if(btnBuscar){ btnBuscar.disabled=true; btnBuscar.innerHTML='<span class="spinner"></span> Buscando...'; }
   if(btnCancel){ btnCancel.style.display='inline-flex'; }
   if(vazio)    { vazio.style.display='none'; }
   if(resultados){ resultados.style.display='none'; }
+  if(skeleton) { skeleton.style.display='block'; }
+  if(status)   { status.textContent=''; }
 
   const dataLimite = new Date();
   dataLimite.setDate(dataLimite.getDate()-dias);
 
   try{
     // ── Passo 1: Geocodificar cidade ──────────────────────────
-    if(status) status.textContent='Localizando cidade...';
+    if(status) status.textContent='Localizando...';
+    if(skMsg)  skMsg.textContent='Localizando cidade...';
     let lat, lng;
     try{
       const geo = await gmGeocode(`${cidade}, ${uf}, Brasil`);
@@ -6787,6 +6893,7 @@ async function buscarNovosNegocios(){
 
     // ── Passo 2: Busca via Google Places ─────────────────────
     if(status) status.textContent='Buscando...';
+    if(skMsg)  skMsg.textContent=`Buscando ${nicho} em ${cidade}...`;
     const radios = [5000, 10000, 20000];
     let allPlaces=[], seen=new Set();
     for(const rad of radios){
@@ -6805,10 +6912,12 @@ async function buscarNovosNegocios(){
 
     // ── Passo 3: Filtrar por data de abertura via CNPJ ───────
     if(status) status.textContent=`Verificando ${allPlaces.length} empresas...`;
+    if(skMsg)  skMsg.textContent=`Verificando ${allPlaces.length} empresas...`;
     const novas=[];
     for(let i=0; i<allPlaces.length; i++){
       if(!_alertasBuscando) break;
       if(status) status.textContent=`Verificando ${i+1}/${allPlaces.length}...`;
+      if(skMsg)  skMsg.textContent=`Verificando ${i+1}/${allPlaces.length}...`;
       const p=allPlaces[i];
       let det={};
       try{
@@ -7072,7 +7181,12 @@ async function buscarNovosNegocios(){
     toast('Erro ao buscar: '+e.message,'error');
   }finally{
     _alertasBuscando=false;
-    if(btnBuscar){ btnBuscar.disabled=false; btnBuscar.textContent='Buscar Novos Negócios'; }
+    const sk2 = document.getElementById('alertasSkeleton');
+    if(sk2) sk2.style.display='none';
+    if(btnBuscar){
+      btnBuscar.disabled=false;
+      btnBuscar.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Buscar Empresas Novas';
+    }
     if(btnCancel){ btnCancel.style.display='none'; }
   }
 }
@@ -7133,64 +7247,109 @@ function _renderAlertasResultados(lista, cidade, nicho, dias){
   el.style.display='block';
   if(contador) contador.textContent=`${lista.length} negócio(s) aberto(s) nos últimos ${dias} dias — ${nicho} em ${cidade}`;
 
-  grid.innerHTML = lista.map((emp,idx)=>{
+function _renderAlertasResultados(lista, cidade, nicho, dias){
+  const el = $('alertasResultados');
+  const vazio = $('alertasVazio');
+  const skeleton = $('alertasSkeleton');
+  const contador = $('alertasContador');
+  const grid = $('alertasGrid');
+  if(!el||!grid) return;
+
+  if(skeleton) skeleton.style.display='none';
+
+  if(!lista.length){
+    if(vazio){ vazio.style.display='block'; }
+    el.style.display='none';
+    return;
+  }
+
+  if(vazio) vazio.style.display='none';
+  el.style.display='block';
+
+  // Ordena por score decrescente
+  const sorted = [...lista].sort((a,b)=>{
+    const sa = calcularScoreAlerta(a), sb = calcularScoreAlerta(b);
+    return sb - sa;
+  });
+
+  if(contador) contador.textContent=`${lista.length} empresa${lista.length!==1?'s':''} nova${lista.length!==1?'s':''} — ${nicho} em ${cidade}`;
+
+  grid.innerHTML = sorted.map((emp,idx)=>{
     const nome = escHtml(emp.razao_social||emp.nome_fantasia||emp.nome||'Sem nome');
     const cnpj = emp.cnpj||'';
     const dataAb = emp.data_inicio_atividade||emp.abertura||'';
     const dtFmt  = dataAb ? new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1'))
                               .toLocaleDateString('pt-BR') : '—';
-    const cnae   = escHtml(emp.cnae_fiscal_descricao||(emp.atividade_principal&&emp.atividade_principal[0]?.text)||'—');
-    const tel    = escHtml(emp.telefone||emp.ddd_telefone_1||emp.formatted_phone_number||'—');
+    const cnae   = escHtml(emp.cnae_fiscal_descricao||(emp.atividade_principal&&emp.atividade_principal[0]?.text)||'');
+    const tel    = emp.telefone||emp.ddd_telefone_1||emp.formatted_phone_number||'';
+    const telFmt = escHtml(tel||'');
     const email  = escHtml(emp.email||'');
-    const porte  = escHtml(emp.porte||emp.descricao_porte||'—');
-    const capital = emp.capital_social ? 'R$ '+parseFloat(emp.capital_social).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
-    const socios = (emp.qsa||[]).map(s=>escHtml(s.nome_socio||s.nome||'')).join(', ')||'—';
-    const diasAberto = dataAb ? Math.round((Date.now()-new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1')).getTime())/(1000*60*60*24)) : null;
+    const socios = (emp.qsa||[]).map(s=>escHtml(s.nome_socio||s.nome||'')).filter(Boolean).join(', ')||'';
+    const capital = emp.capital_social ? 'R$ '+parseFloat(String(emp.capital_social).replace(/\./g,'').replace(',','.')).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}) : '';
 
-    // ── Score de Oportunidade (0–100) ──────────────────────────────────────
-    let score = 50;
-    if(diasAberto!==null){
-      if(diasAberto<=7)  score=98;
-      else if(diasAberto<=15) score=92;
-      else if(diasAberto<=30) score=85;
-      else if(diasAberto<=60) score=75;
-      else if(diasAberto<=90) score=65;
+    const diasAberto = dataAb
+      ? Math.round((Date.now()-new Date(dataAb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3-$2-$1')).getTime())/(1000*60*60*24))
+      : null;
+
+    // Enriquece objeto com diasAberta para calcular score
+    emp._diasAberta = diasAberto;
+    emp._cidade = cidade;
+
+    const score = calcularScoreAlerta(emp);
+    const info = labelScore(score);
+
+    // Urgência de tempo
+    let urgenciaBadge = '';
+    if(diasAberto !== null){
+      if(diasAberto<=7)       urgenciaBadge = `<span style="background:rgba(255,45,45,.18);color:#ff4d4d;font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(255,45,45,.3)">🔥 ${diasAberto}d — Ultra quente</span>`;
+      else if(diasAberto<=30) urgenciaBadge = `<span style="background:rgba(255,140,0,.12);color:var(--orange);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(255,140,0,.25)">${diasAberto}d atrás</span>`;
+      else                    urgenciaBadge = `<span style="background:var(--s3);color:var(--muted2);font-size:9px;padding:2px 8px;border-radius:20px">${diasAberto}d atrás</span>`;
     }
-    if(emp.capital_social && parseFloat(emp.capital_social)>=50000) score=Math.min(100,score+8);
-    if(tel!=='—') score=Math.min(100,score+5);
-    if(email)     score=Math.min(100,score+4);
-    const scoreCor = score>=85?'var(--green)':score>=70?'var(--orange)':'var(--accent)';
-    const scoreLabel2 = score>=85?'🔥 Alta':score>=70?'⚡ Média':'🌡 Normal';
 
-    return `<div style="background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--volcano),var(--hot))"></div>
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
-        <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:3px">${nome}</div>
-          <div style="font-size:10px;color:var(--muted2);font-family:'IBM Plex Mono',monospace">${cnpj}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          ${diasAberto!==null?`<span style="font-size:10px;background:rgba(255,69,0,.15);color:var(--volcano);padding:3px 8px;border-radius:20px;font-weight:700;white-space:nowrap">${diasAberto}d atrás</span>`:''}
-          <span style="font-size:10px;background:rgba(0,0,0,.3);border:1px solid ${scoreCor}33;color:${scoreCor};padding:3px 8px;border-radius:20px;font-weight:700">Score ${score}</span>
+    const nomeEscaped = nome.replace(/'/g,"\\'").replace(/"/g,'\\"');
+
+    return `<div class="alerta-card ${info.cardClass}" id="acard-${idx}" style="animation:fadeInCard .3s ease ${idx*0.06}s both">
+      <!-- Score badge -->
+      <div class="alerta-score-badge ${info.css}">${score}</div>
+
+      <!-- Nome e badges -->
+      <div style="padding-right:52px;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:800;line-height:1.3;margin-bottom:4px">${nome}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;align-items:center">
+          ${urgenciaBadge}
+          <span style="font-size:10px;color:${info.cor};font-weight:600">${info.label}</span>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--muted2);margin-bottom:8px;line-height:1.6">
-        <div>📅 Abertura: <strong style="color:${dtFmt!=='—'?'var(--text)':'var(--muted2)'}">${dtFmt}</strong>
-          ${emp._apiFonte?`<span style="font-size:9px;background:var(--accent-bg);color:var(--accent);padding:1px 6px;border-radius:10px;margin-left:4px">${escHtml(emp._apiFonte)}</span>`:'<span style="font-size:9px;background:rgba(255,157,62,.1);color:var(--orange);padding:1px 6px;border-radius:10px;margin-left:4px">Google Places</span>'}
-        </div>
-        ${cnae!=='—'?`<div>🏷 ${cnae}</div>`:''}
-        ${tel!=='—'?`<div>📞 <span style="font-family:monospace">${tel}</span></div>`:`<div style="opacity:.5">📞 Telefone não encontrado</div>`}
-        ${email?`<div>✉ <span style="font-family:monospace">${email}</span></div>`:''}
-        <div>👤 Sócio: <strong style="color:${socios!=='—'?'var(--text)':'var(--muted2)'}">${socios}</strong></div>
-        <div style="display:flex;gap:12px"><span>Porte: <strong style="color:var(--text)">${porte}</strong></span><span>Capital: <strong style="color:var(--text)">${capital}</strong></span></div>
+
+      <!-- Dados -->
+      <div style="font-size:11px;color:var(--muted2);line-height:1.8;margin-bottom:12px;border-top:1px solid var(--border);padding-top:10px">
+        ${dtFmt!=='—' ? `<div>📅 <strong style="color:var(--text2)">${dtFmt}</strong>${emp._apiFonte?` <span style="font-size:9px;background:var(--accent-bg);color:var(--accent);padding:1px 5px;border-radius:8px">${escHtml(emp._apiFonte)}</span>`:''}</div>` : ''}
+        ${cnae ? `<div>🏷 ${cnae}</div>` : ''}
+        ${telFmt ? `<div>📞 <span style="font-family:'IBM Plex Mono',monospace;color:var(--text2)">${telFmt}</span></div>` : `<div style="opacity:.4">📞 Tel. não encontrado</div>`}
+        ${email ? `<div>✉ <span style="font-family:'IBM Plex Mono',monospace">${email}</span></div>` : ''}
+        ${socios ? `<div>👤 ${socios}</div>` : ''}
+        ${capital ? `<div>💰 Capital: <strong style="color:var(--text2)">${capital}</strong></div>` : ''}
+        ${cnpj ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.5">${cnpj}</div>` : ''}
       </div>
-      <!-- Pitch IA -->
-      <div id="pitch-area-${idx}" style="display:none;background:var(--s2);border:1px solid var(--border2);border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--text2);font-style:italic"></div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
-        <button onclick="_importarAlertaLeadUnico(${idx})" class="btn btn-primary" style="font-size:10px;padding:5px 10px">+ Importar Lead</button>
-        <button onclick="_gerarPitchAlerta(${idx},'${nome.replace(/'/g,"\\'").replace(/"/g,'\\"')}','${escHtml(nicho)}')" class="btn btn-ghost" style="font-size:10px;padding:5px 10px;color:var(--purple);border-color:rgba(184,122,255,.3);background:var(--purple-bg)">🤖 Pitch IA</button>
-        ${tel!=='—'?`<a href="https://wa.me/55${tel.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:5px 10px;text-decoration:none;color:#25D366;border-color:#25D36633">💬 WA</a>`:''}
-        ${cnpj?`<a href="https://publica.cnpj.ws/cnpj/${cnpj.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:5px 10px;text-decoration:none">📋 CNPJ</a>`:''}
+
+      <!-- Área de Pitch IA (expandível) -->
+      <div id="pitch-inline-${idx}" style="display:none;background:var(--s2);border:1px solid rgba(79,142,255,.25);border-radius:10px;padding:12px;margin-bottom:10px;font-size:12px;line-height:1.6;color:var(--text2);font-style:italic;animation:fadeInCard .25s ease"></div>
+
+      <!-- Ações -->
+      <div style="display:flex;gap:6px;flex-direction:column">
+        <!-- Botão Pitch IA -->
+        <button onclick="abrirPitchIA(_alertasData[${idx}],'${tel.replace(/\D/g,'')}','${escHtml(nicho)}')" class="btn-pitch">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+          🤖 Gerar Pitch Personalizado
+        </button>
+        <!-- Linha de ações secundárias -->
+        <div style="display:flex;gap:6px">
+          <button onclick="_importarAlertaLeadUnico(${idx})" class="btn btn-primary" style="font-size:10px;padding:6px 10px;flex:1">+ Importar</button>
+          ${tel ? `<a href="https://wa.me/55${tel.replace(/\D/g,'')}" target="_blank" class="btn" style="font-size:10px;padding:6px 10px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;border:none;text-decoration:none;display:flex;align-items:center;gap:4px;flex:1;justify-content:center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+            WA</a>` : ''}
+          ${cnpj ? `<a href="https://publica.cnpj.ws/cnpj/${cnpj.replace(/\D/g,'')}" target="_blank" class="btn btn-ghost" style="font-size:10px;padding:6px 10px;text-decoration:none">📋</a>` : ''}
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -12747,6 +12906,130 @@ window._postAuthInit = function(){
 /* Missões */
 .missao-item{display:flex;justify-content:space-between;align-items:center;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;transition:border-color .2s}
 .missao-item:hover{border-color:var(--border2)}
+
+/* ── ALERTAS PREMIUM ── */
+@keyframes shimmerSkeleton{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* Card de alerta novo negócio */
+.alerta-card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+  transition:all .22s var(--ease-spring);
+  cursor:default;
+}
+.alerta-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--volcano),var(--orange));
+  opacity:0;
+  transition:opacity .2s;
+}
+.alerta-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 36px rgba(0,0,0,.25);
+  border-color:rgba(255,77,77,.3);
+}
+.alerta-card:hover::before{ opacity:1; }
+
+.alerta-card.score-alto{ border-left:3px solid var(--volcano); }
+.alerta-card.score-med{ border-left:3px solid var(--orange); }
+.alerta-card.score-baixo{ border-left:3px solid var(--cold); }
+
+@keyframes fadeInCard{
+  from{ opacity:0; transform:translateY(8px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* Score badge no card */
+.alerta-score-badge{
+  position:absolute;
+  top:14px;right:14px;
+  width:36px;height:36px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;
+  font-family:'IBM Plex Mono',monospace;
+}
+.asb-alta{ background:rgba(255,77,77,.15);color:var(--volcano);border:1.5px solid rgba(255,77,77,.3); }
+.asb-med{ background:rgba(255,140,0,.12);color:var(--orange);border:1.5px solid rgba(255,140,0,.25); }
+.asb-baixo{ background:rgba(79,142,255,.1);color:var(--cold);border:1.5px solid rgba(79,142,255,.2); }
+
+/* Botão pitch no card */
+.btn-pitch{
+  width:100%;
+  padding:9px 14px;
+  border-radius:10px;
+  border:1px solid rgba(79,142,255,.3);
+  background:var(--accent-bg);
+  color:var(--accent);
+  font-size:11px;font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .18s var(--ease-spring);
+  margin-top:10px;
+  font-family:'Plus Jakarta Sans','Inter',sans-serif;
+}
+.btn-pitch:hover{
+  background:var(--accent);
+  color:#fff;
+  border-color:var(--accent);
+  box-shadow:0 4px 14px rgba(79,142,255,.35);
+  transform:translateY(-1px);
+}
+
+/* Botão Zap no card alerta */
+.btn-alerta-zap{
+  width:100%;
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(135deg,#25D366,#128C7E);
+  color:#fff;
+  font-size:12px;font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:all .18s;
+  margin-top:6px;
+  font-family:'Plus Jakarta Sans','Inter',sans-serif;
+  box-shadow:0 4px 14px rgba(37,211,102,.25);
+}
+.btn-alerta-zap:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(37,211,102,.4);
+  filter:brightness(1.08);
+}
+
+/* Pitch modal - pitches list */
+.pitch-option{
+  background:var(--s2);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  font-size:12px;
+  line-height:1.6;
+  color:var(--text2);
+  cursor:pointer;
+  transition:all .18s;
+  position:relative;
+}
+.pitch-option:hover{ border-color:var(--accent); background:var(--accent-bg); }
+.pitch-option.selected{ border-color:var(--accent); background:var(--accent-bg); }
+.pitch-copy-btn{
+  position:absolute;top:8px;right:8px;
+  background:transparent;border:1px solid var(--border2);color:var(--muted2);
+  font-size:10px;padding:3px 8px;border-radius:6px;cursor:pointer;
+  transition:all .15s;font-family:'IBM Plex Mono',monospace;
+}
+.pitch-copy-btn:hover{ border-color:var(--accent);color:var(--accent); }
 </style>
 
 <!-- ── MODAL RECARGA DE RAIOS ── -->
@@ -12779,22 +13062,53 @@ window._postAuthInit = function(){
         <div class="recarga-label">Sinais</div>
         <div class="recarga-preco">R$&nbsp;397</div>
         <div class="recarga-custo">R$&nbsp;0,99/Sinal</div>
-        <div class="recarga-badge">Melhor custo</div>
+        <div class="recarga-badge" style="background:var(--green)">Melhor custo</div>
       </div>
     </div>
 
-    <!-- Plano mensal -->
-    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_MENSAL')">
+    <!-- Pack Mega -->
+    <div class="recarga-mensal" onclick="abrirHotmart('PACK_MEGA')" style="margin-bottom:10px;border-color:rgba(184,122,255,.3);background:var(--purple-bg)">
       <div class="recarga-mensal-info">
-        <div class="recarga-mensal-titulo">📅 Plano Mensal — R$ 97/mês</div>
-        <div class="recarga-mensal-desc">80 Sinais/mês renovados automaticamente + acesso completo</div>
+        <div class="recarga-mensal-titulo" style="color:var(--purple)">⚡ Pack Mega — 1.000 Sinais</div>
+        <div class="recarga-mensal-desc">R$&nbsp;0,79/Sinal — Para quem prospecta em volume</div>
+      </div>
+      <button class="recarga-mensal-btn" style="background:var(--purple)">R$&nbsp;797</button>
+    </div>
+
+    <!-- Divisor -->
+    <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:10px;color:var(--muted2);font-weight:600;text-transform:uppercase;letter-spacing:.06em">ou assine mensalmente</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+
+    <!-- Planos mensais -->
+    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_STARTER')" style="margin-bottom:8px">
+      <div class="recarga-mensal-info">
+        <div class="recarga-mensal-titulo">🌱 Starter — R$&nbsp;97/mês</div>
+        <div class="recarga-mensal-desc">80 Sinais/mês + acesso completo</div>
+      </div>
+      <button class="recarga-mensal-btn">Assinar</button>
+    </div>
+    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_MENSAL')" style="margin-bottom:8px;border-color:var(--accent);background:var(--accent-bg)">
+      <div class="recarga-mensal-info">
+        <div class="recarga-mensal-titulo">🚀 Pro — R$&nbsp;197/mês <span style="font-size:9px;background:var(--accent);color:#fff;padding:2px 7px;border-radius:20px;margin-left:6px">RECOMENDADO</span></div>
+        <div class="recarga-mensal-desc">200 Sinais/mês + Pitch IA + prioridade suporte</div>
+      </div>
+      <button class="recarga-mensal-btn">Assinar</button>
+    </div>
+    <div class="recarga-mensal" onclick="abrirHotmart('PLANO_AGENCY')">
+      <div class="recarga-mensal-info">
+        <div class="recarga-mensal-titulo">🏢 Agency — R$&nbsp;397/mês</div>
+        <div class="recarga-mensal-desc">500 Sinais/mês + multi-usuário + white label</div>
       </div>
       <button class="recarga-mensal-btn">Assinar</button>
     </div>
 
-    <!-- Nota de uso -->
-    <div style="margin-top:12px;font-size:10px;color:var(--muted2);text-align:center;line-height:1.6">
-      Sinais extras são usados primeiro. Depois voltam os do plano mensal.
+    <!-- Nota -->
+    <div style="margin-top:14px;font-size:10px;color:var(--muted2);text-align:center;line-height:1.7">
+      Sinais extras são usados primeiro. Após esgotar, voltam os do plano mensal.<br>
+      💡 <strong style="color:var(--text)">Dica:</strong> Complete missões diárias e ganhe Sinais grátis!
     </div>
   </div>
 </div>
@@ -13052,10 +13366,13 @@ async function changeUserPassword(){
 
 // URLs das ofertas no Hotmart — preencha após criar as ofertas na plataforma
 const HOTMART_LINKS = {
-  PACK_50:       'https://pay.hotmart.com/E105157382F?off=wnajnkwr',
-  PACK_150:      'https://pay.hotmart.com/E105157382F?off=si62fm4q',
-  PACK_400:      'https://pay.hotmart.com/E105157382F?off=1c61zoyq',
-  PLANO_MENSAL:  'https://pay.hotmart.com/E105157382F?off=1qnc59s6',
+  PACK_50:        'https://pay.hotmart.com/E105157382F?off=wnajnkwr',
+  PACK_150:       'https://pay.hotmart.com/E105157382F?off=si62fm4q',
+  PACK_400:       'https://pay.hotmart.com/E105157382F?off=1c61zoyq',
+  PACK_MEGA:      'https://pay.hotmart.com/E105157382F?off=mega1000',  // configure no Hotmart
+  PLANO_STARTER:  'https://pay.hotmart.com/E105157382F?off=starter97', // configure no Hotmart
+  PLANO_MENSAL:   'https://pay.hotmart.com/E105157382F?off=1qnc59s6',
+  PLANO_AGENCY:   'https://pay.hotmart.com/E105157382F?off=agency397', // configure no Hotmart
 };
 
 function abrirModalRecarga(forceMsg){
@@ -13068,8 +13385,8 @@ function abrirModalRecarga(forceMsg){
   } else {
     const r = leadsRestantes();
     sub.textContent = r === 0
-      ? 'Seus Leads acabaram. Escolha um pack para continuar.'
-      : `Você tem ${r} Lead${r!==1?'s':''} restante${r!==1?'s':''}. Quer adicionar mais?`;
+      ? 'Seus Sinais acabaram. Escolha um pack para continuar.'
+      : `Você tem ${r} Sinal${r!==1?'is':''} restante${r!==1?'s':''}. Quer adicionar mais?`;
     sub.style.color = '';
   }
   modal.classList.add('open');
@@ -13093,10 +13410,13 @@ function abrirHotmart(oferta){
 
 // ── SISTEMA DE MISSÕES DIÁRIAS ────────────────────────────────────────────
 const MISSOES = [
-  { id:'daily_checkin',  icon:'🔥', titulo:'Check-in Diário',        desc:'Abra o app hoje',               recompensa:2  },
-  { id:'busca_realizada',icon:'🔍', titulo:'Fazer uma Busca',         desc:'Execute qualquer prospecção',   recompensa:3  },
-  { id:'importar_lead',  icon:'📥', titulo:'Importar 1 Lead',         desc:'Importe um lead novo',          recompensa:2  },
-  { id:'indicar_amigo',  icon:'🤝', titulo:'Indicar o CAPTURO',       desc:'Compartilhe seu link de convite',recompensa:50 },
+  { id:'daily_checkin',   icon:'🔥', titulo:'Check-in Diário',           desc:'Abra o app hoje',                                recompensa:2  },
+  { id:'busca_realizada', icon:'🔍', titulo:'Fazer uma Busca',            desc:'Execute qualquer prospecção',                    recompensa:3  },
+  { id:'importar_lead',   icon:'📥', titulo:'Importar 1 Lead',            desc:'Importe um lead novo',                           recompensa:2  },
+  { id:'pitch_gerado',    icon:'🤖', titulo:'Gerar Pitch com IA',         desc:'Gere um pitch em Novos Negócios',                recompensa:5  },
+  { id:'lead_fechado',    icon:'💰', titulo:'Marcar Lead como Fechado',   desc:'Marque qualquer lead como cliente convertido',   recompensa:10 },
+  { id:'followup_feito',  icon:'📞', titulo:'Registrar Follow-up',        desc:'Adicione uma nota de follow-up em um lead',      recompensa:3  },
+  { id:'indicar_amigo',   icon:'🤝', titulo:'Indicar o CAPTURO',          desc:'Compartilhe seu link de convite',                recompensa:50 },
 ];
 
 function renderMissoes(){
@@ -13105,7 +13425,7 @@ function renderMissoes(){
   const hoje = new Date().toDateString();
   container.innerHTML = MISSOES.map(m=>{
     const feita = localStorage.getItem(`capturo_missao_${m.id}`) === hoje;
-    return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:10px 14px">
+    return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--s2);border:1px solid ${feita?'var(--green-b)':'var(--border)'};border-radius:10px;padding:10px 14px;transition:border-color .2s">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-size:18px">${m.icon}</span>
         <div>
@@ -13145,7 +13465,7 @@ async function completarMissao(missaoId, recompensa){
 
   localStorage.setItem(`capturo_missao_${missaoId}`, hoje);
   renderMissoes();
-  toast(`🎉 +${recompensa} Sinais! Missão "${missaoId.replace(/_/g,' ')}" concluída!`,'ok',4000);
+  toast(`🎉 +${recompensa} Sinais! Missão "${m => m.id === missaoId ? m.titulo : missaoId}" concluída!`,'ok',4000);
 }
 
 function copiarLinkConvite(){
@@ -13163,6 +13483,162 @@ function _registrarCheckinMissao(){
   if(localStorage.getItem('capturo_missao_daily_checkin') !== hoje){
     completarMissao('daily_checkin', 2);
   }
+}
+
+// ── AI PITCH GENERATOR ────────────────────────────────────────────────────
+let _pitchAtualEmpresa = null;
+let _pitchAtualTelefone = null;
+let _pitchIAAtivo = true;
+let _pitchSelecionado = '';
+
+function togglePitchIA(){
+  _pitchIAAtivo = !_pitchIAAtivo;
+  const wrap = document.getElementById('pitchToggleWrap');
+  const knob = document.getElementById('pitchToggleKnob');
+  if(wrap) wrap.style.background = _pitchIAAtivo ? 'var(--accent)' : 'var(--s3)';
+  if(knob) knob.style.left = _pitchIAAtivo ? '16px' : '2px';
+}
+
+function calcularScoreAlerta(empresa){
+  let score = 50;
+  const dias = empresa._diasAberta || 999;
+  if(dias <= 7)  score += 40;
+  else if(dias <= 30) score += 28;
+  else if(dias <= 60) score += 16;
+  else if(dias <= 90) score += 8;
+
+  if(empresa.telefone) score += 8;
+  if(empresa.email) score += 5;
+
+  const cap = parseFloat(String(empresa.capital_social||'0').replace(/\D/g,''));
+  if(cap >= 100000) score += 10;
+  else if(cap >= 50000) score += 6;
+  else if(cap >= 10000) score += 3;
+
+  if(!empresa.website && !empresa.site) score += 5;
+
+  return Math.min(99, Math.max(1, score));
+}
+
+function labelScore(score){
+  if(score >= 80) return { label:'🔥 Lead Ultra Quente', cor:'var(--volcano)', css:'asb-alta', cardClass:'score-alto' };
+  if(score >= 60) return { label:'⚡ Lead Quente',        cor:'var(--orange)',  css:'asb-med',  cardClass:'score-med'  };
+  return             { label:'❄ Lead Morno',             cor:'var(--cold)',   css:'asb-baixo', cardClass:'score-baixo'};
+}
+
+function gerarPitchesParaNicho(nomeEmpresa, nicho, diasAberta, cidade){
+  const plural = diasAberta === 1 ? 'dia' : 'dias';
+  const recencia = diasAberta <= 7 ? 'recentemente' : diasAberta <= 30 ? `há ${diasAberta} ${plural}` : `há pouco mais de ${diasAberta} ${plural}`;
+  const n = nomeEmpresa || 'sua empresa';
+  const ni = nicho || 'seu negócio';
+  const c = cidade || 'sua cidade';
+
+  return [
+    `Olá! Vi que a ${n} abriu ${recencia} em ${c}. Parabéns pela abertura! 🎉 Trabalho ajudando empresas de ${ni} a atrair os primeiros clientes rápido — sem precisar depender de indicações. Posso te mostrar como em 5 minutos?`,
+    `Oi! Percebi que a ${n} é nova por aqui e ainda está estruturando a presença digital. Consigo te ajudar a aparecer no Google e atrair clientes locais nos primeiros 30 dias. Vale uma conversa rápida?`,
+    `${n}, parabéns pela abertura! 🚀 Ajudo negócios de ${ni} a não depender só de boca a boca desde o primeiro mês. Se quiser, posso te mostrar um case de como uma empresa parecida com a sua triplicou o movimento em 60 dias.`,
+  ];
+}
+
+let _currentPitches = [];
+let _currentPitchIdx = 0;
+
+function abrirPitchIA(empresa, telefone, nicho){
+  _pitchAtualEmpresa = empresa;
+  _pitchAtualTelefone = telefone;
+
+  const modal = document.getElementById('modalPitchIA');
+  if(!modal){ toast('Modal de Pitch não encontrado.','error'); return; }
+
+  const score = calcularScoreAlerta(empresa);
+  const info = labelScore(score);
+
+  document.getElementById('pitchLeadNome').textContent = empresa.nome || empresa.name || 'Empresa';
+
+  const circle = document.getElementById('pitchScoreCircle');
+  const lbl = document.getElementById('pitchScoreLabel');
+  const reason = document.getElementById('pitchScoreReason');
+  if(circle){ circle.textContent = score; circle.style.color = info.cor; circle.style.borderColor = info.cor+'66'; circle.style.background = info.cor+'1a'; }
+  if(lbl){ lbl.textContent = info.label; lbl.style.color = info.cor; }
+  if(reason){
+    const dias = empresa._diasAberta;
+    reason.textContent = dias ? `Empresa aberta há ${dias} dia${dias===1?'':'s'}` : 'Data de abertura não confirmada';
+  }
+
+  const cidade = empresa._cidade || empresa.municipio || '';
+  _currentPitches = gerarPitchesParaNicho(empresa.nome || empresa.name, nicho, empresa._diasAberta || 45, cidade);
+  _currentPitchIdx = 0;
+  renderPitchContainer();
+
+  modal.style.display = 'flex';
+
+  // Registra missão de pitch gerado
+  const hoje = new Date().toDateString();
+  if(localStorage.getItem('capturo_missao_pitch_gerado') !== hoje){
+    completarMissao('pitch_gerado', 5);
+  }
+}
+
+function renderPitchContainer(){
+  const c = document.getElementById('pitchContainer');
+  if(!c) return;
+  c.innerHTML = _currentPitches.map((p,i)=>`
+    <div class="pitch-option ${i===_currentPitchIdx?'selected':''}" onclick="selecionarPitch(${i})">
+      <button class="pitch-copy-btn" onclick="event.stopPropagation();copiarPitch(${i})">Copiar</button>
+      <div style="padding-right:48px;font-style:italic">"${p}"</div>
+    </div>
+  `).join('');
+  _pitchSelecionado = _currentPitches[_currentPitchIdx];
+}
+
+function selecionarPitch(idx){
+  _currentPitchIdx = idx;
+  _pitchSelecionado = _currentPitches[idx];
+  renderPitchContainer();
+}
+
+function copiarPitch(idx){
+  const txt = _currentPitches[idx] || _pitchSelecionado;
+  navigator.clipboard.writeText(txt).then(()=> toast('✅ Pitch copiado!','ok',2500));
+}
+
+function regenerarPitch(){
+  _currentPitchIdx = (_currentPitchIdx + 1) % _currentPitches.length;
+  renderPitchContainer();
+}
+
+function abrirZapComPitch(){
+  const txt = _pitchSelecionado || _currentPitches[0] || '';
+  const tel = (_pitchAtualTelefone||'').replace(/\D/g,'');
+  if(!txt){ toast('Selecione um pitch primeiro.','warn'); return; }
+  const url = tel
+    ? `https://wa.me/55${tel}?text=${encodeURIComponent(txt)}`
+    : `https://wa.me/?text=${encodeURIComponent(txt)}`;
+  window.open(url,'_blank','noopener');
+  fecharPitchIA();
+}
+
+function fecharPitchIA(){
+  const modal = document.getElementById('modalPitchIA');
+  if(modal) modal.style.display = 'none';
+}
+
+// Filtro de score nos resultados
+let _alertaFiltroScore = 'todos';
+function filtrarAlertaScore(tipo){
+  _alertaFiltroScore = tipo;
+  document.querySelectorAll('[id^="fs"]').forEach(b=>{
+    b.style.background = 'var(--s2)';
+    b.style.color = 'var(--muted2)';
+    b.style.borderColor = 'var(--border)';
+  });
+  const el = document.getElementById(tipo==='todos'?'fsAll':'fsAlta');
+  if(el){ el.style.background='var(--accent-bg)';el.style.color='var(--accent)';el.style.borderColor='rgba(79,142,255,.3)'; }
+  // Mostrar/esconder cards
+  document.querySelectorAll('.alerta-card').forEach(card=>{
+    if(tipo==='todos') card.style.display='';
+    else card.style.display = card.classList.contains('score-alto') ? '' : 'none';
+  });
 }
 
 // Abrir modal automaticamente quando sinais chegam a 0 durante uma busca
